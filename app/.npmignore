@@ -1,3 +1,6 @@
 .DS_Store
 *.coffee
 *.styl
+client/css
+client/js
+server/js
