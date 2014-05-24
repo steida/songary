@@ -1,4 +1,1 @@
-songary
-=======
-
-Your personal songbook.
+Songary App.
