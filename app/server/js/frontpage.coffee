@@ -17,9 +17,8 @@ class server.FrontPage
     @return {string} Rendered HTML.
   ###
   render: (title, reactComponent) ->
-    bodyHtml = @getBodyHtml reactComponent
     html = React.renderComponentToStaticMarkup @reactApp.create
-      bodyHtml: bodyHtml
+      bodyHtml: @getBodyHtml reactComponent
       buildNumber: @buildNumber
       isDev: @isDev
       title: title
@@ -28,13 +27,22 @@ class server.FrontPage
     '<!DOCTYPE html>' + html
 
   ###*
-    Body HTML must be injected to prevent content escaping.
     @param {function(): React.ReactComponent} reactComponent
     @return {string}
   ###
   getBodyHtml: (reactComponent) ->
-    bodyHtml = React.renderComponentToString reactComponent()
-    bodyHtml += "<script>app.main(#{JSON.stringify @clientData});</script>"
+    html = React.renderComponentToString reactComponent()
+    html += """
+      <script src="#{'/app/client/build/app.js?v=' + @buildNumber}"></script>
+    """
     if @isDev
-      bodyHtml += '<script src="http://localhost:35729/livereload.js"></script>'
-    bodyHtml
+      html += """
+        <script src="/bower_components/closure-library/closure/goog/base.js"></script>
+        <script src="/tmp/deps.js"></script>
+        <script src="/app/client/js/main.js"></script>
+        <script src="http://localhost:35729/livereload.js"></script>
+      """
+    html += """
+      <script>app.main(#{JSON.stringify @clientData});</script>
+    """
+    html

@@ -17,10 +17,4 @@ class server.react.App
             title null, this.props.title
             link href: '/app/client/img/favicon.ico', rel: 'shortcut icon'
             link href: '/app/client/build/app.css?v=' + this.props.buildNumber, rel: 'stylesheet'
-            script src: '/app/client/build/app.js?v=' + this.props.buildNumber
-            this.props.isDev && [
-              '/bower_components/closure-library/closure/goog/base.js'
-              '/tmp/deps.js'
-              '/app/client/js/main.js'
-            ].map (src, i) -> script src: src, key: i
           body dangerouslySetInnerHTML: __html: this.props.bodyHtml

@@ -1,27 +1,27 @@
-goog.provide 'app.todos.Store'
+goog.provide 'app.songs.Store'
 
 goog.require 'goog.array'
 goog.require 'goog.events.EventTarget'
 
-class app.todos.Store extends goog.events.EventTarget
+class app.songs.Store extends goog.events.EventTarget
 
   ###*
-    @param {app.todos.Todos} todos
+    @param {app.songs.Song} songs
     @constructor
     @extends {goog.events.EventTarget}
     @final
   ###
-  constructor: (@todos) ->
+  constructor: (@songs) ->
     super()
 
   ###*
-    @type {app.todos.Todos}
+    @type {app.songs.Song}
     @private
   ###
   todos: null
 
   ###*
-    @return {Array.<app.todos.Todo>}
+    @return {Array.<app.songs.Song>}
   ###
   getTodos: ->
     @todos.items
@@ -38,7 +38,7 @@ class app.todos.Store extends goog.events.EventTarget
     @notify_()
 
   ###*
-    @param {app.todos.Todo} todo
+    @param {app.songs.Song} todo
   ###
   remove: (todo) ->
     goog.array.remove @todos.items, todo
