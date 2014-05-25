@@ -6,7 +6,7 @@ class server.react.App
     @constructor
   ###
   constructor: ->
-    {html,head,meta,title,link,script,body} = React.DOM
+    {html,head,meta,title,link,body} = React.DOM
 
     @create = React.createClass
       render: ->
