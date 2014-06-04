@@ -11,12 +11,18 @@ class server.Router
   constructor: (@frontPage, @todoApp, @routes) ->
 
   use: (app) ->
-    # TODO: Refactor.
-    for route in [@routes.home, @routes.newSong]
-      do (route) =>
-        expressRoute = app['route'] route.path
-        expressRoute.get (req, res) =>
-          @routes.setActive route
-          html = @frontPage.render 'Songary', @todoApp.create
-          res['send'] html
+    @routeToExpress app, [
+      @routes.home
+      @routes.newSong
+    ]
+
+  routeToExpress: (app, routes) ->
+    for route in routes
+      app['route'] route.path
+        .get @onRequest.bind @, route
     return
+
+  onRequest: (route, req, res) ->
+    @routes.setActive route
+    html = @frontPage.render 'Songary', @todoApp.create
+    res['send'] html
