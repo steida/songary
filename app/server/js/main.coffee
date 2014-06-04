@@ -9,8 +9,6 @@ server.main = (config) ->
 
   container = new server.DiContainer
 
-  # Note how CommonJS modules are injected. Requiring from different place
-  # than composite root is an anti-pattern leading toward hard to test code.
   container.configure
     resolve: server.App
     with:
@@ -21,9 +19,7 @@ server.main = (config) ->
     resolve: server.FrontPage
     with:
       isDev: config['env']['development']
-      # Example for CircleCI: process.env['CIRCLE_BUILD_NUM']
-      buildNumber: 0
-      # Data which will be passed into app.main method.
+      version: config['version']
       clientData: {}
   ,
     resolve: server.Middleware

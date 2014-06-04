@@ -25,6 +25,18 @@ class app.react.App
 
       componentDidMount: ->
         routes.listen app.Routes.EventType.CHANGE, @onRoutesChange
+        @ensureAllAnchorsHaveTouchAction_()
+
+      componentDidUpdate: ->
+        @ensureAllAnchorsHaveTouchAction_()
+        # touch-action="none"
+
+      # http://www.polymer-project.org/platform/pointer-events.html#basic-usage
+      ensureAllAnchorsHaveTouchAction_: ->
+        for a in @getDOMNode().querySelectorAll 'a'
+          continue if a.hasAttribute 'touch-action'
+          a.setAttribute 'touch-action', 'none'
+        return
 
       onRoutesChange: ->
         @forceUpdate()

@@ -1,8 +1,8 @@
-goog.provide 'app.songs.Song'
+goog.provide 'app.songs.Songs'
 
-goog.require 'app.songs.Song'
+goog.require 'app.songs.Songs'
 
-class app.songs.Song
+class app.songs.Songs
 
   ###*
     @constructor

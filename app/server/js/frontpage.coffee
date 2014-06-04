@@ -5,44 +5,38 @@ class server.FrontPage
   ###*
     @param {server.react.App} reactApp
     @param {boolean} isDev
-    @param {number} buildNumber
+    @param {number} version
     @param {Object} clientData
     @constructor
   ###
-  constructor: (@reactApp, @isDev, @buildNumber, @clientData) ->
+  constructor: (@reactApp, @isDev, @version, @clientData) ->
 
   ###*
     @param {string} title
-    @param {function(): React.ReactComponent} reactComponent
+    @param {function(): React.ReactComponent} createReactApp
     @return {string} Rendered HTML.
   ###
-  render: (title, reactComponent) ->
+  render: (title, createReactApp) ->
+    appHtml = React.renderComponentToString createReactApp()
+    scriptsHtml = @getScriptsHtml()
+
     html = React.renderComponentToStaticMarkup @reactApp.create
-      bodyHtml: @getBodyHtml reactComponent
-      buildNumber: @buildNumber
-      isDev: @isDev
+      bodyHtml: appHtml + scriptsHtml
+      version: @version
       title: title
 
     # React can't render doctype so we have to manually add it.
     '<!DOCTYPE html>' + html
 
-  ###*
-    @param {function(): React.ReactComponent} reactComponent
-    @return {string}
-  ###
-  getBodyHtml: (reactComponent) ->
-    html = React.renderComponentToString reactComponent()
-    html += """
-      <script src="#{'/app/client/build/app.js?v=' + @buildNumber}"></script>
-    """
-    if @isDev
-      html += """
-        <script src="/bower_components/closure-library/closure/goog/base.js"></script>
-        <script src="/tmp/deps.js"></script>
-        <script src="/app/client/js/main.js"></script>
-        <script src="http://localhost:35729/livereload.js"></script>
-      """
-    html += """
-      <script>app.main(#{JSON.stringify @clientData});</script>
-    """
-    html
+  getScriptsHtml: ->
+    scripts = ['/app/client/build/app.js?v=' + @version]
+    if @isDev then scripts.push [
+      '/bower_components/closure-library/closure/goog/base.js'
+      '/tmp/deps.js'
+      '/app/client/js/main.js'
+      'http://localhost:35729/livereload.js'
+    ]...
+    html = scripts
+      .map (script) -> """<script src="#{script}"></script>"""
+      .join ''
+    html + "<script>app.main(#{JSON.stringify @clientData});</script>"
