@@ -29,7 +29,6 @@ class app.react.App
 
       componentDidUpdate: ->
         @ensureAllAnchorsHaveTouchAction_()
-        # touch-action="none"
 
       # http://www.polymer-project.org/platform/pointer-events.html#basic-usage
       ensureAllAnchorsHaveTouchAction_: ->
