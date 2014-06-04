@@ -16,7 +16,7 @@ class app.react.App
     @create = React.createClass
 
       render: ->
-        div className: 'container',
+        div className: 'app',
           header.create null
           switch routes.getActive()
             when routes.home then homePage.create null
