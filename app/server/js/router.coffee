@@ -11,18 +11,7 @@ class server.Router
   constructor: (@frontPage, @todoApp, @routes) ->
 
   use: (app) ->
-    @routeToExpress app, [
-      @routes.home
-      @routes.newSong
-    ]
-
-  routeToExpress: (app, routes) ->
-    for route in routes
-      app['route'] route.path
-        .get @onRequest.bind @, route
-    return
-
-  onRequest: (route, req, res) ->
-    @routes.setActive route
-    html = @frontPage.render 'Songary', @todoApp.create
-    res['send'] html
+    @routes.addToExpress app, (req, res) =>
+      title = @routes.getActive().title
+      html = @frontPage.render title, @todoApp.create
+      res['send'] html

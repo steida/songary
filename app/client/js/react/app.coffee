@@ -24,7 +24,6 @@ class app.react.App
           footer.create null
 
       componentDidMount: ->
-        routes.listen app.Routes.EventType.CHANGE, @onRoutesChange
         @ensureAllAnchorsHaveTouchAction_()
 
       componentDidUpdate: ->
@@ -36,6 +35,3 @@ class app.react.App
           continue if a.hasAttribute 'touch-action'
           a.setAttribute 'touch-action', 'none'
         return
-
-      onRoutesChange: ->
-        @forceUpdate()

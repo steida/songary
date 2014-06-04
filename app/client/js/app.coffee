@@ -10,12 +10,11 @@ class App
     @constructor
   ###
   constructor: (router, routes, reactApp, element) ->
-    @setRoutes router, routes
+    routes.addToEste router
     router.start()
-    React.renderComponent reactApp.create(), element
 
-  setRoutes: (router, routes) ->
-    for route in [routes.home, routes.newSong]
-      do (route) ->
-        router.add route, (params) -> routes.setActive route
-    return
+    appComponent = React.renderComponent reactApp.create(), element
+
+    routes.listen este.Routes.EventType.CHANGE, (e) ->
+      document.title = routes.getActive().title
+      appComponent.forceUpdate()
