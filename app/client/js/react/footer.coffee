@@ -17,4 +17,5 @@ class app.react.Footer
   ###*
     @desc app.react.Footer
   ###
-  @MSG_FOO: goog.getMsg 'footer'
+  # TODO: Here will be footer.
+  @MSG_FOO: goog.getMsg ''
