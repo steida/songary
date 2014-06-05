@@ -13,4 +13,9 @@ class app.home.react.Page
 
       render: ->
         div className: 'home',
-          a href: routes.newSong.createUrl(), 'create new song'
+          a href: routes.newSong.createUrl(), Page.MSG_FOO
+
+  ###*
+    @desc app.home.react.Page
+  ###
+  @MSG_FOO: goog.getMsg 'create new song'

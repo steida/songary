@@ -10,12 +10,20 @@ class app.Routes extends este.Routes
   ###
   constructor: ->
     super()
-    @home = new este.Route '/',
-      'Songary | Your personal songbook'
-    @newSong = new este.Route '/songs/new/:operation?',
-      'New Song | Songary'
+    @home = new este.Route '/', Routes.MSG_HOME
+    @newSong = new este.Route '/songs/new/:operation?', Routes.MSG_NEW_SONG
 
     @list = [
       @home
       @newSong
     ]
+
+  ###*
+    @desc app.Routes
+  ###
+  @MSG_HOME: goog.getMsg 'Songary | Your personal songbook'
+
+  ###*
+    @desc app.Routes
+  ###
+  @MSG_NEW_SONG: goog.getMsg 'New Song | Songary'

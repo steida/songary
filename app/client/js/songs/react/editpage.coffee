@@ -12,4 +12,9 @@ class app.songs.react.EditPage
     @create = React.createClass
 
       render: ->
-        div className: 'new-song', 'New song here'
+        div className: 'new-song', EditPage.MSG_NEW_SONG_HERE
+
+  ###*
+    @desc app.songs.react.EditPage
+  ###
+  @MSG_NEW_SONG_HERE: goog.getMsg 'New song here'

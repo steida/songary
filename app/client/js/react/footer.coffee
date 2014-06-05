@@ -12,4 +12,9 @@ class app.react.Footer
     @create = React.createClass
 
       render: ->
-        footer null, 'footer'
+        footer null, Footer.MSG_FOO
+
+  ###*
+    @desc app.react.Footer
+  ###
+  @MSG_FOO: goog.getMsg 'footer'
