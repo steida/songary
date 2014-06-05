@@ -11,7 +11,7 @@ class app.Routes extends este.Routes
   constructor: ->
     super()
     @home = new este.Route '/', Routes.MSG_HOME
-    @newSong = new este.Route '/songs/new/:operation?', Routes.MSG_NEW_SONG
+    @newSong = new este.Route '/songs/new', Routes.MSG_NEW_SONG
 
     @list = [
       @home
