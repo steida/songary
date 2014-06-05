@@ -1,6 +1,6 @@
-goog.provide 'app.home.react.Page'
+goog.provide 'app.home.index.react.Page'
 
-class app.home.react.Page
+class app.home.index.react.Page
 
   ###*
     @param {app.Routes} routes
@@ -16,6 +16,6 @@ class app.home.react.Page
           a href: routes.newSong.createUrl(), Page.MSG_FOO
 
   ###*
-    @desc app.home.react.Page
+    @desc app.home.index.react.Page
   ###
   @MSG_FOO: goog.getMsg 'create new song'
