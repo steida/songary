@@ -1,6 +1,6 @@
-goog.provide 'app.songs.react.EditPage'
+goog.provide 'app.songs.edit.react.Page'
 
-class app.songs.react.EditPage
+class app.songs.edit.react.Page
 
   ###*
     @param {app.Routes} routes
@@ -12,9 +12,9 @@ class app.songs.react.EditPage
     @create = React.createClass
 
       render: ->
-        div className: 'new-song', EditPage.MSG_NEW_SONG_HERE
+        div className: 'new-song', Page.MSG_NEW_SONG_HERE
 
   ###*
-    @desc app.songs.react.EditPage
+    @desc app.songs.edit.react.Page
   ###
   @MSG_NEW_SONG_HERE: goog.getMsg 'New song here'

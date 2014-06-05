@@ -7,7 +7,7 @@ class app.react.App
     @param {app.react.Header} header
     @param {app.react.Footer} footer
     @param {app.home.react.Page} homePage
-    @param {app.songs.react.EditPage} songsEditPage
+    @param {app.songs.edit.react.Page} songsEditPage
     @constructor
   ###
   constructor: (routes, header, footer, homePage, songsEditPage) ->
