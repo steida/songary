@@ -1,15 +1,24 @@
-// @import '../../../bower_components/normalize-css/normalize.css'
-// @import '../../../bower_components/stylus-nib'
-// @import '../../../bower_components/este-library/este/css'
+@import '../../../bower_components/normalize-css/normalize.css'
+@import '../../../bower_components/stylus-nib'
+@import '../../../bower_components/este-library/este/css'
 
-// From PhoneGap css. TODO: Use more.
+// From PhoneGap CSS.
+// TODO(steida): Use more.
 
 *
   -webkit-tap-highlight-color rgba(0,0,0,0)
 
-// TODO: Nejak hezky.
-// a:active
-//   color: blue
+// TODO(steida): Clean and refactor.
 
-// .app
-//   border solid 1px red
+.app
+  padding 0 1em
+
+form
+  input, textarea
+    border 0
+    box-sizing border-box
+    display block
+    margin .625em 0
+    width 100%
+    &:focus
+      outline none

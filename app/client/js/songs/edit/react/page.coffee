@@ -1,5 +1,7 @@
 goog.provide 'app.songs.edit.react.Page'
 
+# goog.require 'goog.ui.Textarea'
+
 class app.songs.edit.react.Page
 
   ###*
@@ -7,14 +9,28 @@ class app.songs.edit.react.Page
     @constructor
   ###
   constructor: (routes) ->
-    {div} = React.DOM
+    {div,form,fieldset,legend,input,textarea} = React.DOM
 
     @create = React.createClass
 
       render: ->
-        div className: 'new-song', Page.MSG_NEW_SONG_HERE
+        div className: 'new-song',
+          form null,
+            input
+              autoFocus: true
+              name: 'name'
+              placeholder: Page.MSG_SONG_NAME
+              ref: 'name'
+              type: 'text'
+            textarea
+              name: 'chordpro'
+              placeholder: Page.MSG_WRITE_LYRICS_HERE
+              ref: 'chordpro'
 
-  ###*
-    @desc app.songs.edit.react.Page
-  ###
-  @MSG_NEW_SONG_HERE: goog.getMsg 'New song here'
+      componentDidMount: ->
+        # @refs['name'].getDOMNode().focus()
+        # new goog.ui.Textarea
+
+
+  @MSG_SONG_NAME: goog.getMsg 'Song name'
+  @MSG_WRITE_LYRICS_HERE: goog.getMsg 'Write lyrics here'
