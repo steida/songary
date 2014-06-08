@@ -1,6 +1,6 @@
 goog.provide 'app.songs.edit.react.Page'
 
-# goog.require 'goog.ui.Textarea'
+goog.require 'goog.ui.Textarea'
 
 class app.songs.edit.react.Page
 
@@ -20,7 +20,6 @@ class app.songs.edit.react.Page
               autoFocus: true
               name: 'name'
               placeholder: Page.MSG_SONG_NAME
-              ref: 'name'
               type: 'text'
             textarea
               name: 'chordpro'
@@ -28,9 +27,11 @@ class app.songs.edit.react.Page
               ref: 'chordpro'
 
       componentDidMount: ->
-        # @refs['name'].getDOMNode().focus()
-        # new goog.ui.Textarea
+        @chordproTextarea_ = new goog.ui.Textarea ''
+        @chordproTextarea_.decorate @refs['chordpro'].getDOMNode()
 
+      componentWillUnmount: ->
+        @chordproTextarea_.dispose()
 
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg 'Write lyrics here'
