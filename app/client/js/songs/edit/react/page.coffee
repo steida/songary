@@ -9,7 +9,7 @@ class app.songs.edit.react.Page
     @constructor
   ###
   constructor: (routes) ->
-    {div,form,fieldset,legend,input,textarea} = React.DOM
+    {div,form,input,textarea,a} = React.DOM
 
     @create = React.createClass
 
@@ -25,6 +25,10 @@ class app.songs.edit.react.Page
               name: 'chordpro'
               placeholder: Page.MSG_WRITE_LYRICS_HERE
               ref: 'chordpro'
+          a
+            href: 'http://linkesoft.com/songbook/chordproformat.html'
+            target: '_blank'
+          , Page.MSG_HOW_TO_WRITE_LYRICS
 
       componentDidMount: ->
         @chordproTextarea_ = new goog.ui.Textarea ''
@@ -35,3 +39,4 @@ class app.songs.edit.react.Page
 
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg 'Write lyrics here'
+  @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to write lyrics'
