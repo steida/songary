@@ -10,7 +10,7 @@ suite 'app.songs.Song', ->
       assert.equal song.chordpro, 'Chordpro'
 
   suite 'validate', ->
-    test 'should return true for valid song', ->
+    test 'should return empty array for valid song', ->
       song = new Song 'Name', 'Bla [Ami]'
       assert.deepEqual song.validate(), []
 

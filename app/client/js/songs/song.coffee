@@ -72,7 +72,7 @@ class app.songs.Song
   chordpro: ''
 
   ###*
-    TODO(steida): Consider interface.
+    TODO(steida): Consider validation error class.
     @return {Array.<Object>}
   ###
   validate: ->
