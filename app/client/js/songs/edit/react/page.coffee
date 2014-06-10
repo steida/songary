@@ -1,5 +1,7 @@
 goog.provide 'app.songs.edit.react.Page'
 
+goog.require 'app.songs.Song'
+goog.require 'este.dom'
 goog.require 'goog.ui.Textarea'
 
 class app.songs.edit.react.Page
@@ -9,13 +11,14 @@ class app.songs.edit.react.Page
     @constructor
   ###
   constructor: (routes) ->
-    {div,form,input,textarea,button,a} = React.DOM
 
     @create = React.createClass
 
       render: ->
+        {div,form,input,textarea,button,a} = React.DOM
+
         div className: 'new-song',
-          form onSubmit: @onFormSubmit,
+          form onSubmit: @onFormSubmit, ref: 'form',
             input
               autoFocus: true
               name: 'name'
@@ -43,7 +46,18 @@ class app.songs.edit.react.Page
 
       onFormSubmit: (e) ->
         e.preventDefault()
-        @refs['name'].getDOMNode().focus()
+        @addSong()
+
+      addSong: ->
+        form = @refs['form'].getDOMNode()
+        data = este.dom.serializeForm form
+        song = new app.songs.Song data.name, data.chordpro
+        errors = song.validate()
+        if errors.length
+          field = form.elements[errors[0].prop]
+          field.focus()
+          return
+        routes.home.redirect()
 
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg 'Write lyrics here'
