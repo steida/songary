@@ -3,9 +3,14 @@ goog.provide 'app.songs.Song'
 class app.songs.Song
 
   ###*
+    @param {string} name
+    @param {string} chordpro
     @constructor
   ###
-  constructor: ->
+  constructor: (@name, @chordpro) ->
+
+  @MSG_PLEASE_FILL_OUT_NAME: goog.getMsg 'Please fill out name.'
+  @MSG_PLEASE_FILL_OUT_CHORDPRO: goog.getMsg 'Please fill out chordpro.'
 
   ###*
     ID is an empty string until first sync aka user is logged or created.
@@ -65,3 +70,20 @@ class app.songs.Song
     @expose
   ###
   chordpro: ''
+
+  ###*
+    TODO(steida): Consider interface.
+    @return {Array.<Object>}
+  ###
+  validate: ->
+    errors = []
+
+    if !@name.trim() then errors.push
+      prop: 'name'
+      message: Song.MSG_PLEASE_FILL_OUT_NAME
+
+    if !@chordpro.trim() then errors.push
+      prop: 'chordpro'
+      message: Song.MSG_PLEASE_FILL_OUT_CHORDPRO
+
+    errors
