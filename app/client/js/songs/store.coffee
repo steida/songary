@@ -18,30 +18,30 @@ class app.songs.Store extends goog.events.EventTarget
     @type {app.songs.Song}
     @private
   ###
-  todos: null
+  songs: null
 
   ###*
     @return {Array.<app.songs.Song>}
   ###
   getTodos: ->
-    @todos.items
+    @songs.items
 
   ###*
     @param {string} title
   ###
   add: (title) ->
-    @todos.add title
+    @songs.add title
     @notify_()
 
   clearAll: ->
-    @todos.clearAll()
+    @songs.clearAll()
     @notify_()
 
   ###*
-    @param {app.songs.Song} todo
+    @param {app.songs.Song} song
   ###
-  remove: (todo) ->
-    goog.array.remove @todos.items, todo
+  remove: (song) ->
+    goog.array.remove @songs.items, song
     @notify_()
 
   ###*
