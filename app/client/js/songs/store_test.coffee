@@ -17,27 +17,27 @@ suite 'app.songs.Store', ->
       songs = store.all()
       assert.deepEqual songs, []
 
-  suite 'save', ->
-    test 'should save valid model', (done) ->
+  suite 'add', ->
+    test 'should add valid model', (done) ->
       song = validSong()
       store.listen 'change', ->
         assert.deepEqual store.all(), [song]
         done()
-      errors = store.save song
+      errors = store.add song
       assert.deepEqual errors, []
 
-    test 'should not save invalid model', ->
+    test 'should not add invalid model', ->
       song = invalidSong()
       changeDispatched = false
       store.listen 'change', -> changeDispatched = true
-      errors = store.save song
+      errors = store.add song
       assert.isFalse changeDispatched
       assert.deepEqual errors, song.validate()
 
   suite 'delete', ->
     test 'should delete model', (done) ->
       song = validSong()
-      store.save song
+      store.add song
       store.listen 'change', ->
         assert.deepEqual store.all(), []
         done()

@@ -30,7 +30,7 @@ class app.songs.Store extends goog.events.EventTarget
     @param {app.songs.Song} song
     @return {Array.<app.ValidationError>}
   ###
-  save: (song) ->
+  add: (song) ->
     errors = song.validate()
     return errors if errors.length
     @songs.push song
