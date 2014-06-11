@@ -4,13 +4,14 @@ class app.react.Header
 
   ###*
     @param {app.Routes} routes
+    @param {app.react.TouchAnchor} touchAnchor
     @constructor
   ###
-  constructor: (routes) ->
-    {h1,a} = React.DOM
+  constructor: (routes, touchAnchor) ->
+    {h1} = React.DOM
 
     @create = React.createClass
 
       render: ->
         h1 null,
-          a href: routes.home.createUrl(), 'Songary'
+          touchAnchor.create href: routes.home.createUrl(), 'Songary'

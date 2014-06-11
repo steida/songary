@@ -22,16 +22,3 @@ class app.react.App
             when routes.home then homeIndexPage.create null
             when routes.newSong then songsEditPage.create null
           footer.create null
-
-      componentDidMount: ->
-        @ensureAllAnchorsHaveTouchAction_()
-
-      componentDidUpdate: ->
-        @ensureAllAnchorsHaveTouchAction_()
-
-      # http://www.polymer-project.org/platform/pointer-events.html#basic-usage
-      ensureAllAnchorsHaveTouchAction_: ->
-        for a in @getDOMNode().querySelectorAll 'a'
-          continue if a.hasAttribute 'touch-action'
-          a.setAttribute 'touch-action', 'none'
-        return
