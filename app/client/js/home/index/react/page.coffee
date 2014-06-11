@@ -18,7 +18,7 @@ class app.home.index.react.Page
           touchAnchor.create href: routes.newSong.createUrl(),
             Page.MSG_FOO
           ul null, songsStore.all().map (song) ->
-            li null, song.name
+            li key: song.name, song.name
 
 
   ###*
