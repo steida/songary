@@ -1,5 +1,7 @@
 goog.provide 'app.songs.Song'
 
+goog.require 'app.ValidationError'
+
 class app.songs.Song
 
   ###*
@@ -72,18 +74,17 @@ class app.songs.Song
   chordpro: ''
 
   ###*
-    TODO(steida): Consider validation error class.
-    @return {Array.<Object>}
+    @return {Array.<app.ValidationError>}
   ###
   validate: ->
     errors = []
 
-    if !@name.trim() then errors.push
-      prop: 'name'
-      message: Song.MSG_PLEASE_FILL_OUT_NAME
+    if !@name.trim()
+      errors.push new app.ValidationError 'name',
+        Song.MSG_PLEASE_FILL_OUT_NAME
 
-    if !@chordpro.trim() then errors.push
-      prop: 'chordpro'
-      message: Song.MSG_PLEASE_FILL_OUT_CHORDPRO
+    if !@chordpro.trim()
+      errors.push new app.ValidationError 'chordpro',
+        Song.MSG_PLEASE_FILL_OUT_CHORDPRO
 
     errors
