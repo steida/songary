@@ -8,9 +8,10 @@ class app.songs.edit.react.Page
 
   ###*
     @param {app.Routes} routes
+    @param {app.songs.Store} store
     @constructor
   ###
-  constructor: (routes) ->
+  constructor: (routes, store) ->
 
     @create = React.createClass
 
@@ -52,7 +53,7 @@ class app.songs.edit.react.Page
         form = @refs['form'].getDOMNode()
         data = este.dom.serializeForm form
         song = new app.songs.Song data.name, data.chordpro
-        errors = song.validate()
+        errors = store.add song
         if errors.length
           field = form.elements[errors[0].prop]
           field.focus()
