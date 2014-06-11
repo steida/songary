@@ -6,16 +6,16 @@ goog.require 'goog.events.EventTarget'
 class app.songs.Store extends goog.events.EventTarget
 
   ###*
-    @param {app.songs.Song} songs
     @constructor
     @extends {goog.events.EventTarget}
     @final
   ###
-  constructor: (@songs) ->
+  constructor: ->
     super()
+    @songs = []
 
   ###*
-    @type {app.songs.Song}
+    @type {Array.<app.songs.Song>}
     @private
   ###
   songs: null
@@ -23,25 +23,25 @@ class app.songs.Store extends goog.events.EventTarget
   ###*
     @return {Array.<app.songs.Song>}
   ###
-  getTodos: ->
-    @songs.items
+  all: ->
+    @songs
 
   ###*
-    @param {string} title
+    @param {app.songs.Song} song
+    @return {Array.<app.ValidationError>}
   ###
-  add: (title) ->
-    @songs.add title
+  save: (song) ->
+    errors = song.validate()
+    return errors if errors.length
+    @songs.push song
     @notify_()
-
-  clearAll: ->
-    @songs.clearAll()
-    @notify_()
+    []
 
   ###*
     @param {app.songs.Song} song
   ###
-  remove: (song) ->
-    goog.array.remove @songs.items, song
+  delete: (song) ->
+    goog.array.remove @songs, song
     @notify_()
 
   ###*
