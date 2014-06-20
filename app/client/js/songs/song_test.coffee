@@ -5,6 +5,9 @@ suite 'app.songs.Song', ->
 
   suite 'constructor', ->
     test 'should set name and chordpro', ->
+      song = new Song
+      assert.equal song.name, ''
+      assert.equal song.chordpro, ''
       song = new Song 'Name', 'Chordpro'
       assert.equal song.name, 'Name'
       assert.equal song.chordpro, 'Chordpro'

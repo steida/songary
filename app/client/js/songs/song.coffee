@@ -5,11 +5,11 @@ goog.require 'app.ValidationError'
 class app.songs.Song
 
   ###*
-    @param {string} name
-    @param {string} chordpro
+    @param {string=} name
+    @param {string=} chordpro
     @constructor
   ###
-  constructor: (@name, @chordpro) ->
+  constructor: (@name = '', @chordpro = '') ->
 
   @MSG_PLEASE_FILL_OUT_NAME: goog.getMsg 'Please fill out name.'
   @MSG_PLEASE_FILL_OUT_CHORDPRO: goog.getMsg 'Please fill out chordpro.'
