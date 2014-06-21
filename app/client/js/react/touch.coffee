@@ -1,5 +1,7 @@
 goog.provide 'app.react.Touch'
 
+goog.require 'goog.events'
+
 class app.react.Touch
 
   ###*
@@ -53,4 +55,11 @@ class app.react.Touch
           @transferPropsTo React.DOM[tag] null, @props.children
         componentDidMount: ->
           @getDOMNode().setAttribute 'touch-action', touchAction
+          goog.events.listen @getDOMNode(), 'pointerup', @onPointerUp
+        componentWillUnmount: ->
+          goog.events.unlisten @getDOMNode(), 'pointerup', @onPointerUp
+        onPointerUp: (e) ->
+          return if !this.props.onPointerUp
+          this.props.onPointerUp e
+
     obj
