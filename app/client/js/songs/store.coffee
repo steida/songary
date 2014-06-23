@@ -37,6 +37,13 @@ class app.songs.Store extends goog.events.EventTarget
     @notify_()
     []
 
+  # Tohle je vec serializace...
+  # ###*
+  #   @param {app.songs.Song} song
+  # ###
+  # trimStrings: (song) ->
+  #   for key, value of song
+
   ###*
     @param {app.songs.Song} song
   ###

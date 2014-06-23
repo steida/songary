@@ -1,18 +1,20 @@
 goog.provide 'app.songs.Song'
 
 goog.require 'app.ValidationError'
+goog.require 'este.string'
 
 class app.songs.Song
 
   ###*
     @param {string=} name
+    @param {string=} artist
     @param {string=} chordpro
     @constructor
   ###
-  constructor: (@name = '', @chordpro = '') ->
-
-  @MSG_PLEASE_FILL_OUT_NAME: goog.getMsg 'Please fill out name.'
-  @MSG_PLEASE_FILL_OUT_CHORDPRO: goog.getMsg 'Please fill out chordpro.'
+  constructor: (
+    @name = ''
+    @artist = ''
+    @lyrics = '') ->
 
   ###*
     ID is an empty string until first sync aka user is logged or created.
@@ -51,13 +53,13 @@ class app.songs.Song
     @type {string}
     @expose
   ###
-  author: ''
+  artist: ''
 
   ###*
     @type {string}
     @expose
   ###
-  interpret: ''
+  urlArtist: ''
 
   ###*
     User id.
@@ -71,20 +73,30 @@ class app.songs.Song
     @type {string}
     @expose
   ###
-  chordpro: ''
+  lyrics: ''
 
   ###*
     @return {Array.<app.ValidationError>}
   ###
   validate: ->
-    errors = []
-
-    if !@name.trim()
-      errors.push new app.ValidationError 'name',
-        Song.MSG_PLEASE_FILL_OUT_NAME
-
-    if !@chordpro.trim()
-      errors.push new app.ValidationError 'chordpro',
-        Song.MSG_PLEASE_FILL_OUT_CHORDPRO
-
+    errors = ['name', 'artist', 'lyrics']
+      .filter (name) => !@[name].trim()
+      .map (name) ->
+        msg = goog.getMsg 'Please fill out {$name}.', 'name': name
+        new app.ValidationError name, msg
     errors
+
+  ###*
+    Compute urls after set.
+  ###
+  updateUrlNames: ->
+    @urlName = este.string.toFancyUrl @name
+    @urlArtist = este.string.toFancyUrl @artist
+
+  ###*
+    @param {string} prop
+    @param {string} value
+  ###
+  setProp: (prop, value) ->
+    @[prop] = value
+    @updateUrlNames()

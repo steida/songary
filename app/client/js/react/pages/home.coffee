@@ -1,6 +1,6 @@
-goog.provide 'app.home.index.react.Page'
+goog.provide 'app.react.pages.Home'
 
-class app.home.index.react.Page
+class app.react.pages.Home
 
   ###*
     @param {app.Routes} routes
@@ -16,9 +16,11 @@ class app.home.index.react.Page
 
       render: ->
         div className: 'home',
-          a href: routes.newSong.createUrl(), Page.MSG_FOO
-          ul null, songsStore.all().map (song) ->
-            li key: song.name, song.name
+          a href: routes.newSong.createUrl(), Home.MSG_FOO
+          ul null, songsStore.all().map (song, i) ->
+            li key: i,
+              a href: routes.song.createUrl(song),
+                "#{song.name} [#{song.artist}]"
 
   ###*
     @desc app.home.index.react.Page
