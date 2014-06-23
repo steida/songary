@@ -8,7 +8,7 @@ class app.songs.Song
   ###*
     @param {string=} name
     @param {string=} artist
-    @param {string=} chordpro
+    @param {string=} lyrics
     @constructor
   ###
   constructor: (
@@ -81,9 +81,9 @@ class app.songs.Song
   validate: ->
     errors = ['name', 'artist', 'lyrics']
       .filter (name) => !@[name].trim()
-      .map (name) ->
-        msg = goog.getMsg 'Please fill out {$name}.', 'name': name
-        new app.ValidationError name, msg
+      .map (name) =>
+        @MSG_PLEASE_FILL_OUT = goog.getMsg 'Please fill out {$name}.', name: name
+        new app.ValidationError name, @MSG_PLEASE_FILL_OUT
     errors
 
   ###*
