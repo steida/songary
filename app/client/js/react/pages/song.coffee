@@ -7,16 +7,19 @@ class app.react.pages.Song
   ###*
     @param {app.Routes} routes
     @param {app.songs.Store} store
+    @param {app.react.pages.NotFound} notFound
     @constructor
   ###
-  constructor: (routes, store) ->
-
-    song = new app.songs.Song
+  constructor: (routes, store, notFound) ->
+    {div,h1,h2} = React.DOM
 
     @create = React.createClass
 
       render: ->
-        {div,h1} = React.DOM
+        song = store.songByUrl routes.active.params
+        return notFound.create null if !song
 
         div className: 'song',
-          h1 null, 'Ahoj'
+          h1 null, song.name
+          h2 null, song.artist
+          div null, song.lyrics

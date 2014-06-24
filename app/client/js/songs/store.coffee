@@ -52,6 +52,15 @@ class app.songs.Store extends goog.events.EventTarget
     @notify_()
 
   ###*
+    @param {Object} params
+    @return {app.songs.Song}
+  ###
+  songByUrl: (params) ->
+    goog.array.find @songs, (song) ->
+      song['urlArtist'] == params['urlArtist'] &&
+      song['urlName'] == params['urlName']
+
+  ###*
     @private
   ###
   notify_: ->
