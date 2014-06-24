@@ -13,11 +13,13 @@ class app.Routes extends este.Routes
     @home = new este.Route '/', Routes.MSG_HOME
     @newSong = new este.Route '/@me/songs/new', Routes.MSG_NEW_SONG
     @song = new este.Route '/@me/songs/:urlArtist/:urlName', 'Routes.MSG_NEW_SONG'
+    @notFound = new este.Route '*'
 
     @list = [
       @home
       @newSong
       @song
+      @notFound
     ]
 
   ###*
