@@ -20,7 +20,7 @@ class app.react.App
       render: ->
         div className: 'app',
           header.create null
-          switch routes.getActive()
+          switch routes.active
             when routes.home then homePage.create null
             when routes.newSong then editSong.create null
             when routes.song then song.create null

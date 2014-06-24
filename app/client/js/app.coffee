@@ -16,5 +16,5 @@ class App
     appComponent = React.renderComponent reactApp.create(), element
 
     routes.listen este.Routes.EventType.CHANGE, (e) ->
-      document.title = routes.getActive().title
+      document.title = routes.active.title
       appComponent.forceUpdate()
