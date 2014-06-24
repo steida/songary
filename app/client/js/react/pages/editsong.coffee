@@ -11,14 +11,13 @@ class app.react.pages.EditSong
     @constructor
   ###
   constructor: (routes, store) ->
+    {div,form,input,textarea,a,button} = React.DOM
 
     song = new app.songs.Song
 
     @create = React.createClass
 
       render: ->
-        {div,form,input,textarea,button,a} = React.DOM
-
         div className: 'new-song',
           form onSubmit: @onFormSubmit, ref: 'form',
             input
