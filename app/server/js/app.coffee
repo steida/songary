@@ -14,7 +14,6 @@ class server.App
     app = express()
 
     middleware.use app
-    router.use app
 
     if isDev
       # Square brackets syntax until we will have Express 4 externs.
@@ -24,6 +23,8 @@ class server.App
     else
       # Compiled script has per deploy specific url so set maxAge to one year.
       app['use'] '/app', express['static'] 'app', 'maxAge': 31557600000
+
+    router.use app
 
     app['listen'] port, ->
       console.log 'Express server listening on port ' + port
