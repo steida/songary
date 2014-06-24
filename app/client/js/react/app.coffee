@@ -8,10 +8,11 @@ class app.react.App
     @param {app.react.Footer} footer
     @param {app.react.pages.Home} homePage
     @param {app.react.pages.EditSong} editSong
+    @param {app.react.pages.Song} song
     @constructor
   ###
   constructor: (routes, header, footer,
-      homePage, editSong) ->
+      homePage, editSong, song) ->
     {div} = React.DOM
 
     @create = React.createClass
@@ -22,5 +23,5 @@ class app.react.App
           switch routes.getActive()
             when routes.home then homePage.create null
             when routes.newSong then editSong.create null
-            # when routes.song then songPage.create null
+            when routes.song then song.create null
           footer.create null
