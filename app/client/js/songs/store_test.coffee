@@ -43,12 +43,12 @@ suite 'app.songs.Store', ->
         done()
       store.delete song
 
-  suite 'songByUrl', ->
+  suite 'songByRoute', ->
     test 'should return added song looked up with params', ->
       song = urlArtist: 'a', urlName: 'b', validate: -> []
       store.add song
-      songByUrl = store.songByUrl urlArtist: 'a', urlName: 'b'
-      assert.deepEqual songByUrl, song
+      songByRoute = store.songByRoute params: urlArtist: 'a', urlName: 'b'
+      assert.deepEqual songByRoute, song
 
     test 'should return null', ->
-      assert.isNull store.songByUrl urlArtist: 'a', urlName: 'b'
+      assert.isNull store.songByRoute params: urlArtist: 'a', urlName: 'b'

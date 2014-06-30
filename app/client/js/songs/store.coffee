@@ -16,7 +16,6 @@ class app.songs.Store extends goog.events.EventTarget
 
   ###*
     @type {Array.<app.songs.Song>}
-    @private
   ###
   songs: null
 
@@ -52,13 +51,13 @@ class app.songs.Store extends goog.events.EventTarget
     @notify_()
 
   ###*
-    @param {Object} params
+    @param {este.Route} route
     @return {app.songs.Song}
   ###
-  songByUrl: (params) ->
+  songByRoute: (route) ->
     goog.array.find @songs, (song) ->
-      song['urlArtist'] == params['urlArtist'] &&
-      song['urlName'] == params['urlName']
+      song['urlArtist'] == route.params['urlArtist'] &&
+      song['urlName'] == route.params['urlName']
 
   ###*
     @private
