@@ -7,14 +7,20 @@ class App
     @param {app.Routes} routes
     @param {app.react.App} reactApp
     @param {Element} element
+    @param {app.Title} appTitle
     @constructor
   ###
-  constructor: (router, routes, reactApp, element) ->
+  constructor: (router, routes, @reactApp, @element, @appTitle) ->
     routes.addToEste router
+    routes.listen este.Routes.EventType.CHANGE, (e) => @syncUi()
     router.start()
 
-    appComponent = React.renderComponent reactApp.create(), element
-
-    routes.listen este.Routes.EventType.CHANGE, (e) ->
-      document.title = routes.active.title
-      appComponent.forceUpdate()
+  ###*
+    @protected
+  ###
+  syncUi: ->
+    if @component
+      @component.forceUpdate()
+    else
+      @component = React.renderComponent @reactApp.create(), @element
+    document.title = @appTitle.get()

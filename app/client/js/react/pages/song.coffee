@@ -5,21 +5,19 @@ goog.require 'app.songs.Song'
 class app.react.pages.Song
 
   ###*
-    @param {app.Routes} routes
     @param {app.songs.Store} store
     @param {app.react.pages.NotFound} notFound
     @constructor
   ###
-  constructor: (routes, store, notFound) ->
+  constructor: (store, notFound) ->
     {div,h1,h2} = React.DOM
 
     @create = React.createClass
 
       render: ->
-        song = store.songByUrl routes.active.params
-        return notFound.create null if !song
+        return notFound.create null if !store.song
 
         div className: 'song',
-          h1 null, song.name
-          h2 null, song.artist
-          div null, song.lyrics
+          h1 null, store.song.name
+          h2 null, store.song.artist
+          div null, store.song.lyrics
