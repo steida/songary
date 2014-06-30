@@ -6,9 +6,11 @@ class app.react.pages.NotFound
     @constructor
   ###
   constructor: ->
-    {div} = React.DOM
+    {div,h1,p} = React.DOM
 
     @create = React.createClass
 
       render: ->
-        div null, 'This page does not exist.'
+        div className: 'page404',
+          h1 null, "This page isn't available"
+          p null, "The link may be broken, or the page may have been removed."
