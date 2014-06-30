@@ -53,13 +53,15 @@ class app.react.Touch
       obj[tag] = React.createClass
         render: ->
           @transferPropsTo React.DOM[tag] null, @props.children
+
         componentDidMount: ->
           @getDOMNode().setAttribute 'touch-action', touchAction
           goog.events.listen @getDOMNode(), 'pointerup', @onPointerUp
+
         componentWillUnmount: ->
           goog.events.unlisten @getDOMNode(), 'pointerup', @onPointerUp
+
         onPointerUp: (e) ->
           return if !this.props.onPointerUp
           this.props.onPointerUp e
-
     obj
