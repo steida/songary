@@ -9,12 +9,17 @@
 *
   -webkit-tap-highlight-color rgba(0,0,0,0)
 
-// // lvfha
-// a, button
-//   &:focus
-//     outline solid 1px red
-//   &:active
-//     color inherit
+a
+button
+input
+textarea
+  transition all 0.3s ease-in-out
+  outline none
+
+  &:focus
+    // background-color red
+    opacity .9
+    box-shadow 0 0 6px rgba(0, 0, 0, .3)
 
 .app
   padding 0 1em
