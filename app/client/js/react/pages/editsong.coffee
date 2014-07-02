@@ -19,33 +19,41 @@ class app.react.pages.EditSong
 
       render: ->
         div className: 'new-song',
-          form onSubmit: @onFormSubmit, ref: 'form',
-            input
-              autoFocus: true
-              onChange: @onFieldChange
-              name: 'name'
-              placeholder: EditSong.MSG_SONG_NAME
-              type: 'text'
-              value: song.name
-            input
-              onChange: @onFieldChange
-              name: 'artist'
-              placeholder: EditSong.MSG_SONG_ARTIST
-              type: 'text'
-              value: song.artist
-            textarea
-              onChange: @onFieldChange
-              name: 'lyrics'
-              placeholder: EditSong.MSG_WRITE_LYRICS_HERE
-              ref: 'lyrics'
-              value: song.lyrics
-            a
-              href: 'http://linkesoft.com/songbook/chordproformat.html'
-              target: '_blank'
-            , EditSong.MSG_HOW_TO_WRITE_LYRICS
-            button
-              type: 'submit'
-            , EditSong.MSG_CREATE_NEW_SONG
+          form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
+            div className: 'form-group',
+              input
+                autoFocus: true
+                className: 'form-control'
+                name: 'name'
+                onChange: @onFieldChange
+                placeholder: EditSong.MSG_SONG_NAME
+                type: 'text'
+                value: song.name
+            div className: 'form-group',
+              input
+                className: 'form-control'
+                onChange: @onFieldChange
+                name: 'artist'
+                placeholder: EditSong.MSG_SONG_ARTIST
+                type: 'text'
+                value: song.artist
+            div className: 'form-group',
+              textarea
+                className: 'form-control'
+                onChange: @onFieldChange
+                name: 'lyrics'
+                placeholder: EditSong.MSG_WRITE_LYRICS_HERE
+                ref: 'lyrics'
+                value: song.lyrics
+              a
+                href: 'http://linkesoft.com/songbook/chordproformat.html'
+                target: '_blank'
+              , EditSong.MSG_HOW_TO_WRITE_LYRICS
+            div className: 'form-group',
+              button
+                className: 'btn btn-default'
+                type: 'submit'
+              , EditSong.MSG_CREATE_NEW_SONG
 
       componentDidMount: ->
         @chordproTextarea_ = new goog.ui.Textarea ''
