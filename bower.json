@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "este-library": "git://github.com/steida/este-library.git",
-    "stylus-nib": "git://github.com/visionmedia/nib.git"
+    "stylus-nib": "git://github.com/visionmedia/nib.git",
+    "bootstrap": "~3.2.0"
   }
 }

@@ -1,42 +1,24 @@
-@import '../../../bower_components/normalize-css/normalize.css'
+@import '../../../bower_components/bootstrap/dist/css/bootstrap.min.css'
 @import '../../../bower_components/stylus-nib'
 @import '../../../bower_components/este-library/este/css'
-
-// From PhoneGap CSS.
-// TODO(steida): Use more.
-// TODO(steida): Clean and refactor.
-
-*
-  -webkit-tap-highlight-color rgba(0,0,0,0)
-
-a
-button
-input
-textarea
-  transition opacity 0.2s ease-in-out, box-shadow 0.3s ease-in-out
-  outline none
-
-  &:focus
-    // background-color red
-    opacity .9
-    box-shadow 0 0 6px rgba(0, 0, 0, .3)
 
 .app
   padding 0 1em
 
-form
-  input, textarea
-    border 0
-    box-sizing border-box
-    display block
-    margin .625em 0
-    width 100%
-    &:focus
-      outline none
-  button
-    display block
-
-  textarea
-    min-height 3em
-    // http://stackoverflow.com/questions/588089/hiding-textarea-resize-handle-in-safari
-    resize none
+//
+// form
+//   input, textarea
+//     border 0
+//     box-sizing border-box
+//     display block
+//     margin .625em 0
+//     width 100%
+//     &:focus
+//       outline none
+//   button
+//     display block
+//
+//   textarea
+//     min-height 3em
+//     // http://stackoverflow.com/questions/588089/hiding-textarea-resize-handle-in-safari
+//     resize none
