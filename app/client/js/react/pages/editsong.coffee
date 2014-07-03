@@ -71,6 +71,10 @@ class app.react.pages.EditSong
         @addSong()
 
       addSong: ->
+        if store.contains song
+          alert 'Song with such name and artist already exists.'
+          return
+
         errors = store.add song
         # TODO: Consider React helper for that.
         if errors.length
