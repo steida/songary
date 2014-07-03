@@ -1,5 +1,6 @@
 goog.provide 'app.songs.Store'
 
+goog.require 'app.songs.Song'
 goog.require 'goog.array'
 goog.require 'goog.events.EventTarget'
 
@@ -58,6 +59,15 @@ class app.songs.Store extends goog.events.EventTarget
     goog.array.find @songs, (song) ->
       song['urlArtist'] == route.params['urlArtist'] &&
       song['urlName'] == route.params['urlName']
+
+  ###*
+    @param {app.songs.Song} song
+    @return {boolean}
+  ###
+  contains: (song) ->
+    goog.array.some @songs, (s) ->
+      s.name == song.name &&
+      s.artist == song.artist
 
   ###*
     @private

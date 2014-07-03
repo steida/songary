@@ -52,3 +52,10 @@ suite 'app.songs.Store', ->
 
     test 'should return null', ->
       assert.isNull store.songByRoute params: urlArtist: 'a', urlName: 'b'
+
+  suite 'contains', ->
+    test 'should check if song with the same name and artist is in store', ->
+      song = new app.songs.Song 'a', 'b', 'lala'
+      assert.isFalse store.contains song
+      store.add song
+      assert.isTrue store.contains song
