@@ -32,6 +32,10 @@ class app.songs.Store extends goog.events.EventTarget
   ###
   add: (song) ->
     errors = song.validate()
+    if @contains song
+      errors.push new app.ValidationError null,
+        # TODO(steida): Localize.
+        'Song with such name and artist already exists.'
     return errors if errors.length
     @songs.push song
     @notify_()
