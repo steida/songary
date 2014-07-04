@@ -80,10 +80,10 @@ class app.songs.Song
   ###
   validate: ->
     ['name', 'artist', 'lyrics']
-      .filter (name) => !@[name].trim()
-      .map (name) =>
-        @MSG_PLEASE_FILL_OUT = goog.getMsg 'Please fill out {$name}.', name: name
-        new app.ValidationError name, @MSG_PLEASE_FILL_OUT
+      .filter (prop) => !@[prop].trim()
+      .map (prop) =>
+        @MSG_PLEASE_FILL_OUT = goog.getMsg 'Please fill out {$prop}.', prop: prop
+        new app.ValidationError prop, @MSG_PLEASE_FILL_OUT
 
   ###*
     Compute urls after set.
