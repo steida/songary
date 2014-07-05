@@ -17,12 +17,22 @@ class app.Storage extends este.labs.storage.Base
   load: (route, routes) ->
     switch route
       when routes.song
-        # NOTE(steida) Can be server side requested ofc.
-        @songsStore.song = @songsStore.songByRoute route
-    super route, routes
+        # This is simulation of long XHR load...
+        # We can also demonstrate "last click win" aka "pending navigation"
+        # just by clicking to another link. Previous loading will be canceled.
+        new goog.Promise (resolve, reject) ->
+          setTimeout resolve, 2000
+          return
+        .then =>
+          console.log 'Store updated.'
+          @songsStore.song = @songsStore.songByRoute route
+      else
+        super route, routes
 
-    # new goog.Promise (resolve, reject) ->
-    #   setTimeout resolve, 2000
-    #   return
-    # .then =>
-    #   console.log goog.now()
+
+    # Tohle je vec serializace...
+    # ###*
+    #   @param {app.songs.Song} song
+    # ###
+    # trimStrings: (song) ->
+    #   for key, value of song
