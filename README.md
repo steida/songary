@@ -14,9 +14,9 @@ For production, run ```gulp -p```
 How? Just read it, there are a lot of comments. 
 
 Principles:
-  - Storage should manipulates only with stores.
+  - Storage should manipulate only with stores.
   - Stores should manipulate only with models.
   - Models should be read only for React components.
-  - React components should change app state change only via stores.
+  - React components should change model state change only via stores.
   
   
