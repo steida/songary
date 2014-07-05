@@ -17,34 +17,36 @@ class app.react.pages.EditSong
 
       render: ->
         div className: 'new-song',
-          form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
+          form
+            # PATTERN(steida): React forms events bubbles, which is nice.
+            # onFormChange handler immediately stores form state for us.
+            onChange: @onFormChange
+            onSubmit: @onFormSubmit
+            ref: 'form'
+            role: 'form'
+          ,
             div className: 'form-group',
               input
                 autoFocus: true
                 className: 'form-control'
-                name: 'name'
-                onChange: @onFieldChange
-                placeholder: EditSong.MSG_SONG_NAME
-                type: 'text'
                 # PATTERN(steida): Don't use props for app model. Use stores.
                 # Stores should be prefetched by app.Storage.
-                value: store.newSong.name
+                defaultValue: store.newSong.name
+                name: 'name'
+                placeholder: EditSong.MSG_SONG_NAME
             div className: 'form-group',
               input
                 className: 'form-control'
-                onChange: @onFieldChange
+                defaultValue: store.newSong.artist
                 name: 'artist'
                 placeholder: EditSong.MSG_SONG_ARTIST
-                type: 'text'
-                value: store.newSong.artist
             div className: 'form-group',
               textarea
                 className: 'form-control'
-                onChange: @onFieldChange
+                defaultValue: store.newSong.lyrics
                 name: 'lyrics'
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
-                value: store.newSong.lyrics
               a
                 href: 'http://linkesoft.com/songbook/chordproformat.html'
                 target: '_blank'
@@ -62,7 +64,7 @@ class app.react.pages.EditSong
       componentWillUnmount: ->
         @chordproTextarea_.dispose()
 
-      onFieldChange: (e) ->
+      onFormChange: (e) ->
         # PATTERN(steida): All changes are immediatelly stored into stores.
         # Stores are asap synced with local/rest storages.
         store.setNewSong e.target.name, e.target.value
