@@ -1,4 +1,4 @@
-Songary App. My pet project for isomorphic React, Flux, etc.
+# Songary App. My pet project for isomorphic React, Flux, etc.
 
 Build with [Este.js](https://github.com/steida/este) dev stack.
 
@@ -8,3 +8,15 @@ Build with [Este.js](https://github.com/steida/este) dev stack.
 4. ```gulp```
 
 For production, run ```gulp -p```
+
+## Learn from code
+
+How? Just read it, there are a lot of comments. 
+
+Principles:
+  - Storage should manipulates only with stores.
+  - Stores should manipulate only with models.
+  - Models should be read only for React components.
+  - React components should change app state change only via stores.
+  
+  
