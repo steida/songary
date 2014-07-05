@@ -81,6 +81,7 @@ gulp.task 'compile-clientapp', ->
     compilerPath: paths.compiler
     compilerFlags:
       closure_entry_point: 'app.main'
+      language_in: 'ECMASCRIPT5_STRICT'
       externs: paths.externs
 
 gulp.task 'compile-serverapp', ->
@@ -88,6 +89,7 @@ gulp.task 'compile-serverapp', ->
     compilerPath: paths.compiler
     compilerFlags:
       closure_entry_point: 'server.main'
+      language_in: 'ECMASCRIPT5_STRICT'
       externs: paths.externs
         .concat este.getExterns dirs.nodeJsExterns
       # To have compiled code readable, so we can trace errors.
