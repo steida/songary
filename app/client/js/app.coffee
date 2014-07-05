@@ -10,17 +10,26 @@ class App
     @param {app.Title} appTitle
     @constructor
   ###
-  constructor: (router, routes, @reactApp, @element, @appTitle) ->
-    routes.addToEste router
-    routes.listen este.Routes.EventType.CHANGE, (e) => @syncUi()
-    router.start()
+  constructor: (router, routes, reactApp, element, appTitle) ->
 
-  ###*
-    @protected
-  ###
-  syncUi: ->
-    if @component
-      @component.forceUpdate()
-    else
-      @component = React.renderComponent @reactApp.create(), @element
-    document.title = @appTitle.get()
+    syncView = ->
+      if @component
+        @component.forceUpdate()
+      else
+        @component = React.renderComponent reactApp.create(), element
+      document.title = appTitle.get()
+
+    onRouterError = (e) ->
+      # NOTE(steida): Here we can handle various errors.
+      # For error from server, say something like "Try it later.",
+      # for client error, log them then reload browser probably.
+      # We can decide by: e.reason
+      alert e.reason
+      # NOTE(steida): App can be in wrong state, so reload it.
+      forceReloadToEnsureFreshScripts = true
+      location.reload forceReloadToEnsureFreshScripts
+
+    routes.addToEste  router
+    routes.listen este.Routes.EventType.CHANGE, syncView
+    router.listen este.Router.EventType.ERROR, onRouterError
+    router.start()

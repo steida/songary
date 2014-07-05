@@ -16,6 +16,11 @@ class app.songs.Store extends goog.events.EventTarget
     @songs = []
 
   ###*
+    @desc app.Title
+  ###
+  @MSG_HOME: goog.getMsg 'Songary | Your personal songbook'
+
+  ###*
     @type {Array.<app.songs.Song>}
   ###
   songs: null
@@ -33,20 +38,12 @@ class app.songs.Store extends goog.events.EventTarget
   add: (song) ->
     errors = song.validate()
     if @contains song
-      errors.push new app.ValidationError null,
-        # TODO(steida): Localize.
+      errors.push new app.ValidationError 'name',
         'Song with such name and artist already exists.'
     return errors if errors.length
     @songs.push song
     @notify_()
     []
-
-  # Tohle je vec serializace...
-  # ###*
-  #   @param {app.songs.Song} song
-  # ###
-  # trimStrings: (song) ->
-  #   for key, value of song
 
   ###*
     @param {app.songs.Song} song
