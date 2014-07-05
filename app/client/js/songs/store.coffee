@@ -14,6 +14,7 @@ class app.songs.Store extends goog.events.EventTarget
   constructor: ->
     super()
     @songs = []
+    @newSong = new app.songs.Song
 
   ###*
     @desc app.Title
@@ -24,6 +25,11 @@ class app.songs.Store extends goog.events.EventTarget
     @type {Array.<app.songs.Song>}
   ###
   songs: null
+
+  ###*
+    @type {app.songs.Song}
+  ###
+  newSong: null
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -69,6 +75,24 @@ class app.songs.Store extends goog.events.EventTarget
     goog.array.some @songs, (s) ->
       s.name == song.name &&
       s.artist == song.artist
+
+  ###*
+    @param {string} prop
+    @param {string} value
+  ###
+  setNewSong: (prop, value) ->
+    @newSong[prop] = value
+    @newSong.updateUrlNames()
+    @notify_()
+
+  ###*
+    @return {Array.<app.ValidationError>}
+  ###
+  addNewSong: ->
+    errors = @add @newSong
+    if !errors.length
+      @newSong = new app.songs.Song
+    errors
 
   ###*
     @private

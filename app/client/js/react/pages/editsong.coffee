@@ -13,8 +13,6 @@ class app.react.pages.EditSong
   constructor: (routes, store) ->
     {div,form,input,textarea,a,button} = React.DOM
 
-    song = new app.songs.Song
-
     @create = React.createClass
 
       render: ->
@@ -28,7 +26,9 @@ class app.react.pages.EditSong
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_NAME
                 type: 'text'
-                value: song.name
+                # PATTERN(steida): Don't use props for app model. Use stores.
+                # Stores should be prefetched by app.Storage.
+                value: store.newSong.name
             div className: 'form-group',
               input
                 className: 'form-control'
@@ -36,7 +36,7 @@ class app.react.pages.EditSong
                 name: 'artist'
                 placeholder: EditSong.MSG_SONG_ARTIST
                 type: 'text'
-                value: song.artist
+                value: store.newSong.artist
             div className: 'form-group',
               textarea
                 className: 'form-control'
@@ -44,7 +44,7 @@ class app.react.pages.EditSong
                 name: 'lyrics'
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
-                value: song.lyrics
+                value: store.newSong.lyrics
               a
                 href: 'http://linkesoft.com/songbook/chordproformat.html'
                 target: '_blank'
@@ -63,24 +63,26 @@ class app.react.pages.EditSong
         @chordproTextarea_.dispose()
 
       onFieldChange: (e) ->
-        song.setProp e.target.name, e.target.value
-        @forceUpdate()
+        # PATTERN(steida): All changes are immediatelly stored into stores.
+        # Stores are asap synced with local/rest storages.
+        store.setNewSong e.target.name, e.target.value
 
       onFormSubmit: (e) ->
         e.preventDefault()
         @addSong()
 
       addSong: ->
-        errors = store.add song
+        errors = store.addNewSong()
         # TODO: React helper for that.
         if errors.length
           alert errors[0].message
           field = this.refs['form'].getDOMNode().elements[errors[0].prop]
           field.focus() if field
           return
-        song = new app.songs.Song
         routes.home.redirect()
 
+  # PATTERN(steida): String localization. Remember, every string has to be
+  # wrapped with goog.getMsg method.
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_SONG_ARTIST: goog.getMsg 'Artist (or band)'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'

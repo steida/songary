@@ -59,3 +59,32 @@ suite 'app.songs.Store', ->
       assert.isFalse store.contains song
       store.add song
       assert.isTrue store.contains song
+
+  suite 'newSong', ->
+    test 'should be defined on store', ->
+      assert.instanceOf store.newSong, app.songs.Song
+
+  suite 'setNewSong', ->
+    test 'should set new song property', (done) ->
+      store.listen 'change', ->
+        assert.equal store.newSong.name, 'Name'
+        assert.equal store.newSong.urlName, 'name'
+        done()
+      store.setNewSong 'name', 'Name'
+
+  suite 'addNewSong', ->
+    test 'should add valid new song', ->
+      song = validSong()
+      store.newSong = song
+      errors = store.addNewSong()
+      assert.equal store.all()[0], song
+      assert.isFalse store.newSong == song
+      assert.deepEqual errors, []
+
+    test 'should not add invalid new song', ->
+      song = invalidSong()
+      store.newSong = song
+      errors = store.addNewSong()
+      assert.equal store.all().length, 0
+      assert.isTrue store.newSong == song
+      assert.deepEqual errors, ['error']

@@ -85,17 +85,6 @@ class app.songs.Song
         @MSG_PLEASE_FILL_OUT = goog.getMsg 'Please fill out {$prop}.', prop: prop
         new app.ValidationError prop, @MSG_PLEASE_FILL_OUT
 
-  ###*
-    Compute urls after set.
-  ###
   updateUrlNames: ->
     @urlName = este.string.toFancyUrl @name
     @urlArtist = este.string.toFancyUrl @artist
-
-  ###*
-    @param {string} prop
-    @param {string} value
-  ###
-  setProp: (prop, value) ->
-    @[prop] = value
-    @updateUrlNames()

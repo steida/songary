@@ -46,8 +46,3 @@ suite 'app.songs.Song', ->
       song.updateUrlNames()
       assert.equal song.urlName, 'hey-jude'
       assert.equal song.urlArtist, 'beatles'
-
-  suite 'setProp', ->
-    test 'should set property, then call updateUrlNames', ->
-      song.setProp 'name', 'Foo'
-      assert.equal song.urlName, 'foo'
