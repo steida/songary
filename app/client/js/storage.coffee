@@ -10,6 +10,15 @@ class app.Storage extends este.labs.storage.Base
     @extends {este.labs.storage.Base}
   ###
   constructor: (@songsStore) ->
+    @stores = [@songsStore]
+    @fetchStores()
+    @listenStores()
+
+  ###*
+    @type {Array.<goog.events.Listenable>}
+    @protected
+  ###
+  stores: null
 
   ###*
     @override
@@ -28,3 +37,23 @@ class app.Storage extends este.labs.storage.Base
           @songsStore.song = @songsStore.songByRoute route
       else
         super route, routes
+
+  ###*
+    NOTE(steida): Now plain browser localStorage is used to store and retrieve
+    app state snapshot. In future, we can leverage:
+    - http://git.yathit.com/ydn-db/wiki/Home
+    - https://github.com/swannodette/mori
+    - https://github.com/benjamine/jsondiffpatch
+    PATTERN(steida): This should be one place to change/sync app state. The goal
+    is to use http://en.wikipedia.org/wiki/Persistent_data_structure
+    with all its benefits.
+    @protected
+  ###
+  fetchStores: ->
+
+  ###*
+    @protected
+  ###
+  listenStores: ->
+    # for store in @stores
+    #   store.listen
