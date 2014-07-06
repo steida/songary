@@ -83,8 +83,6 @@ gulp.task 'compile-clientapp', ->
       externs: paths.externs
 
 gulp.task 'compile-serverapp', ->
-  console.log paths.externs.concat este.getNodeJsExterns()
-
   este.compile paths.js, 'app/server/build',
     compilerPath: paths.compiler
     compilerFlags:
