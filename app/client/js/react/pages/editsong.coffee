@@ -34,6 +34,8 @@ class app.react.pages.EditSong
                 defaultValue: store.newSong.name
                 name: 'name'
                 placeholder: EditSong.MSG_SONG_NAME
+                # PATTERN(steida): type text is default, so we need to write it.
+                # type: 'text'
             div className: 'form-group',
               input
                 className: 'form-control'
