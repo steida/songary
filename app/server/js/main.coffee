@@ -1,6 +1,7 @@
 goog.provide 'server.main'
 
 goog.require 'server.DiContainer'
+goog.require 'server.Storage'
 
 ###*
   @param {Object} config
@@ -28,6 +29,9 @@ server.main = (config) ->
       favicon: require 'static-favicon'
       bodyParser: require 'body-parser'
       methodOverride: require 'method-override'
+  ,
+    resolve: app.Storage
+    as: server.Storage
 
   container.resolveServerApp()
 
