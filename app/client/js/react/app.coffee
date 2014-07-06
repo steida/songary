@@ -22,10 +22,10 @@ class app.react.App
 
       render: ->
         div className: 'app',
-          header.create null
+          header.create()
           switch routes.active
-            when routes.home then home.create null
-            when routes.newSong then editSong.create null
-            when routes.song then song.create null
-            when routes.notFound then notFound.create null
-          footer.create null
+            when routes.home then home.create()
+            when routes.newSong then editSong.create()
+            when routes.song then song.create()
+            when routes.notFound then notFound.create()
+          footer.create()
