@@ -11,12 +11,12 @@ class app.Storage extends este.labs.storage.Base
     PATTERN(steida): This should be one place to change/sync app state.
     The goal is http://en.wikipedia.org/wiki/Persistent_data_structure,
     with all its benefits like global app undo etc.
+    @param {app.Stores} stores
     @param {app.songs.Store} songsStore
     @constructor
     @extends {este.labs.storage.Base}
   ###
-  constructor: (@songsStore) ->
-    @stores = [@songsStore]
+  constructor: (@stores, @songsStore) ->
     @tryCreateLocalStorage()
     @fetchStores()
     @listenStores()
@@ -28,7 +28,7 @@ class app.Storage extends este.labs.storage.Base
   @LOCALSTORAGE_KEY: 'songary'
 
   ###*
-    @type {Array.<app.Store>}
+    @type {app.Stores}
     @protected
   ###
   stores: null
@@ -52,7 +52,6 @@ class app.Storage extends este.labs.storage.Base
           setTimeout resolve, 2000
           return
         .then =>
-          # console.log 'Store updated.'
           @songsStore.song = @songsStore.songByRoute route
       else
         super route, routes
@@ -68,7 +67,7 @@ class app.Storage extends este.labs.storage.Base
   tryCreateLocalStorage: ->
     mechanism = goog.storage.mechanism.mechanismfactory
       .createHTML5LocalStorage Storage.LOCALSTORAGE_KEY
-    # Fot instance, Safari in private mode does not allow localStorage.
+    # For instance, Safari in private mode does not allow localStorage.
     return if !mechanism
     @localStorage = new goog.storage.Storage mechanism
 
@@ -77,18 +76,19 @@ class app.Storage extends este.labs.storage.Base
   ###
   fetchStores: ->
     return if !@localStorage
-    @stores.forEach (store) =>
+    @stores.all.forEach (store) =>
       json = @localStorage.get store.name
       return if !json
-      # TODO(steida): Try catch for case of wrong json data.
-      # Report error to https endpoint.
+      # TODO(steida): Try catch case of wrong json data. Report error to
+      # server.
       store.fromJson json
 
   ###*
     @protected
   ###
   listenStores: ->
-    return if !@localStorage
-    @stores.forEach (store) =>
-      store.listen 'change', =>
+    @stores.listen 'change', (e) =>
+      store = e.target
+      if @localStorage
         @localStorage.set store.name, store.toJson()
+      # TODO(steida): Server sync, consider diff.
