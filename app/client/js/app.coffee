@@ -1,7 +1,5 @@
 goog.provide 'App'
 
-goog.require 'goog.labs.userAgent.browser'
-
 class App
 
   ###*
@@ -53,15 +51,3 @@ class App
     routes.listen 'change', syncUI
     stores.listen 'change', syncUI
     router.start()
-
-    # ###*
-    #   @protected
-    # ###
-    # listenWindowStorage: ->
-    #   # TODO(steida): Fix IE http://stackoverflow.com/a/4679754
-    #   return if goog.labs.userAgent.browser.isIE
-    #   goog.events.listen window, 'storage', (e) =>
-    #
-    #
-    #
-    #

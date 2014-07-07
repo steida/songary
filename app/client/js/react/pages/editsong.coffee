@@ -17,38 +17,30 @@ class app.react.pages.EditSong
 
       render: ->
         div className: 'new-song',
-          form
-            # PATTERN(steida): React forms events bubbles, which is nice.
-            # onFormChange handler immediately stores form state for us.
-            onChange: @onFormChange
-            onSubmit: @onFormSubmit
-            ref: 'form'
-            role: 'form'
-          ,
+          form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
             div className: 'form-group',
               input
                 autoFocus: true
                 className: 'form-control'
-                # PATTERN(steida): Don't use props for app model. Use stores.
-                # Stores should be prefetched by app.Storage.
-                defaultValue: store.newSong.name
                 name: 'name'
+                onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_NAME
-                # PATTERN(steida): type text is default, so we need to write it.
-                # type: 'text'
+                value: store.newSong.name
             div className: 'form-group',
               input
                 className: 'form-control'
-                defaultValue: store.newSong.artist
                 name: 'artist'
+                onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_ARTIST
+                value: store.newSong.artist
             div className: 'form-group',
               textarea
                 className: 'form-control'
-                defaultValue: store.newSong.lyrics
                 name: 'lyrics'
+                onChange: @onFieldChange
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
+                value: store.newSong.lyrics
               a
                 href: 'http://linkesoft.com/songbook/chordproformat.html'
                 target: '_blank'
@@ -66,14 +58,14 @@ class app.react.pages.EditSong
       componentWillUnmount: ->
         @chordproTextarea_.dispose()
 
-      onFormChange: (e) ->
-        # PATTERN(steida): All changes are immediatelly stored into stores.
-        # Stores are asap synced with local/rest storages.
-        store.setNewSong e.target.name, e.target.value
-
       onFormSubmit: (e) ->
         e.preventDefault()
         @addSong()
+
+      onFieldChange: (e) ->
+        # PATTERN(steida): All changes are immediatelly stored into store.
+        # Store is asap synced with local/rest storages.
+        store.setNewSong e.target.name, e.target.value
 
       addSong: ->
         errors = store.addNewSong()
