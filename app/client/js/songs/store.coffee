@@ -1,35 +1,34 @@
 goog.provide 'app.songs.Store'
 
+goog.require 'app.Store'
 goog.require 'app.songs.Song'
-goog.require 'goog.array'
-goog.require 'goog.events.EventTarget'
 
-class app.songs.Store extends goog.events.EventTarget
+class app.songs.Store extends app.Store
 
   ###*
     @constructor
-    @extends {goog.events.EventTarget}
-    @final
+    @extends {app.Store}
+    @implements {SongsStoreProps}
   ###
   constructor: ->
-    super()
+    super 'songs'
     @songs = []
     @newSong = new app.songs.Song
+
+  ###*
+    @type {Array.<app.songs.Song>}
+  ###
+  @songs: null
+
+  ###*
+    @type {app.songs.Song}
+  ###
+  @newSong: null
 
   ###*
     @desc app.Title
   ###
   @MSG_HOME: goog.getMsg 'Songary | Your personal songbook'
-
-  ###*
-    @type {Array.<app.songs.Song>}
-  ###
-  songs: null
-
-  ###*
-    @type {app.songs.Song}
-  ###
-  newSong: null
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -48,7 +47,7 @@ class app.songs.Store extends goog.events.EventTarget
         'Song with such name and artist already exists.'
     return errors if errors.length
     @songs.push song
-    @notify_()
+    @notify()
     []
 
   ###*
@@ -56,7 +55,7 @@ class app.songs.Store extends goog.events.EventTarget
   ###
   delete: (song) ->
     goog.array.remove @songs, song
-    @notify_()
+    @notify()
 
   ###*
     @param {este.Route} route
@@ -83,7 +82,7 @@ class app.songs.Store extends goog.events.EventTarget
   setNewSong: (prop, value) ->
     @newSong[prop] = value
     @newSong.updateUrlNames()
-    @notify_()
+    @notify()
 
   ###*
     @return {Array.<app.ValidationError>}
@@ -95,7 +94,15 @@ class app.songs.Store extends goog.events.EventTarget
     errors
 
   ###*
-    @private
+    @override
   ###
-  notify_: ->
-    @dispatchEvent 'change'
+  toJson: ->
+    newSong: @newSong
+    songs: @songs
+
+  ###*
+    @override
+  ###
+  fromJson: (json) ->
+    @songs = json.songs.map @instanceFromJson app.songs.Song
+    @newSong = @instanceFromJson app.songs.Song, json.newSong
