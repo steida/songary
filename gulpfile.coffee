@@ -32,6 +32,7 @@ paths =
   ]
   compiler: 'bower_components/closure-compiler/compiler.jar'
   externs: [
+    'app/client/js/externs.js'
     'bower_components/react-externs/externs.js'
   ]
   thirdParty:
@@ -80,14 +81,14 @@ gulp.task 'compile-clientapp', ->
     compilerPath: paths.compiler
     compilerFlags:
       closure_entry_point: 'app.main'
-      externs: paths.externs
       define: [
         'goog.array.ASSUME_NATIVE_FUNCTIONS=true'
         'goog.dom.ASSUME_STANDARDS_MODE=true'
-        # 'goog.json.USE_NATIVE_JSON=true'
+        'goog.json.USE_NATIVE_JSON=true'
         # 'goog.net.XmlHttpDefines.ASSUME_NATIVE_XHR=true'
         'goog.style.GET_BOUNDING_CLIENT_RECT_ALWAYS_EXISTS=true'
       ]
+      externs: paths.externs
 
 gulp.task 'compile-serverapp', ->
   este.compile paths.js, 'app/server/build',
