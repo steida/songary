@@ -45,7 +45,8 @@ class app.Store extends goog.events.EventTarget
       instance
 
   ###*
-    @protected
+    PATTERN(steida): Whenever store changes anything, just call notify to
+    dispatch change event.
   ###
   notify: ->
     @dispatchEvent 'change'
