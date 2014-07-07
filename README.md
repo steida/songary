@@ -11,7 +11,7 @@ For production, run ```gulp -p```
 
 ## Learn from code
 
-How? Just read it, there are a lot of comments. 
+How? Just read it, there is a plethora of comments. 
 
 Principles:
   - client/mobile/offline first
