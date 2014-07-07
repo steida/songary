@@ -11,6 +11,8 @@ class app.Stores extends goog.events.EventTarget
   ###
   constructor: (songsStore) ->
     super()
+    # PATTERN(steida): This enables event bubbling, so we can listen
+    # all various stores events at app.Stores instance.
     songsStore.setParentEventTarget @
 
     ###*
