@@ -29,6 +29,9 @@ suite 'app.Store', ->
     test 'should return instance factory, useful for Array map', ->
       SomeClass = ->
       json = a: 'a', b: 'b'
-      instance = store.instanceFromJson(SomeClass) json
+      create = store.instanceFromJson SomeClass
+      instance = create json
+      instance2 = create json
+      assert.notEqual instance, instance2
       assert.instanceOf instance, SomeClass
       assert.deepEqual instance, json

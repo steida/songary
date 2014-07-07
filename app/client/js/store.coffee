@@ -33,16 +33,15 @@ class app.Store extends goog.events.EventTarget
   ###*
     @param {Function} constructor
     @param {Object=} json
-    @return {Function}
+    @return {*}
   ###
   instanceFromJson: (constructor, json) ->
-    instance = new constructor
-    if json
-      goog.mixin instance, json
+    if arguments.length == 2
+      instance = new constructor
+      goog.mixin instance, json || {}
       return instance
-    (json) ->
-      goog.mixin instance, json
-      instance
+    (json) =>
+      @instanceFromJson constructor, json
 
   ###*
     PATTERN(steida): Whenever store changes anything, just call notify to
