@@ -6,13 +6,10 @@ goog.require 'este.string'
 class app.songs.Song
 
   ###*
-    @param {string=} name
-    @param {string=} artist
-    @param {string=} lyrics
     @constructor
     @implements {SongProps}
   ###
-  constructor: (@name = '', @artist = '', @lyrics = '') ->
+  constructor: ->
 
   ###*
     ID is an empty string until first sync aka user is logged or created.
