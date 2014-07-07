@@ -110,7 +110,6 @@ class app.Storage extends este.labs.storage.Base
   ###
   listenStores: ->
     @stores.listen 'change', (e) =>
-      console.log 'store changed'
       store = e.target
       if @localStorage
         # TODO(steida): Try/Catch in case of error. Report error to server.
