@@ -91,6 +91,7 @@ class app.songs.Store extends app.Store
     errors = @add @newSong
     if !errors.length
       @newSong = new app.songs.Song
+      @notify()
     errors
 
   ###*
