@@ -26,6 +26,6 @@ class app.react.App
           switch routes.active
             when routes.home then home.create()
             when routes.newSong then editSong.create()
-            when routes.song then song.create()
+            when routes.mySong then song.create()
             when routes.notFound then notFound.create()
           footer.create()

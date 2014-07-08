@@ -19,10 +19,7 @@ class app.react.pages.Home
           a href: routes.newSong.createUrl(), Home.MSG_FOO
           ul null, songsStore.all().map (song, i) ->
             li key: i,
-              a href: routes.song.createUrl(song),
+              a href: routes.mySong.createUrl(song),
                 "#{song.name} [#{song.artist}]"
 
-  ###*
-    @desc app.home.index.react.Page
-  ###
   @MSG_FOO: goog.getMsg 'create new song'

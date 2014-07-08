@@ -14,5 +14,6 @@ class app.Routes extends este.Routes
 
     @home = @route '/'
     @newSong = @route '/@me/songs/new'
-    @song = @route '/@me/songs/:urlArtist/:urlName'
+    @mySong = @route '/@me/songs/:urlArtist/:urlName'
+    @editMySong = @route '/@me/songs/:urlArtist/:urlName/edit'
     @notFound = @route '*'

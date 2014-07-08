@@ -25,9 +25,6 @@ class app.songs.Store extends app.Store
   ###
   @newSong: null
 
-  ###*
-    @desc app.Title
-  ###
   @MSG_HOME: goog.getMsg 'Songary | Your personal songbook'
 
   ###*

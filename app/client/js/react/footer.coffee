@@ -14,8 +14,4 @@ class app.react.Footer
       render: ->
         footer null, Footer.MSG_FOO
 
-  ###*
-    @desc app.react.Footer
-  ###
-  # TODO: Here will be footer.
   @MSG_FOO: goog.getMsg ''

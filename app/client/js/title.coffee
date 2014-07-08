@@ -16,24 +16,14 @@ class app.Title
     switch @routes.active
       when @routes.home then Title.MSG_HOME
       when @routes.newSong then Title.MSG_NEW_SONG
-      when @routes.song then @getSongTitle()
+      when @routes.mySong then @getSongTitle()
       else ''
 
-  ###*
-    @desc app.Title
-  ###
   @MSG_HOME: goog.getMsg 'Songary | Your personal songbook'
-
-  ###*
-    @desc app.Title
-  ###
   @MSG_NEW_SONG: goog.getMsg 'New Song | Songary'
 
   getSongTitle: ->
     song = @songsStore.song
-    ###*
-      @desc app.Title
-    ###
     Title.MSG_SONG = goog.getMsg '{$name} - {$artist} | Songary',
       name: song?.name
       artist: song?.artist
