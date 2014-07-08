@@ -47,16 +47,7 @@ class app.Storage extends este.labs.storage.Base
   load: (route, routes) ->
     switch route
       when routes.song
-        # This is simulation of long XHR load...
-        # We can also demonstrate "last click win" aka "pending navigation"
-        # just by click to another link. Previous load will be canceled.
-        new goog.Promise (resolve, reject) ->
-          setTimeout resolve, 2000
-          return
-        .then =>
-          @songsStore.song = @songsStore.songByRoute route
-      else
-        super route, routes
+        @songsStore.song = @songsStore.songByRoute route
 
   ###*
     NOTE(steida): Plain browser localStorage is used to store and retrieve
@@ -76,6 +67,7 @@ class app.Storage extends este.labs.storage.Base
     true
 
   ###*
+    NOTE(steida): This sync app state across tabs/windows.
     @protected
   ###
   updateStoreOnLocalStorageChange: ->

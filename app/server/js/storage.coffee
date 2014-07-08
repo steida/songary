@@ -14,4 +14,3 @@ class server.Storage extends este.labs.storage.Base
     @override
   ###
   load: (route, routes) ->
-    super route, routes
