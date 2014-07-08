@@ -46,7 +46,7 @@ class app.Storage extends este.labs.storage.Base
   ###
   load: (route, routes) ->
     switch route
-      when routes.mySong
+      when routes.mySong, routes.editMySong
         @songsStore.song = @songsStore.songByRoute route
 
   ###*

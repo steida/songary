@@ -21,11 +21,16 @@ class app.songs.Store extends app.Store
   @songs: null
 
   ###*
+    Not yet saved new song.
     @type {app.songs.Song}
   ###
   @newSong: null
 
-  @MSG_HOME: goog.getMsg 'Songary | Your personal songbook'
+  ###*
+    Already saved song set by storage.
+    @type {app.songs.Song}
+  ###
+  @song: null
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -34,18 +39,25 @@ class app.songs.Store extends app.Store
     @songs
 
   ###*
-    @param {app.songs.Song} song
+    PATTERN(steida): This is example why it's good to manipulate app model only
+    through stores. We need to validate both song and songs, and we need to
+    change not only the model. Stores ftw.
     @return {Array.<app.ValidationError>}
   ###
-  add: (song) ->
-    errors = song.validate()
-    if @contains song
+  addNewSong: ->
+    errors = @newSong.validate()
+    if @contains @newSong
       errors.push new app.ValidationError 'name',
         'Song with such name and artist already exists.'
     return errors if errors.length
-    @songs.push song
+    @songs.push @newSong
+    @newSong = new app.songs.Song
     @notify()
     []
+
+  saveSong: ->
+    errors = @song.validate()
+    return errors if errors.length
 
   ###*
     @param {app.songs.Song} song
@@ -73,23 +85,14 @@ class app.songs.Store extends app.Store
       s.artist == song.artist
 
   ###*
+    @param {app.songs.Song} song
     @param {string} prop
     @param {string} value
   ###
-  setNewSong: (prop, value) ->
-    @newSong[prop] = value
-    @newSong.updateUrlNames()
+  updateSong: (song, prop, value) ->
+    song[prop] = value
+    song.updateUrlNames()
     @notify()
-
-  ###*
-    @return {Array.<app.ValidationError>}
-  ###
-  addNewSong: ->
-    errors = @add @newSong
-    if !errors.length
-      @newSong = new app.songs.Song
-      @notify()
-    errors
 
   ###*
     @override
@@ -102,5 +105,5 @@ class app.songs.Store extends app.Store
     @override
   ###
   fromJson: (json) ->
-    @songs = json.songs.map @instanceFromJson app.songs.Song
     @newSong = @instanceFromJson app.songs.Song, json.newSong
+    @songs = json.songs.map @instanceFromJson app.songs.Song

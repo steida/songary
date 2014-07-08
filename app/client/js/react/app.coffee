@@ -25,7 +25,7 @@ class app.react.App
           header.create()
           switch routes.active
             when routes.home then home.create()
-            when routes.newSong then editSong.create()
+            when routes.newSong, routes.editMySong then editSong.create()
             when routes.mySong then song.create()
             when routes.notFound then notFound.create()
           footer.create()

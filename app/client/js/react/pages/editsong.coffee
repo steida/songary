@@ -13,43 +13,61 @@ class app.react.pages.EditSong
   constructor: (routes, store) ->
     {div,form,input,textarea,a,button} = React.DOM
 
+    editMode = false
+    song = null
+
     @create = React.createClass
 
       render: ->
+        editMode = routes.active == routes.editMySong
+        song = if editMode then store.song else store.newSong
+
         div className: 'new-song',
           form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
             div className: 'form-group',
               input
-                autoFocus: true
+                autoFocus: !editMode
                 className: 'form-control'
+                disabled: editMode
                 name: 'name'
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_NAME
-                value: store.newSong.name
+                value: song.name
             div className: 'form-group',
               input
                 className: 'form-control'
+                disabled: editMode
                 name: 'artist'
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_ARTIST
-                value: store.newSong.artist
+                value: song.artist
             div className: 'form-group',
               textarea
+                autoFocus: editMode
                 className: 'form-control'
                 name: 'lyrics'
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
-                value: store.newSong.lyrics
+                value: song.lyrics
               a
+                className: 'help-block'
                 href: 'http://linkesoft.com/songbook/chordproformat.html'
                 target: '_blank'
               , EditSong.MSG_HOW_TO_WRITE_LYRICS
-            div className: 'form-group',
+            div className: 'form-group horizontal',
               button
                 className: 'btn btn-default'
-                type: 'submit'
-              , EditSong.MSG_CREATE_NEW_SONG
+              , if editMode
+                  EditSong.MSG_BACK_TO_SONGS
+                else
+                  EditSong.MSG_CREATE_NEW_SONG
+              # TODO(steida): Non submit button, handle click.
+              editMode && button
+                className: 'btn btn-danger'
+                onClick: @onDeleteButtonClick
+                type: 'button'
+              , EditSong.MSG_DELETE
 
       componentDidMount: ->
         @chordproTextarea_ = new goog.ui.Textarea ''
@@ -58,18 +76,20 @@ class app.react.pages.EditSong
       componentWillUnmount: ->
         @chordproTextarea_.dispose()
 
-      onFormSubmit: (e) ->
-        e.preventDefault()
-        @addSong()
-
       onFieldChange: (e) ->
         # PATTERN(steida): All changes are immediatelly stored into store.
         # Store is asap synced with local/rest storages.
-        store.setNewSong e.target.name, e.target.value
+        goog.asserts.assertInstanceof song, app.songs.Song
+        store.updateSong song, e.target.name, e.target.value
 
-      addSong: ->
-        errors = store.addNewSong()
-        # TODO: React helper for that.
+      onFormSubmit: (e) ->
+        e.preventDefault()
+        @saveSong()
+
+      saveSong: ->
+        # PATTERN(steida): Edited model/song is stored immediatelly.
+        errors = if editMode then song.validate() else store.addNewSong()
+        # TODO(steida): Reusable React helper/mixin/whatever.
         if errors.length
           alert errors[0].message
           field = this.refs['form'].getDOMNode().elements[errors[0].prop]
@@ -77,10 +97,18 @@ class app.react.pages.EditSong
           return
         routes.home.redirect()
 
+      onDeleteButtonClick: ->
+        return if not confirm EditSong.MSG_DELETE_QUESTION
+        store.delete song
+        routes.home.redirect()
+
   # PATTERN(steida): String localization. Remember, every string has to be
   # wrapped with goog.getMsg method.
-  @MSG_SONG_NAME: goog.getMsg 'Song name'
-  @MSG_SONG_ARTIST: goog.getMsg 'Artist (or band)'
-  @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'
+  @MSG_BACK_TO_SONGS: goog.getMsg 'Back to Songs'
   @MSG_CREATE_NEW_SONG: goog.getMsg 'Add new song'
+  @MSG_DELETE: goog.getMsg 'Delete'
+  @MSG_DELETE_QUESTION: goog.getMsg 'Are you sure?'
   @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to write lyrics'
+  @MSG_SONG_ARTIST: goog.getMsg 'Artist (or band)'
+  @MSG_SONG_NAME: goog.getMsg 'Song name'
+  @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'
