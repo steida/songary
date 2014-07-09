@@ -22,7 +22,7 @@ class app.react.pages.EditSong
         editMode = routes.active == routes.editMySong
         song = if editMode then store.song else store.newSong
 
-        div className: 'new-song',
+        div className: 'edit-song',
           form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
             div className: 'form-group',
               input
