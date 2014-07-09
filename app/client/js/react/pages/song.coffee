@@ -24,8 +24,10 @@ class app.react.pages.Song
           div
             className: 'lyrics'
             dangerouslySetInnerHTML: '__html': @getDangerousLyricsHtml()
-          a href: routes.editMySong.createUrl(store.song),
-            Song.MSG_EDIT_SONG
+          a
+            className: 'btn btn-default'
+            href: routes.editMySong.createUrl(store.song),
+          , Song.MSG_EDIT_SONG
 
       getDangerousLyricsHtml: ->
         goog.string

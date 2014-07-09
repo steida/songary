@@ -20,6 +20,9 @@ class app.react.pages.Home
             li key: i,
               a href: routes.mySong.createUrl(song),
                 "#{song.name} [#{song.artist}]"
-          a href: routes.newSong.createUrl(), Home.MSG_ADD_NEW_SONG
+          a
+            className: 'btn btn-default'
+            href: routes.newSong.createUrl()
+          , Home.MSG_ADD_NEW_SONG
 
   @MSG_ADD_NEW_SONG: goog.getMsg 'add new song'
