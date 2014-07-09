@@ -36,9 +36,13 @@ suite 'app.songs.Song', ->
         message: 'Please fill out lyrics.'
       ]
 
-  suite 'updateUrlNames', ->
-    test 'should update urlName and urlArtist', ->
-      song = createSong 'Hey Jude', 'Beatles', ''
-      song.updateUrlNames()
-      assert.equal song.urlName, 'hey-jude'
-      assert.equal song.urlArtist, 'beatles'
+  suite 'update', ->
+    test 'should ensure model state', ->
+      song = new Song
+      song.name = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+      song.artist = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+      song.lyrics = new Array(32001).join 'a'
+      song.update()
+      assert.equal song.urlName, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+      assert.equal song.urlArtist, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+      assert.equal song.lyrics.length, 32000

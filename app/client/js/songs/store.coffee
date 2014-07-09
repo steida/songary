@@ -91,7 +91,7 @@ class app.songs.Store extends app.Store
   ###
   updateSong: (song, prop, value) ->
     song[prop] = value
-    song.updateUrlNames()
+    song.update()
     @notify()
 
   ###*

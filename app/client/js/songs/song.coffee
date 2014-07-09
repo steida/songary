@@ -72,6 +72,10 @@ class app.songs.Song
           prop: prop
         new app.ValidationError prop, Song.MSG_PLEASE_FILL_OUT
 
-  updateUrlNames: ->
+  update: ->
+    # PATTERN(steida): Look, we don't need to use form field max length.
+    @name = @name.slice 0, 30
+    @artist = @artist.slice 0, 60
+    @lyrics = @lyrics.slice 0, 32000
     @urlName = este.string.toFancyUrl @name
     @urlArtist = este.string.toFancyUrl @artist
