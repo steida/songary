@@ -12,12 +12,20 @@ class app.Storage extends este.labs.storage.Base
     PATTERN(steida): This should be one place to change/sync app state.
     The goal is http://en.wikipedia.org/wiki/Persistent_data_structure,
     with all its benefits like global app undo etc.
-    @param {app.Stores} stores
     @param {app.songs.Store} songsStore
     @constructor
     @extends {este.labs.storage.Base}
   ###
-  constructor: (@stores, @songsStore) ->
+  constructor: (@songsStore) ->
+    super()
+
+    ###*
+      @type {Array.<app.Store>}
+    ###
+    @stores = [
+      @songsStore
+    ]
+
     if @tryCreateLocalStorage()
       @updateStoreOnLocalStorageChange()
     @fetchStores()
@@ -28,12 +36,6 @@ class app.Storage extends este.labs.storage.Base
     @type {string}
   ###
   @LOCALSTORAGE_KEY: 'songary'
-
-  ###*
-    @type {app.Stores}
-    @protected
-  ###
-  stores: null
 
   ###*
     @type {goog.storage.Storage}
@@ -78,7 +80,7 @@ class app.Storage extends este.labs.storage.Base
     goog.events.listen window, 'storage', (e) =>
       browserEvent = e.getBrowserEvent()
       storeName = browserEvent.key.split('::')[1]
-      store = goog.array.find @stores.all, (store) -> store.name == storeName
+      store = goog.array.find @stores, (store) -> store.name == storeName
       return if !store
       # TODO(steida): Try/Catch in case of error. Report error to server.
       json = JSON.parse browserEvent.newValue
@@ -91,7 +93,7 @@ class app.Storage extends este.labs.storage.Base
   ###
   fetchStores: ->
     return if !@localStorage
-    @stores.all.forEach (store) =>
+    @stores.forEach (store) =>
       json = @localStorage.get store.name
       return if !json
       # TODO(steida): Try/Catch in case of error. Report error to server.
@@ -101,9 +103,18 @@ class app.Storage extends este.labs.storage.Base
     @protected
   ###
   listenStores: ->
-    @stores.listen 'change', (e) =>
-      store = e.target
-      if @localStorage
-        # TODO(steida): Try/Catch in case of error. Report error to server.
-        @localStorage.set store.name, store.toJson()
-      # TODO(steida): Server sync, consider diff.
+    @stores.forEach (store) =>
+      store.listen 'change', (e) =>
+        store = e.target
+        if @localStorage
+          # TODO(steida): Try/Catch in case of error. Report error to server.
+          @localStorage.set store.name, store.toJson()
+        @notify()
+        # TODO(steida): Server sync, consider diff.
+
+  ###*
+    PATTERN(steida): Whenever store changes anything, just call notify to
+    dispatch change event.
+  ###
+  notify: ->
+    @dispatchEvent 'change'

@@ -8,10 +8,10 @@ class App
     @param {app.react.App} reactApp
     @param {Element} element
     @param {app.Title} appTitle
-    @param {app.Stores} stores
+    @param {app.Storage} storage
     @constructor
   ###
-  constructor: (router, routes, reactApp, element, appTitle, stores) ->
+  constructor: (router, routes, reactApp, element, appTitle, storage) ->
 
     reactAppComponent = null
 
@@ -49,5 +49,5 @@ class App
     # Don't worry about performance, all data should be fetched already.
     # Only data supposed to be shown are processed with React virtual DOM diff.
     routes.listen 'change', syncUI
-    stores.listen 'change', syncUI
+    storage.listen 'change', syncUI
     router.start()
