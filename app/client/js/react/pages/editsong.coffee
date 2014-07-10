@@ -62,7 +62,6 @@ class app.react.pages.EditSong
                   EditSong.MSG_BACK_TO_SONGS
                 else
                   EditSong.MSG_CREATE_NEW_SONG
-              # TODO(steida): Non submit button, handle click.
               editMode && button
                 className: 'btn btn-danger'
                 onClick: @onDeleteButtonClick
