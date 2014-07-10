@@ -11,7 +11,7 @@ class app.react.pages.EditSong
     @constructor
   ###
   constructor: (routes, store) ->
-    {div,form,input,textarea,a,button} = React.DOM
+    {p,div,form,input,textarea,a,button} = React.DOM
 
     editMode = false
     song = null
@@ -50,11 +50,11 @@ class app.react.pages.EditSong
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
                 value: song.lyrics
-              a
-                className: 'help-block'
-                href: 'http://linkesoft.com/songbook/chordproformat.html'
-                target: '_blank'
-              , EditSong.MSG_HOW_TO_WRITE_LYRICS
+              p className: 'help-block',
+                a
+                  href: 'http://linkesoft.com/songbook/chordproformat.html'
+                  target: '_blank'
+                , EditSong.MSG_HOW_TO_WRITE_LYRICS
             div className: 'form-group horizontal',
               button
                 className: 'btn btn-default'
