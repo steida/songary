@@ -1,6 +1,7 @@
 goog.provide 'app.react.pages.Song'
 
 goog.require 'app.songs.Song'
+goog.require 'goog.dom.ViewportSizeMonitor'
 goog.require 'goog.string'
 
 class app.react.pages.Song
@@ -16,24 +17,59 @@ class app.react.pages.Song
 
     @create = React.createClass
 
+      ###* @type {goog.dom.ViewportSizeMonitor} ###
+      viewportMonitor: null
+
       render: ->
         return notFound.create null if !store.song
 
         div className: 'song',
-          h1 null, "#{store.song.name} [#{store.song.artist}]"
+          # h2 null, "#{store.song.name} [#{store.song.artist}]"
           div
             className: 'lyrics'
-            dangerouslySetInnerHTML: '__html': @getDangerousLyricsHtml()
-          a
-            className: 'btn btn-default'
-            href: routes.editMySong.createUrl(store.song),
-          , Song.MSG_EDIT_SONG
+            dangerouslySetInnerHTML: '__html': @lyricsHtml()
+            ref: 'lyrics'
+          # a
+          #   className: 'btn btn-default'
+          #   href: routes.editMySong.createUrl(store.song),
+          # , Song.MSG_EDIT_SONG
 
-      getDangerousLyricsHtml: ->
+      lyricsHtml: ->
         goog.string
-          # Not dangerous html anymore, we escaped.
           .htmlEscape store.song.lyrics
           .replace /\[([^\]]+)\]/g, (str, chord) ->
             "<sup>#{chord}</sup>"
+
+      componentDidMount: ->
+        @setLyricsMaxFontSize()
+        @viewportMonitor = new goog.dom.ViewportSizeMonitor
+        @viewportMonitor.listen 'resize', => @setLyricsMaxFontSize()
+
+      componentWillUnmount: ->
+        @viewportMonitor.dispose()
+
+      componentDidUpdate: ->
+        # TODO(steida): pro plus a minus buttony pro font size
+        # @setLyricsMaxFontSize()
+
+      ###*
+        Detect max lyrics fontSize to fit into screen.
+        TODO(steida): Describe strategies.
+      ###
+      setLyricsMaxFontSize: ->
+        el = @refs['lyrics'].getDOMNode()
+        originalVisibility = el.style.visibility
+        el.style.visibility = 'hidden'
+        fontSize = 6
+        while fontSize != 55
+          el.style.fontSize = fontSize + 'px'
+          scrollbarIsVisible =
+            el.scrollHeight > el.offsetHeight ||
+            el.scrollWidth > el.offsetWidth
+          if scrollbarIsVisible
+            el.style.fontSize = (fontSize - 1) + 'px'
+            break
+          fontSize++
+        el.style.visibility = originalVisibility
 
   @MSG_EDIT_SONG: goog.getMsg 'Edit song'
