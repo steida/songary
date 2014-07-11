@@ -15,7 +15,7 @@ class app.Title
   get: ->
     switch @routes.active
       when @routes.home then Title.MSG_HOME
-      when @routes.newSong then Title.MSG_NEW_SONG
+      when @routes.myNewSong then Title.MSG_NEW_SONG
       when @routes.mySong then @getSongTitle()
       else ''
 

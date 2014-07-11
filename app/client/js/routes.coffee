@@ -14,7 +14,7 @@ class app.Routes extends este.Routes
 
     @home = @route '/'
     # TODO(steida): Rename it to newMySong.
-    @newSong = @route '/@me/songs/new'
+    @myNewSong = @route '/@me/songs/new'
     @mySong = @route '/@me/songs/:urlArtist/:urlName'
     @editMySong = @route '/@me/songs/:urlArtist/:urlName/edit'
     @notFound = @route '*'

@@ -22,7 +22,7 @@ class app.react.pages.Home
                 "#{song.name} [#{song.artist}]"
           a
             className: 'btn btn-default'
-            href: routes.newSong.createUrl()
+            href: routes.myNewSong.createUrl()
           , Home.MSG_ADD_NEW_SONG
 
   @MSG_ADD_NEW_SONG: goog.getMsg 'add new song'
