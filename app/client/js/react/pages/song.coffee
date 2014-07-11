@@ -43,14 +43,17 @@ class app.react.pages.Song
             "<sup>#{chord}</sup>"
 
       componentDidMount: ->
-        goog.dom.classlist.add document.body, 'active-song'
+        @toggleActive true
         @setLyricsMaxFontSize()
         @viewportMonitor = new goog.dom.ViewportSizeMonitor
         @viewportMonitor.listen 'resize', => @setLyricsMaxFontSize()
 
       componentWillUnmount: ->
-        goog.dom.classlist.remove document.body, 'active-song'
+        @toggleActive false
         @viewportMonitor.dispose()
+
+      toggleActive: (enabled) ->
+        goog.dom.classlist.enable document.body, 'active-song', enabled
 
       componentDidUpdate: ->
         # TODO(steida): Implement fontSize increase and decrease.
