@@ -2,6 +2,7 @@ goog.provide 'app.react.pages.Song'
 
 goog.require 'app.songs.Song'
 goog.require 'goog.dom.ViewportSizeMonitor'
+goog.require 'goog.dom.classlist'
 goog.require 'goog.string'
 
 class app.react.pages.Song
@@ -24,6 +25,7 @@ class app.react.pages.Song
         return notFound.create null if !store.song
 
         div className: 'song',
+          # TODO(steida): Show details on tap/click.
           # h2 null, "#{store.song.name} [#{store.song.artist}]"
           div
             className: 'lyrics'
@@ -41,15 +43,17 @@ class app.react.pages.Song
             "<sup>#{chord}</sup>"
 
       componentDidMount: ->
+        goog.dom.classlist.add document.body, 'active-song'
         @setLyricsMaxFontSize()
         @viewportMonitor = new goog.dom.ViewportSizeMonitor
         @viewportMonitor.listen 'resize', => @setLyricsMaxFontSize()
 
       componentWillUnmount: ->
+        goog.dom.classlist.remove document.body, 'active-song'
         @viewportMonitor.dispose()
 
       componentDidUpdate: ->
-        # TODO(steida): pro plus a minus buttony pro font size
+        # TODO(steida): Implement fontSize increase and decrease.
         # @setLyricsMaxFontSize()
 
       ###*
@@ -73,3 +77,5 @@ class app.react.pages.Song
         el.style.visibility = originalVisibility
 
   @MSG_EDIT_SONG: goog.getMsg 'Edit song'
+
+  name: 'song'
