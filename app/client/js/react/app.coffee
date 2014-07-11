@@ -23,9 +23,12 @@ class app.react.App
       render: ->
         div className: 'app',
           header.create()
-          switch routes.active
-            when routes.home then home.create()
-            when routes.myNewSong, routes.editMySong then editSong.create()
-            when routes.mySong then song.create()
-            when routes.notFound then notFound.create()
+          @activePage().create()
           footer.create()
+
+      activePage: ->
+        switch routes.active
+          when routes.home then home
+          when routes.myNewSong, routes.editMySong then editSong
+          when routes.mySong then song
+          when routes.notFound then notFound
