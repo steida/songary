@@ -26,15 +26,15 @@ class app.react.pages.Song
 
         div className: 'song',
           # TODO(steida): Show details on tap/click.
-          # h2 null, "#{store.song.name} [#{store.song.artist}]"
+          h2 null, "#{store.song.name} [#{store.song.artist}]"
           div
             className: 'lyrics'
             dangerouslySetInnerHTML: '__html': @lyricsHtml()
             ref: 'lyrics'
-          # a
-          #   className: 'btn btn-default'
-          #   href: routes.editMySong.createUrl(store.song),
-          # , Song.MSG_EDIT_SONG
+          a
+            className: 'btn btn-default'
+            href: routes.editMySong.createUrl(store.song),
+          , Song.MSG_EDIT_SONG
 
       lyricsHtml: ->
         goog.string
@@ -43,17 +43,12 @@ class app.react.pages.Song
             "<sup>#{chord}</sup>"
 
       componentDidMount: ->
-        @toggleActive true
         @setLyricsMaxFontSize()
-        @viewportMonitor = new goog.dom.ViewportSizeMonitor
-        @viewportMonitor.listen 'resize', => @setLyricsMaxFontSize()
+        # @viewportMonitor = new goog.dom.ViewportSizeMonitor
+        # @viewportMonitor.listen 'resize', => @setLyricsMaxFontSize()
 
       componentWillUnmount: ->
-        @toggleActive false
-        @viewportMonitor.dispose()
-
-      toggleActive: (enabled) ->
-        goog.dom.classlist.enable document.body, 'active-song', enabled
+        # @viewportMonitor.dispose()
 
       componentDidUpdate: ->
         # TODO(steida): Implement fontSize increase and decrease.
@@ -80,5 +75,3 @@ class app.react.pages.Song
         el.style.visibility = originalVisibility
 
   @MSG_EDIT_SONG: goog.getMsg 'Edit song'
-
-  name: 'song'
