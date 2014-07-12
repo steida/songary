@@ -30,7 +30,6 @@ class app.react.pages.Song
           div
             className: 'lyrics'
             dangerouslySetInnerHTML: '__html': @lyricsHtml()
-            ref: 'lyrics'
           a
             className: 'btn btn-default'
             href: routes.editMySong.createUrl(store.song),
@@ -44,11 +43,11 @@ class app.react.pages.Song
 
       componentDidMount: ->
         @setLyricsMaxFontSize()
-        # @viewportMonitor = new goog.dom.ViewportSizeMonitor
-        # @viewportMonitor.listen 'resize', => @setLyricsMaxFontSize()
+        @viewportMonitor = new goog.dom.ViewportSizeMonitor
+        @viewportMonitor.listen 'resize', @setLyricsMaxFontSize
 
       componentWillUnmount: ->
-        # @viewportMonitor.dispose()
+        @viewportMonitor.dispose()
 
       componentDidUpdate: ->
         # TODO(steida): Implement fontSize increase and decrease.
@@ -56,20 +55,20 @@ class app.react.pages.Song
 
       ###*
         Detect max lyrics fontSize to fit into screen.
-        TODO(steida): Describe strategies.
+        TODO(steida): Implement and describe strategies.
       ###
       setLyricsMaxFontSize: ->
-        el = @refs['lyrics'].getDOMNode()
+        el = @getDOMNode()
         originalVisibility = el.style.visibility
         el.style.visibility = 'hidden'
-        fontSize = 6
+        fontSize = 5
         while fontSize != 55
-          el.style.fontSize = fontSize + 'px'
+          el.style.fontSize = "#{fontSize}px"
           scrollbarIsVisible =
             el.scrollHeight > el.offsetHeight ||
             el.scrollWidth > el.offsetWidth
           if scrollbarIsVisible
-            el.style.fontSize = (fontSize - 1) + 'px'
+            el.style.fontSize = "#{--fontSize}px"
             break
           fontSize++
         el.style.visibility = originalVisibility
