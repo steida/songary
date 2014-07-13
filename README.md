@@ -1,13 +1,12 @@
 # Songary [![Build Status](https://secure.travis-ci.org/steida/songary.png?branch=master)](http://travis-ci.org/steida/songary) [![Dependency Status](https://david-dm.org/steida/songary.png)](https://david-dm.org/steida/songary) [![devDependency Status](https://david-dm.org/steida/songary/dev-status.png)](https://david-dm.org/steida/songary#info=devDependencies)
 
-Build with [Este.js](https://github.com/steida/este) dev stack.
+Your personal song book.
 
-1. Clone repo.
-2. ```bower install```
-3. ```npm install```
-4. ```gulp```
+Made with [Este.js](https://github.com/steida/este).
 
-For production, run ```gulp -p```
+## Install and run
+
+Read [Este.js](https://github.com/steida/este).
 
 ## Learn
 
