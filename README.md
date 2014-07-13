@@ -24,4 +24,4 @@ How? Just read code, there are plethora of comments.
   - DI container
   - statically typed code written in CoffeeScript
   - killer React.js syntax
-  - 62 kB gzipped
+  - <70 kB gzipped
