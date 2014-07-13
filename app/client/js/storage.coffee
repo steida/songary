@@ -1,23 +1,24 @@
 goog.provide 'app.Storage'
 
-goog.require 'este.labs.Storage'
+goog.require 'common.Storage'
 goog.require 'goog.array'
 goog.require 'goog.labs.userAgent.browser'
 goog.require 'goog.storage.Storage'
 goog.require 'goog.storage.mechanism.mechanismfactory'
 
-class app.Storage extends este.labs.Storage
+class app.Storage extends common.Storage
 
   ###*
     PATTERN(steida): This should be one place to change/sync app state.
-    The goal is http://en.wikipedia.org/wiki/Persistent_data_structure,
-    with all its benefits like global app undo etc.
+    The goal is http://en.wikipedia.org/wiki/Persistent_data_structure
+    with all its benefits.
+    @param {app.Store} appStore
     @param {app.songs.Store} songsStore
     @constructor
-    @extends {este.labs.Storage}
+    @extends {common.Storage}
   ###
-  constructor: (@songsStore) ->
-    super()
+  constructor: (appStore, @songsStore) ->
+    super appStore
 
     ###*
       @type {Array.<app.Store>}
@@ -46,18 +47,15 @@ class app.Storage extends este.labs.Storage
   ###*
     @override
   ###
-  load: (route, routes) ->
+  promiseOf: (route, routes) ->
     switch route
       when routes.mySong, routes.editMySong
         song = @songsStore.songByRoute route
-        # return goog.Promise.reject 404 if !song
+        return @notFound() if !song
         @songsStore.song = song
-
-    # promise
-    #   .then -> @appStore.pageNotFound = false
-    #   .thenFail (reason) ->
-    #     @appStore.pageNotFound = true
-
+        @ok()
+      else
+        @ok()
 
   ###*
     NOTE(steida): Plain browser localStorage is used to store and retrieve
