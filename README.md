@@ -1,4 +1,4 @@
-# Songary App.
+# Songary [![Build Status](https://secure.travis-ci.org/steida/songary.png?branch=master)](http://travis-ci.org/steida/songary) [![Dependency Status](https://david-dm.org/steida/songary.png)](https://david-dm.org/steida/songary) [![devDependency Status](https://david-dm.org/steida/songary/dev-status.png)](https://david-dm.org/steida/songary#info=devDependencies)
 
 Build with [Este.js](https://github.com/steida/este) dev stack.
 
@@ -9,14 +9,20 @@ Build with [Este.js](https://github.com/steida/este) dev stack.
 
 For production, run ```gulp -p```
 
-## Learn from code
+## Learn
 
-How? Just read it, there is a plethora of comments. 
+How? Just read code, there are plethora of comments. 
 
-Techniques demonstrated on this isomorphic app
-  - client/mobile/offline first
-  - React components read data from and propagate changes to stores.
-  - Only stores can deal with models.
-  - Storages controls stores state.
-  - One way data flow, from react component to store to storage.
-  - Async routing with Promises
+### Techniques
+  - frontend/mobile/offline first
+  - isomorphic
+  - Closure Tools, Facebook React, Polymer PointerEvents
+  - one way data flow
+  - clean architecture
+  - promises everywhere
+  - app state immediately saved into localStorage
+  - pending navigation (
+  - DI container
+  - statically typed code written in CoffeeScript
+  - killer React.js syntax
+  - 62 kB gzipped
