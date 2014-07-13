@@ -10,5 +10,6 @@ deploy:
   user: Steida
   api_key:
     secure: TazZHzH9S  sHl424+Ir4FKhBH/cptdE4t9rTL+cQlMI//rU8QEQLdI5TivUucNATbT7LjKr/iYlxUW/S3+GIyx8BBWDA1BwzKKsbIuXWtdcoFfhjNs0XsL7/hvxzYtyW0/rVMDuRf9yk9KqP1o4188VGCJaX9FfL5uxxOk9a8PHQ=
+  skip_cleanup: true
   on:
     repo: steida/songary
