@@ -3,4 +3,5 @@
 *.styl
 client/css
 client/js
+common/js
 server/js
