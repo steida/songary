@@ -20,7 +20,7 @@ How? Just read code, there are plethora of comments.
   - clean architecture
   - promises everywhere
   - app state immediately saved into localStorage
-  - pending navigation (
+  - pending navigation
   - DI container
   - statically typed code written in CoffeeScript
   - killer React.js syntax
