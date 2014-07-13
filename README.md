@@ -1,6 +1,6 @@
 # Songary [![Build Status](https://secure.travis-ci.org/steida/songary.png?branch=master)](http://travis-ci.org/steida/songary) [![Dependency Status](https://david-dm.org/steida/songary.png)](https://david-dm.org/steida/songary) [![devDependency Status](https://david-dm.org/steida/songary/dev-status.png)](https://david-dm.org/steida/songary#info=devDependencies)
 
-Your personal song book.
+Your personal song book. [Demo](http://songary.jit.su/).
 
 Made with [Este.js](https://github.com/steida/este).
 
