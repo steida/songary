@@ -1,7 +1,14 @@
 language: node_js
 node_js:
-  - 0.10
+  - 0.1
 before_script:
   - npm install -g bower
   - npm install -g gulp
   - bower install
+deploy:
+  provider: nodejitsu
+  user: Steida
+  api_key:
+    secure: TazZHzH9S  sHl424+Ir4FKhBH/cptdE4t9rTL+cQlMI//rU8QEQLdI5TivUucNATbT7LjKr/iYlxUW/S3+GIyx8BBWDA1BwzKKsbIuXWtdcoFfhjNs0XsL7/hvxzYtyW0/rVMDuRf9yk9KqP1o4188VGCJaX9FfL5uxxOk9a8PHQ=
+  on:
+    repo: steida/songary
