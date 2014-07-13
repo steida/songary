@@ -21,16 +21,20 @@ class app.Title
 
     switch @routes.active
       when @routes.home then Title.MSG_HOME
-      when @routes.myNewSong then Title.MSG_NEW_SONG
-      when @routes.mySong then @getSongTitle()
+      when @routes.myNewSong then Title.MSG_MY_NEW_SONG
+      when @routes.mySong then @getMySongTitle()
+      when @routes.editMySong then @getEditMySongTitle()
       else Title.MSG_NOT_FOUND
 
+  @MSG_EDIT: goog.getMsg 'edit: '
   @MSG_HOME: goog.getMsg 'Songary | Your personal songbook'
-  @MSG_NEW_SONG: goog.getMsg 'New Song | Songary'
+  @MSG_MY_NEW_SONG: goog.getMsg 'New Song | Songary'
   @MSG_NOT_FOUND: goog.getMsg 'Page Not Found'
 
-  getSongTitle: ->
-    song = @songsStore.song
+  getMySongTitle: ->
     Title.MSG_SONG = goog.getMsg '{$name} - {$artist} | Songary',
-      name: song.name
-      artist: song.artist
+      name: @songsStore.song.name
+      artist: @songsStore.song.artist
+
+  getEditMySongTitle: ->
+    Title.MSG_EDIT + @getMySongTitle()

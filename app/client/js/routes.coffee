@@ -13,7 +13,6 @@ class app.Routes extends este.Routes
     super()
 
     @home = @route '/'
-    # TODO(steida): Rename it to newMySong.
     @myNewSong = @route '/@me/songs/new'
     @mySong = @route '/@me/songs/:urlArtist/:urlName'
     @editMySong = @route '/@me/songs/:urlArtist/:urlName/edit'
