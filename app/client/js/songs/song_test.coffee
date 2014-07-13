@@ -8,6 +8,7 @@ suite 'app.songs.Song', ->
     song.name = name
     song.artist = artist
     song.lyrics = lyrics
+    song.update()
     song
 
   suite 'validate', ->
@@ -15,8 +16,15 @@ suite 'app.songs.Song', ->
       song = createSong 'Name', 'Artist', 'Bla [Ami]'
       assert.deepEqual song.validate(), []
 
-    test 'should validate invalid name', ->
+    test 'should validate empty name', ->
       song = createSong ' ', 'Artist', 'Bla [Ami]'
+      assert.deepEqual song.validate(), [
+        prop: 'name'
+        message: 'Please fill out name.'
+      ]
+
+    test 'should validate invalid name', ->
+      song = createSong '..', 'Artist', 'Bla [Ami]'
       assert.deepEqual song.validate(), [
         prop: 'name'
         message: 'Please fill out name.'
@@ -39,10 +47,10 @@ suite 'app.songs.Song', ->
   suite 'update', ->
     test 'should ensure model state', ->
       song = new Song
-      song.name = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-      song.artist = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+      song.name = new Array(101).join 'a'
+      song.artist = new Array(101).join 'a'
       song.lyrics = new Array(32001).join 'a'
       song.update()
-      assert.equal song.urlName, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-      assert.equal song.urlArtist, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+      assert.equal song.urlName.length, 100
+      assert.equal song.urlArtist.length, 100
       assert.equal song.lyrics.length, 32000

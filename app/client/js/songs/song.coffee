@@ -68,14 +68,15 @@ class app.songs.Song
     ['name', 'artist', 'lyrics']
       .filter (prop) => !@[prop].trim()
       .map (prop) =>
-        Song.MSG_PLEASE_FILL_OUT = goog.getMsg 'Please fill out {$prop}.',
-          prop: prop
-        new app.ValidationError prop, Song.MSG_PLEASE_FILL_OUT
+        Song.MSG_FILL_OUT = goog.getMsg 'Please fill out {$prop}.', prop: prop
+        new app.ValidationError prop, Song.MSG_FILL_OUT
 
   update: ->
-    # PATTERN(steida): Look, we don't need to use form field max length.
-    @name = @name.slice 0, 30
-    @artist = @artist.slice 0, 60
+    # PATTERN(steida): Look, we really don't need to use html5 form validation.
+    @name = @name.slice 0, 100
+    @artist = @artist.slice 0, 100
     @lyrics = @lyrics.slice 0, 32000
     @urlName = este.string.toFancyUrl @name
+    @name = '' if !@urlName
     @urlArtist = este.string.toFancyUrl @artist
+    @artist = '' if !@urlArtist
