@@ -76,9 +76,10 @@ class app.react.pages.EditSong
         @chordproTextarea_.dispose()
 
       onFieldChange: (e) ->
+        # NOTE(steida): Assert to make compiler happy.
+        goog.asserts.assertInstanceof song, app.songs.Song
         # PATTERN(steida): All changes are immediatelly stored into store.
         # Store is asap synced with local/rest storages.
-        goog.asserts.assertInstanceof song, app.songs.Song
         store.updateSong song, e.target.name, e.target.value
 
       onFormSubmit: (e) ->

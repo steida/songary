@@ -1,13 +1,13 @@
 goog.provide 'app.songs.Store'
 
-goog.require 'app.Store'
+goog.require 'este.labs.Store'
 goog.require 'app.songs.Song'
 
-class app.songs.Store extends app.Store
+class app.songs.Store extends este.labs.Store
 
   ###*
     @constructor
-    @extends {app.Store}
+    @extends {este.labs.Store}
     @implements {SongsStoreProps}
   ###
   constructor: ->
@@ -18,19 +18,17 @@ class app.songs.Store extends app.Store
   ###*
     @type {Array.<app.songs.Song>}
   ###
-  @songs: null
+  songs: null
 
   ###*
-    Not yet saved new song.
     @type {app.songs.Song}
   ###
-  @newSong: null
+  newSong: null
 
   ###*
-    Already saved song set by storage.
     @type {app.songs.Song}
   ###
-  @song: null
+  song: null
 
   ###*
     @return {Array.<app.songs.Song>}

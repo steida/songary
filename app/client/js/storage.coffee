@@ -1,12 +1,12 @@
 goog.provide 'app.Storage'
 
-goog.require 'este.labs.storage.Base'
+goog.require 'este.labs.Storage'
 goog.require 'goog.array'
 goog.require 'goog.labs.userAgent.browser'
 goog.require 'goog.storage.Storage'
 goog.require 'goog.storage.mechanism.mechanismfactory'
 
-class app.Storage extends este.labs.storage.Base
+class app.Storage extends este.labs.Storage
 
   ###*
     PATTERN(steida): This should be one place to change/sync app state.
@@ -14,7 +14,7 @@ class app.Storage extends este.labs.storage.Base
     with all its benefits like global app undo etc.
     @param {app.songs.Store} songsStore
     @constructor
-    @extends {este.labs.storage.Base}
+    @extends {este.labs.Storage}
   ###
   constructor: (@songsStore) ->
     super()
@@ -28,7 +28,7 @@ class app.Storage extends este.labs.storage.Base
 
     if @tryCreateLocalStorage()
       @updateStoreOnLocalStorageChange()
-    @fetchStores()
+    @fetchStoresFromLocalStorage()
     @listenStores()
 
   ###*
@@ -49,7 +49,15 @@ class app.Storage extends este.labs.storage.Base
   load: (route, routes) ->
     switch route
       when routes.mySong, routes.editMySong
-        @songsStore.song = @songsStore.songByRoute route
+        song = @songsStore.songByRoute route
+        # return goog.Promise.reject 404 if !song
+        @songsStore.song = song
+
+    # promise
+    #   .then -> @appStore.pageNotFound = false
+    #   .thenFail (reason) ->
+    #     @appStore.pageNotFound = true
+
 
   ###*
     NOTE(steida): Plain browser localStorage is used to store and retrieve
@@ -91,7 +99,7 @@ class app.Storage extends este.labs.storage.Base
   ###*
     @protected
   ###
-  fetchStores: ->
+  fetchStoresFromLocalStorage: ->
     return if !@localStorage
     @stores.forEach (store) =>
       json = @localStorage.get store.name
@@ -111,10 +119,3 @@ class app.Storage extends este.labs.storage.Base
           @localStorage.set store.name, store.toJson()
         @notify()
         # TODO(steida): Server sync, consider diff.
-
-  ###*
-    PATTERN(steida): Whenever store changes anything, just call notify to
-    dispatch change event.
-  ###
-  notify: ->
-    @dispatchEvent 'change'

@@ -1,19 +1,20 @@
 goog.provide 'app.react.App'
 
+goog.require 'goog.net.HttpStatus'
+
 class app.react.App
 
   ###*
+    @param {app.Store} appStore
     @param {app.Routes} routes
-    @param {app.react.Header} header
-    @param {app.react.Footer} footer
+    @param {app.react.Layout} layout
     @param {app.react.pages.Home} home
     @param {app.react.pages.EditSong} editSong
     @param {app.react.pages.Song} song
     @param {app.react.pages.NotFound} notFound
     @constructor
   ###
-  constructor: (routes,
-      header, footer,
+  constructor: (appStore, routes, layout,
       home, editSong, song, notFound) ->
 
     {div} = React.DOM
@@ -22,11 +23,13 @@ class app.react.App
 
       render: ->
         div className: 'app',
-          header.create()
-          @activePage().create()
-          footer.create()
+          layout.create page: @page()
 
-      activePage: ->
+      page: ->
+        # PATTERN(steida): Here we can handle various edge states.
+        switch appStore.httpStatus
+          when goog.net.HttpStatus.NOT_FOUND then return notFound
+
         switch routes.active
           when routes.home then home
           when routes.myNewSong, routes.editMySong then editSong

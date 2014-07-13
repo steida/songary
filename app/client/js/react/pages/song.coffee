@@ -8,12 +8,11 @@ goog.require 'goog.string'
 class app.react.pages.Song
 
   ###*
-    @param {app.songs.Store} store
-    @param {app.react.pages.NotFound} notFound
     @param {app.Routes} routes
+    @param {app.songs.Store} store
     @constructor
   ###
-  constructor: (store, notFound, routes) ->
+  constructor: (routes, store) ->
     {div,h1,h2,a} = React.DOM
 
     @create = React.createClass
@@ -22,8 +21,6 @@ class app.react.pages.Song
       viewportMonitor: null
 
       render: ->
-        return notFound.create null if !store.song
-
         div className: 'song',
           # TODO(steida): Show details on tap/click.
           h2 null, "#{store.song.name} [#{store.song.artist}]"

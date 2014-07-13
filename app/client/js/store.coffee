@@ -1,51 +1,18 @@
 goog.provide 'app.Store'
 
-goog.require 'goog.array'
-goog.require 'goog.events.EventTarget'
+goog.require 'este.labs.Store'
+goog.require 'goog.net.HttpStatus'
 
-class app.Store extends goog.events.EventTarget
+class app.Store extends este.labs.Store
 
   ###*
-    TODO(steida): Wait to be stabilized, then move to este-library.
-    @param {string} name
     @constructor
-    @extends {goog.events.EventTarget}
+    @extends {este.labs.Store}
   ###
-  constructor: (name) ->
-    super()
-
-    ###*
-      @const
-      @type {string}
-    ###
-    @name = name
+  constructor: ->
+    super 'app'
 
   ###*
-    @return {Object}
+    @type {number}
   ###
-  toJson: goog.abstractMethod
-
-  ###*
-    @param {Object} json
-  ###
-  fromJson: goog.abstractMethod
-
-  ###*
-    @param {Function} constructor
-    @param {Object=} json
-    @return {*}
-  ###
-  instanceFromJson: (constructor, json) ->
-    if arguments.length == 2
-      instance = new constructor
-      goog.mixin instance, json || {}
-      return instance
-    (json) =>
-      @instanceFromJson constructor, json
-
-  ###*
-    PATTERN(steida): Whenever store changes anything, just call notify to
-    dispatch change event.
-  ###
-  notify: ->
-    @dispatchEvent 'change'
+  httpStatus: goog.net.HttpStatus.OK

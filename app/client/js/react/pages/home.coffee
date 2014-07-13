@@ -4,11 +4,11 @@ class app.react.pages.Home
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.Touch} touch
     @param {app.songs.Store} songsStore
+    @param {app.react.Touch} touch
     @constructor
   ###
-  constructor: (routes, touch, songsStore) ->
+  constructor: (routes, songsStore, touch) ->
     {div,ul,li} = React.DOM
     {a} = touch.none 'a'
 
