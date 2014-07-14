@@ -2,17 +2,6 @@
 @import '../../../bower_components/stylus-nib'
 @import '../../../bower_components/este-library/este/css'
 
-.app
-  padding 0 1em
-  @import 'pages/editsong'
-  @import 'pages/home'
-  @import 'pages/notfound'
-  @import 'pages/song'
-
-.horizontal button
-  // NOTE(steida): Can't believe this is not in Bootstrap.
-  margin-right .625em
-
 html:not(.is-desktop)
   // Disable hover for touch devices since it's janky.
   a, a:hover
@@ -22,3 +11,19 @@ html:not(.is-desktop)
   .touch-hover
     color #2a6496 !important
     text-decoration underline !important
+
+body
+  font-family: 'PT Sans', sans-serif;
+  font-size 15px
+  line-height 1.4
+
+  .app
+    padding 0 1em
+    @import 'pages/editsong'
+    @import 'pages/home'
+    @import 'pages/notfound'
+    @import 'pages/song'
+
+  .horizontal button
+    // NOTE(steida): Can't believe this is not in Bootstrap.
+    margin-right .625em

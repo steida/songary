@@ -17,4 +17,6 @@ class server.react.App
             title null, this.props.title
             link href: '/app/client/img/favicon.ico', rel: 'shortcut icon'
             link href: '/app/client/build/app.css?v=' + this.props.version, rel: 'stylesheet'
+            # TODO(steida): Base64 inline.
+            link href: 'http://fonts.googleapis.com/css?family=PT+Sans&amp;subset=latin,latin-ext', rel: 'stylesheet'
           body dangerouslySetInnerHTML: __html: this.props.bodyHtml
