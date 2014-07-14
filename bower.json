@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "este-library": "git://github.com/steida/este-library.git",
-    "stylus-nib": "git://github.com/visionmedia/nib.git",
+    "Magic": "https://github.com/miniMAC/magic.git#~1.0.0",
+    "animate.css": "https://github.com/daneden/animate.css.git#~3.2.0",
     "bootstrap": "~3.2.0",
-    "react": "0.11.0-rc1"
+    "este-library": "git://github.com/steida/este-library.git",
+    "react": "0.11.0-rc1",
+    "stylus-nib": "git://github.com/visionmedia/nib.git"
   },
   "resolutions": {
     "react": "0.11.0-rc1"
