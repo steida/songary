@@ -7,14 +7,14 @@ html:not(.is-desktop)
   a, a:hover
     color #428bca
     text-decoration none
-  // Reimplemented hover via PointerEvents works like a charm.
-  .touch-hover
-    color #2a6496 !important
-    text-decoration underline !important
+    // Reimplemented hover via PointerEvents works like a charm.
+    &.touch-hover
+      color #2a6496
+      text-decoration underline
 
 body
   font-family: 'PT Sans', sans-serif;
-  font-size 15px
+  font-size 16px
   line-height 1.4
 
   .app
@@ -25,5 +25,4 @@ body
     @import 'pages/song'
 
   .horizontal button
-    // NOTE(steida): Can't believe this is not in Bootstrap.
     margin-right .625em

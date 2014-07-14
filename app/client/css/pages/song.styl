@@ -1,21 +1,34 @@
 .song
-
   bottom 0
   left 0
   position absolute
   right 0
   top 0
 
-  .lyrics
-    color #111
-    font-family Monaco
+  article
     padding 1em
     text-align left
     white-space pre
 
     sup
-      color blue
+      color #428BCA
       font-size 110%
       font-style italic
       font-weight bold
       letter-spacing 1px
+
+  menu
+    inline-block-container()
+    background-color rgba(0, 0, 0, 0.7)
+    bottom 0
+    font-size 2rem
+    left 0
+    margin 0
+    padding 0
+    position absolute
+    right 0
+
+    > *, .touch-hover
+      color #fff
+      margin 0
+      padding .625em 1em
