@@ -12,3 +12,13 @@
 .horizontal button
   // NOTE(steida): Can't believe this is not in Bootstrap.
   margin-right .625em
+
+html:not(.is-desktop)
+  // Disable hover for touch devices since it's janky.
+  a, a:hover
+    color #428bca
+    text-decoration none
+  // Reimplement hover via PointerEvents is it works like a charm.
+  .touch-hover
+    color #2a6496 !important
+    text-decoration underline !important
