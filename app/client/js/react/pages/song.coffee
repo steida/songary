@@ -10,10 +10,14 @@ class app.react.pages.Song
   ###*
     @param {app.Routes} routes
     @param {app.songs.Store} store
+    @param {app.react.Touch} touch
     @constructor
   ###
-  constructor: (routes, store) ->
-    {div,h1,h2,a} = React.DOM
+  constructor: (routes, store, touch) ->
+    {div,article,menu,h1} = React.DOM
+    {a} = touch.none 'a'
+
+    # add touch pro a.. zkontrolovat, je vsude
 
     @create = React.createClass
 
@@ -22,15 +26,14 @@ class app.react.pages.Song
 
       render: ->
         div className: 'song',
-          # TODO(steida): Show details on tap/click.
-          h2 null, "#{store.song.name} [#{store.song.artist}]"
-          div
-            className: 'lyrics'
-            dangerouslySetInnerHTML: '__html': @lyricsHtml()
-          a
-            className: 'btn btn-default'
-            href: routes.editMySong.createUrl(store.song),
-          , Song.MSG_EDIT_SONG
+          article dangerouslySetInnerHTML: '__html': @lyricsHtml()
+          menu null,
+            a
+              href: routes.home.createUrl(),
+            , Song.MSG_BACK
+            a
+              href: routes.editMySong.createUrl(store.song),
+            , Song.MSG_EDIT
 
       lyricsHtml: ->
         goog.string
@@ -70,4 +73,5 @@ class app.react.pages.Song
           fontSize++
         el.style.visibility = originalVisibility
 
-  @MSG_EDIT_SONG: goog.getMsg 'Edit song'
+  @MSG_BACK: goog.getMsg 'Back'
+  @MSG_EDIT: goog.getMsg 'Edit'

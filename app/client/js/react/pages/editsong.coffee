@@ -8,10 +8,12 @@ class app.react.pages.EditSong
   ###*
     @param {app.Routes} routes
     @param {app.songs.Store} store
+    @param {app.react.Touch} touch
     @constructor
   ###
-  constructor: (routes, store) ->
-    {p,div,form,input,textarea,a,button} = React.DOM
+  constructor: (routes, store, touch) ->
+    {p,div,form,input,textarea,button} = React.DOM
+    {a} = touch.none 'a'
 
     editMode = false
     song = null
