@@ -17,12 +17,13 @@ class App
 
     onRouterError = (e) ->
       # PATTERN(steida): Here we can handle various errors.
-      # For server error, alert something like "Try it later...".
-      # For client error, log it.
-      # We can decide by 'e.reason' because all callbacks are promises.
-      alert e.reason
-      # TODO(steida): For client-side error, show popup link to reload app.
-      # Don't reload automatically since it can cause loop.
+      # For server error, use alert something like "Try it later...".
+      # For client error, log it, then show link to reload app in popup.
+      # Never reload automatically since it can cause loop.
+      # Use goog.DEBUG to detect development/production mode.
+      # All sync/async errors are handled since we are using promises.
+      # Use e.reason to check what happen.
+      console.log e.reason
 
     syncUI = ->
       document.title = appTitle.get()

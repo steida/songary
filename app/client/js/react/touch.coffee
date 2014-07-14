@@ -15,7 +15,6 @@ class app.react.Touch
     Temp workaround, because React does not support custom attributes yet,
     and Polymer PointerEvents needs touch-action.
     # http://www.polymer-project.org/platform/pointer-events.html#basic-usage
-    # TODO(steida): Enforce pointerevents somehow?
     @constructor
   ###
   constructor: ->
