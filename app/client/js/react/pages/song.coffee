@@ -1,6 +1,7 @@
 goog.provide 'app.react.pages.Song'
 
 goog.require 'app.songs.Song'
+goog.require 'goog.dom.BufferedViewportSizeMonitor'
 goog.require 'goog.dom.ViewportSizeMonitor'
 goog.require 'goog.dom.classlist'
 goog.require 'goog.string'
@@ -17,11 +18,8 @@ class app.react.pages.Song
     {div,article,menu,h1} = React.DOM
     {a} = touch.none 'a'
 
-    # add touch pro a.. zkontrolovat, je vsude
-
     @create = React.createClass
 
-      ###* @type {goog.dom.ViewportSizeMonitor} ###
       viewportMonitor: null
 
       render: ->
@@ -43,7 +41,8 @@ class app.react.pages.Song
 
       componentDidMount: ->
         @setLyricsMaxFontSize()
-        @viewportMonitor = new goog.dom.ViewportSizeMonitor
+        @viewportMonitor = new goog.dom
+          .BufferedViewportSizeMonitor new goog.dom.ViewportSizeMonitor
         @viewportMonitor.listen 'resize', @setLyricsMaxFontSize
 
       componentWillUnmount: ->
