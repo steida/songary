@@ -15,7 +15,8 @@ class app.react.pages.Song
     @constructor
   ###
   constructor: (routes, store, touch) ->
-    {div,article,menu,h1} = React.DOM
+    {div,menu,h1} = React.DOM
+    {article} = touch.scroll 'article'
     {a} = touch.none 'a'
 
     @create = React.createClass
@@ -24,8 +25,10 @@ class app.react.pages.Song
 
       render: ->
         div className: 'song',
-          article dangerouslySetInnerHTML: '__html': @lyricsHtml()
-          menu null,
+          article
+            dangerouslySetInnerHTML: '__html': @lyricsHtml()
+            onPointerUp: @onArticlePointerUp
+          menu ref: 'menu',
             a
               href: routes.home.createUrl(),
             , Song.MSG_BACK
@@ -39,14 +42,29 @@ class app.react.pages.Song
           .replace /\[([^\]]+)\]/g, (str, chord) ->
             "<sup>#{chord}</sup>"
 
+      onArticlePointerUp: ->
+        @toggleMenu()
+
+      toggleMenu: ->
+        goog.dom.classlist.toggle @refs['menu'].getDOMNode(), 'este-hidden'
+
       componentDidMount: ->
         @setLyricsMaxFontSize()
+        @createAndListenViewportMonitor()
+        @hideMenuAfterWhile()
+
+      componentWillUnmount: ->
+        clearTimeout @hideMenuTimer
+        @viewportMonitor.dispose()
+
+      createAndListenViewportMonitor: ->
         @viewportMonitor = new goog.dom
           .BufferedViewportSizeMonitor new goog.dom.ViewportSizeMonitor
         @viewportMonitor.listen 'resize', @setLyricsMaxFontSize
 
-      componentWillUnmount: ->
-        @viewportMonitor.dispose()
+      hideMenuAfterWhile: ->
+        clearTimeout @hideMenuTimer
+        @hideMenuTimer = setTimeout @toggleMenu, Song.HIDE_MENU_DELAY
 
       componentDidUpdate: ->
         # TODO(steida): Implement fontSize increase and decrease.
@@ -74,3 +92,4 @@ class app.react.pages.Song
 
   @MSG_BACK: goog.getMsg 'Back'
   @MSG_EDIT: goog.getMsg 'Edit'
+  @HIDE_MENU_DELAY: 2000
