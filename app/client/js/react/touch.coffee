@@ -48,7 +48,9 @@ class app.react.Touch
     @return {Object}
   ###
   scroll: (var_args) ->
-    @createTouchableTags arguments, 'scroll'
+    # NOTE(steida): scroll doesn't work anymore for some reason.
+    # http://www.polymer-project.org/platform/pointer-events.html
+    @createTouchableTags arguments, 'pan-x pan-y'
 
   ###*
     @param {Arguments} tags
