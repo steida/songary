@@ -8,7 +8,6 @@ class app.songs.Store extends este.labs.Store
   ###*
     @constructor
     @extends {este.labs.Store}
-    @implements {SongsStoreProps}
   ###
   constructor: ->
     super 'songs'

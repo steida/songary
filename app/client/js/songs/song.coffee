@@ -7,7 +7,6 @@ class app.songs.Song
 
   ###*
     @constructor
-    @implements {SongProps}
   ###
   constructor: ->
 
