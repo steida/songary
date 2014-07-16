@@ -1,17 +1,9 @@
 .song
-  bottom 0
-  left 0
-  // NOTE(steida): Overflow hidden prevents hidden menu to change page height.
+  // NOTE(steida): Overflow hidden prevents hidden menu to show scrollbars.
   overflow hidden
-  position absolute
-  right 0
-  top 0
+  pos absolute 0 0 0 0
 
   article
-    // Pos abs ensures whole song tappable. Not only text.
-    position absolute
-    top 0
-    bottom 0
     padding 1em
     text-align left
     white-space pre
@@ -26,13 +18,10 @@
   menu
     inline-block-container()
     background-color rgba(0, 0, 0, 0.7)
-    bottom 0
     font-size 2rem
-    left 0
     margin 0
     padding 0
-    position absolute
-    right 0
+    pos absolute auto 0 0 0
     transform translateY(0)
     transition all .5s
 
