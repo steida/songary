@@ -16,8 +16,8 @@ class app.react.pages.Song
     @constructor
   ###
   constructor: (routes, store, touch) ->
-    {div,menu} = React.DOM
-    {article} = touch.scroll 'article'
+    {div} = touch.scroll 'div'
+    {article,menu} = React.DOM
     {a} = touch.none 'a'
 
     @create = React.createClass
@@ -25,14 +25,11 @@ class app.react.pages.Song
       viewportMonitor: null
 
       render: ->
-        div className: 'song',
+        div className: 'song', onPointerUp: @onSongPointerUp,
           article
             dangerouslySetInnerHTML: '__html': @lyricsHtml()
-            onPointerUp: @onArticlePointerUp
             ref: 'article'
-          menu
-            ref: 'menu'
-          ,
+          menu ref: 'menu',
             a
               href: routes.home.createUrl(),
             , Song.MSG_BACK
@@ -46,13 +43,23 @@ class app.react.pages.Song
           .replace /\[([^\]]+)\]/g, (str, chord) ->
             "<sup>#{chord}</sup>"
 
-      onArticlePointerUp: ->
-        @toggleMenu()
+      onSongPointerUp: (e) ->
+        pointerUpOnMenu = goog.dom.contains @menuEl(), e.target
+        if pointerUpOnMenu
+          @toggleMenu true
+        else
+          @toggleMenu()
 
-      toggleMenu: ->
-        menuEl = @refs['menu'].getDOMNode()
-        isHidden = goog.dom.classlist.contains menuEl, 'este-hidden'
-        goog.dom.classlist.enable menuEl, 'este-hidden', !isHidden
+      menuEl: ->
+        @refs['menu'].getDOMNode()
+
+      ###*
+        @param {boolean=} enable
+      ###
+      toggleMenu: (enable) ->
+        isHidden = enable ? goog.dom.classlist.contains @menuEl(),
+          'este-hidden'
+        goog.dom.classlist.enable @menuEl(), 'este-hidden', !isHidden
         clearTimeout @hideMenuTimer
         @hideMenuAfterWhile() if isHidden
 
@@ -75,8 +82,7 @@ class app.react.pages.Song
         @hideMenuTimer = setTimeout @hideMenu, Song.HIDE_MENU_DELAY
 
       hideMenu: ->
-        menuEl = @refs['menu'].getDOMNode()
-        goog.dom.classlist.add menuEl, 'este-hidden'
+        @toggleMenu false
 
       componentDidUpdate: ->
         # TODO(steida): Implement fontSize increase and decrease.
@@ -89,11 +95,9 @@ class app.react.pages.Song
       setLyricsMaxFontSize: ->
         songElSize = @getSize @getDOMNode()
         articleEl = @refs['article'].getDOMNode()
-        # TODO(steida): Decide minimal fontSize readability.
-        # TODO constanta MINIMAL_READABLE_FONT_SIZE
-        fontSize = 5
+        fontSize = Song.MIN_READABLE_FONT_SIZE
         @toAvoidUnnecessaryReflow =>
-          while fontSize != 55
+          while fontSize != Song.MAX_FONT_SIZE
             articleEl.style.fontSize = "#{fontSize}px"
             articleElSize = @getSize articleEl
             fitsInsideProperly = songElSize.fitsInside articleElSize
@@ -111,6 +115,8 @@ class app.react.pages.Song
         fn()
         songEl.style.visibility = ''
 
+  @MIN_READABLE_FONT_SIZE: 8
+  @MAX_FONT_SIZE: 60
   @MSG_BACK: goog.getMsg 'Back'
   @MSG_EDIT: goog.getMsg 'Edit'
   @HIDE_MENU_DELAY: 2000
