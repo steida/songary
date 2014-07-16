@@ -16,7 +16,7 @@ class app.react.pages.Song
     @constructor
   ###
   constructor: (routes, store, touch) ->
-    {div,menu,h1} = React.DOM
+    {div,menu} = React.DOM
     {article} = touch.scroll 'article'
     {a} = touch.none 'a'
 
@@ -30,7 +30,9 @@ class app.react.pages.Song
             dangerouslySetInnerHTML: '__html': @lyricsHtml()
             onPointerUp: @onArticlePointerUp
             ref: 'article'
-          menu ref: 'menu',
+          menu
+            ref: 'menu',
+          ,
             a
               href: routes.home.createUrl(),
             , Song.MSG_BACK
@@ -48,7 +50,11 @@ class app.react.pages.Song
         @toggleMenu()
 
       toggleMenu: ->
-        goog.dom.classlist.toggle @refs['menu'].getDOMNode(), 'este-hidden'
+        menuEl = @refs['menu'].getDOMNode()
+        isHidden = goog.dom.classlist.contains menuEl, 'este-hidden'
+        goog.dom.classlist.enable menuEl, 'este-hidden', !isHidden
+        clearTimeout @hideMenuTimer
+        @hideMenuAfterWhile() if isHidden
 
       componentDidMount: ->
         @setLyricsMaxFontSize()
@@ -66,7 +72,11 @@ class app.react.pages.Song
 
       hideMenuAfterWhile: ->
         clearTimeout @hideMenuTimer
-        @hideMenuTimer = setTimeout @toggleMenu, Song.HIDE_MENU_DELAY
+        @hideMenuTimer = setTimeout @hideMenu, Song.HIDE_MENU_DELAY
+
+      hideMenu: ->
+        menuEl = @refs['menu'].getDOMNode()
+        goog.dom.classlist.add menuEl, 'este-hidden'
 
       componentDidUpdate: ->
         # TODO(steida): Implement fontSize increase and decrease.
