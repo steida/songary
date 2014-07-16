@@ -31,7 +31,7 @@ class app.react.pages.Song
             onPointerUp: @onArticlePointerUp
             ref: 'article'
           menu
-            ref: 'menu',
+            ref: 'menu'
           ,
             a
               href: routes.home.createUrl(),
