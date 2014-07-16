@@ -4,6 +4,7 @@ goog.require 'app.songs.Song'
 goog.require 'goog.dom.BufferedViewportSizeMonitor'
 goog.require 'goog.dom.ViewportSizeMonitor'
 goog.require 'goog.dom.classlist'
+goog.require 'goog.math.Size'
 goog.require 'goog.string'
 
 class app.react.pages.Song
@@ -28,6 +29,7 @@ class app.react.pages.Song
           article
             dangerouslySetInnerHTML: '__html': @lyricsHtml()
             onPointerUp: @onArticlePointerUp
+            ref: 'article'
           menu ref: 'menu',
             a
               href: routes.home.createUrl(),
@@ -75,20 +77,29 @@ class app.react.pages.Song
         TODO(steida): Implement and describe strategies.
       ###
       setLyricsMaxFontSize: ->
-        el = @getDOMNode()
-        originalVisibility = el.style.visibility
-        el.style.visibility = 'hidden'
+        songElSize = @getSize @getDOMNode()
+        articleEl = @refs['article'].getDOMNode()
+        # TODO(steida): Decide minimal fontSize readability.
+        # TODO constanta MINIMAL_READABLE_FONT_SIZE
         fontSize = 5
-        while fontSize != 55
-          el.style.fontSize = "#{fontSize}px"
-          scrollbarIsVisible =
-            el.scrollHeight > el.offsetHeight ||
-            el.scrollWidth > el.offsetWidth
-          if scrollbarIsVisible
-            el.style.fontSize = "#{--fontSize}px"
-            break
-          fontSize++
-        el.style.visibility = originalVisibility
+        @toAvoidUnnecessaryReflow =>
+          while fontSize != 55
+            articleEl.style.fontSize = "#{fontSize}px"
+            articleElSize = @getSize articleEl
+            fitsInsideProperly = songElSize.fitsInside articleElSize
+            if fitsInsideProperly
+              articleEl.style.fontSize = "#{--fontSize}px"
+              break
+            fontSize++
+
+      getSize: (el) ->
+        new goog.math.Size el.offsetWidth, el.offsetHeight
+
+      toAvoidUnnecessaryReflow: (fn) ->
+        songEl = @getDOMNode()
+        songEl.style.visibility = 'hidden'
+        fn()
+        songEl.style.visibility = ''
 
   @MSG_BACK: goog.getMsg 'Back'
   @MSG_EDIT: goog.getMsg 'Edit'
