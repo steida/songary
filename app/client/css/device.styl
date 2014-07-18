@@ -1,0 +1,13 @@
+// html.is-desktop
+// html.is-tablet
+// html.is-mobile
+
+html:not(.is-desktop)
+  // NOTE(steida): Disable hover for touch devices since it's janky.
+  a, a:hover
+    color #428bca
+    text-decoration none
+    // NOTE(steida): Reimplemented with PointerEvents works like a charm.
+    &.touch-hover
+      color #2a6496
+      text-decoration underline

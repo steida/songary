@@ -2,12 +2,6 @@ goog.provide 'app.react.Touch'
 
 goog.require 'goog.dom.classlist'
 goog.require 'goog.events'
-goog.require 'goog.labs.userAgent.device'
-
-# PATTERN(steida) Set device specific class asap.
-do ->
-  if goog.labs.userAgent.device.isDesktop()
-    goog.dom.classlist.add document.documentElement, 'is-desktop'
 
 class app.react.Touch
 

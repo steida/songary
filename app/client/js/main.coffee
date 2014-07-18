@@ -1,6 +1,7 @@
 goog.provide 'app.main'
 
 goog.require 'app.DiContainer'
+goog.require 'app.device'
 
 ###*
   @param {Object} data Server side data. Useful for config, preload, whatever.
