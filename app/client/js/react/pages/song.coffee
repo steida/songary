@@ -90,7 +90,6 @@ class app.react.pages.Song
 
       ###*
         Detect max lyrics fontSize to fit into screen.
-        TODO(steida): Implement and describe strategies.
       ###
       setLyricsMaxFontSize: ->
         songElSize = @getSize @getDOMNode()
@@ -100,7 +99,8 @@ class app.react.pages.Song
           while fontSize != Song.MAX_FONT_SIZE
             articleEl.style.fontSize = "#{fontSize}px"
             articleElSize = @getSize articleEl
-            fitsInsideProperly = songElSize.fitsInside articleElSize
+            # NOTE(steida): It seems that width is the best UX pattern.
+            fitsInsideProperly = articleElSize.width > songElSize.width
             if fitsInsideProperly
               articleEl.style.fontSize = "#{--fontSize}px"
               break
@@ -115,6 +115,7 @@ class app.react.pages.Song
         fn()
         songEl.style.visibility = ''
 
+  # TODO(steida): Set by platform.
   @MIN_READABLE_FONT_SIZE: 8
   @MAX_FONT_SIZE: 60
   @MSG_BACK: goog.getMsg 'Back'
