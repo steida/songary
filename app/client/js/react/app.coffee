@@ -1,5 +1,7 @@
 goog.provide 'app.react.App'
 
+goog.require 'goog.dom'
+goog.require 'goog.events'
 goog.require 'goog.net.HttpStatus'
 
 class app.react.App
@@ -35,3 +37,12 @@ class app.react.App
           when routes.myNewSong, routes.editMySong then editSong
           when routes.mySong then song
           when routes.notFound then notFound
+
+      componentDidMount: ->
+        goog.events.listen window, 'orientationchange', @onOrientationChange
+
+      onOrientationChange: (e) ->
+        @scrollWindowTop()
+
+      scrollWindowTop: ->
+        goog.dom.getDocumentScrollElement().scrollTop = 0
