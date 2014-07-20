@@ -22,7 +22,9 @@
     font-size 2rem
     margin 0
     padding 0
-    position fixed
+    // NOTE(steida): Consider fixed position, but then ViewportClientPosition
+    // in song page does not work.
+    position absolute
     // transition all .5s
 
     &.hidden
