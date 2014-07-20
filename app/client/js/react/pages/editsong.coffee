@@ -45,7 +45,6 @@ class app.react.pages.EditSong
                 value: song.artist
             div className: 'form-group',
               textarea
-                autoFocus: editMode
                 className: 'form-control'
                 name: 'lyrics'
                 onChange: @onFieldChange
