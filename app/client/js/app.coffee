@@ -9,9 +9,10 @@ class App
     @param {Element} element
     @param {app.Title} appTitle
     @param {app.Storage} storage
+    @param {app.Device} device
     @constructor
   ###
-  constructor: (router, routes, reactApp, element, appTitle, storage) ->
+  constructor: (router, routes, reactApp, element, appTitle, storage, device) ->
 
     reactAppComponent = null
 

@@ -1,6 +1,5 @@
 goog.provide 'app.react.pages.Song'
 
-goog.require 'app.device'
 goog.require 'goog.dom.BufferedViewportSizeMonitor'
 goog.require 'goog.dom.ViewportSizeMonitor'
 goog.require 'goog.dom.classlist'
@@ -14,9 +13,10 @@ class app.react.pages.Song
     @param {app.Routes} routes
     @param {app.react.Touch} touch
     @param {app.songs.Store} store
+    @param {app.Device} device
     @constructor
   ###
-  constructor: (routes, touch, store) ->
+  constructor: (routes, touch, store, device) ->
     {div} = touch.scroll 'div'
     {article,menu} = React.DOM
     {a} = touch.none 'a'
@@ -127,6 +127,7 @@ class app.react.pages.Song
         songEl.style.visibility = ''
 
       onMenuMouseHover: (e) ->
+        return if not device.desktop
         if e.type == 'mouseenter'
           clearTimeout @hideMenuTimer
         else
