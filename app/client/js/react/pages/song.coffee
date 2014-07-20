@@ -37,9 +37,6 @@ class app.react.pages.Song
             ref: 'menu'
           ,
             a
-              href: routes.editMySong.createUrl(store.song)
-            , Song.MSG_EDIT
-            a
               href: routes.home.createUrl()
               ref: 'back'
             , Song.MSG_BACK
@@ -49,6 +46,9 @@ class app.react.pages.Song
             menuitem
               onPointerUp: @onFontResizeButtonPointerUp.bind @, false
             , '-'
+            a
+              href: routes.editMySong.createUrl(store.song)
+            , Song.MSG_EDIT
 
       lyricsHtml: ->
         goog.string
