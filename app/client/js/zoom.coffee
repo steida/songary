@@ -1,8 +1,6 @@
 # TODO(steida): Move to este library once stabilized.
 goog.provide 'app.Zoom'
 
-goog.require 'app.device'
-
 class app.Zoom
 
   ###*
