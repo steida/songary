@@ -30,7 +30,12 @@ class app.react.pages.Song
           article
             dangerouslySetInnerHTML: '__html': @lyricsHtml()
             ref: 'article'
-          menu className: 'hidden', ref: 'menu',
+          menu
+            className: 'hidden'
+            onMouseEnter: @onMenuMouseHover
+            onMouseLeave: @onMenuMouseHover
+            ref: 'menu'
+          ,
             a
               href: routes.home.createUrl(),
             , Song.MSG_BACK
@@ -47,29 +52,24 @@ class app.react.pages.Song
       onSongPointerUp: (e) ->
         pointerUpOnMenu = goog.dom.contains @menuEl(), e.target
         return if pointerUpOnMenu
-        # console.log pointerUpOnMenu
-        # show = if pointerUpOnMenu then true else null
-        @toggleMenu null, e
+        @toggleMenu null, new goog.math.Coordinate e.clientX, e.clientY
 
       menuEl: ->
         @refs['menu'].getDOMNode()
 
       ###*
         @param {?boolean} show
-        @param {goog.events.BrowserEvent=} e
+        @param {goog.math.Coordinate=} position
       ###
-      toggleMenu: (show, e) ->
+      toggleMenu: (show, position) ->
         show ?= goog.dom.classlist.contains @menuEl(), 'hidden'
         goog.dom.classlist.enable @menuEl(), 'hidden', !show
-        @positionMenu e if show
+        @positionMenu position if show
         clearTimeout @hideMenuTimer
         @hideMenuAfterWhile() if show
 
-      ###*
-        @param {goog.events.BrowserEvent} e
-      ###
-      positionMenu: (e) ->
-        position = new goog.positioning.ViewportClientPosition e.clientX, e.clientY
+      positionMenu: (position) ->
+        position = new goog.positioning.ViewportClientPosition position
         position.setLastResortOverflow goog.positioning.Overflow.ADJUST_X | goog.positioning.Overflow.ADJUST_Y
         position.reposition @menuEl(), goog.positioning.Corner.BOTTOM_START
 
@@ -125,6 +125,12 @@ class app.react.pages.Song
         songEl.style.visibility = 'hidden'
         fn()
         songEl.style.visibility = ''
+
+      onMenuMouseHover: (e) ->
+        if e.type == 'mouseenter'
+          clearTimeout @hideMenuTimer
+        else
+          @hideMenuAfterWhile()
 
   # TODO(steida): Set by platform.
   @MIN_READABLE_FONT_SIZE: 8
