@@ -111,7 +111,8 @@ class app.react.pages.Song
         top = -(@ref('menu').offsetHeight / 2)
 
         if device.mobile
-          top -= @ref('menu').offsetHeight 
+          left -= Song.LEFT_THUMB_AVERAGE_X_OFFSET
+          top -= @ref('menu').offsetHeight
 
         new goog.math.Box top, 0, 0, -left
 
@@ -171,8 +172,9 @@ class app.react.pages.Song
         songEl.style.visibility = ''
 
   # TODO(steida): Set by platform.
-  @MIN_READABLE_FONT_SIZE: 8
+  @HIDE_MENU_DELAY: 2000
   @MAX_FONT_SIZE: 60
+  @MIN_READABLE_FONT_SIZE: 8
   @MSG_BACK: goog.getMsg 'back'
   @MSG_EDIT: goog.getMsg 'edit'
-  @HIDE_MENU_DELAY: 2000
+  @LEF_THUMB_AVERAGE_X_OFFSET: 16
