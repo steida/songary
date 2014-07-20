@@ -1,8 +1,8 @@
 goog.provide 'app.react.pages.Song'
 
-goog.require 'goog.dom.BufferedViewportSizeMonitor'
 goog.require 'goog.dom.ViewportSizeMonitor'
 goog.require 'goog.dom.classlist'
+goog.require 'goog.math.Box'
 goog.require 'goog.math.Size'
 goog.require 'goog.positioning.ViewportClientPosition'
 goog.require 'goog.string'
@@ -18,8 +18,8 @@ class app.react.pages.Song
   ###
   constructor: (routes, touch, store, device) ->
     {div} = touch.scroll 'div'
-    {article,menu} = React.DOM
-    {a} = touch.none 'a'
+    {article, menu} = React.DOM
+    {a, menuitem} = touch.none 'a', 'menuitem'
 
     @create = React.createClass
 
@@ -37,11 +37,18 @@ class app.react.pages.Song
             ref: 'menu'
           ,
             a
-              href: routes.home.createUrl(),
-            , Song.MSG_BACK
-            a
-              href: routes.editMySong.createUrl(store.song),
+              href: routes.editMySong.createUrl(store.song)
             , Song.MSG_EDIT
+            a
+              href: routes.home.createUrl()
+              ref: 'back'
+            , Song.MSG_BACK
+            menuitem
+              onPointerUp: @onFontResizeButtonPointerUp
+            , '+'
+            menuitem
+              onPointerUp: @onFontResizeButtonPointerUp
+            , '-'
 
       lyricsHtml: ->
         goog.string
@@ -50,49 +57,86 @@ class app.react.pages.Song
             "<sup>#{chord}</sup>"
 
       onSongPointerUp: (e) ->
-        pointerUpOnMenu = goog.dom.contains @menuEl(), e.target
+        pointerUpOnMenu = goog.dom.contains @ref('menu'), e.target
         return if pointerUpOnMenu
         @toggleMenu null, new goog.math.Coordinate e.clientX, e.clientY
 
-      menuEl: ->
-        @refs['menu'].getDOMNode()
+      onMenuMouseHover: (e) ->
+        return if not device.desktop
+        if e.type == 'mouseenter'
+          clearTimeout @hideMenuTimer
+        else
+          @hideMenuAfterWhile()
+
+      onFontResizeButtonPointerUp: (e) ->
+        if not device.desktop
+          clearTimeout @hideMenuTimer
+          @hideMenuAfterWhile()
+
+      ###*
+        NOTE(steida): Nice pattern. Mixin? Pull request to React?
+        @param {string} name
+        @return {Element}
+      ###
+      ref: (name) ->
+        @refs[name].getDOMNode()
 
       ###*
         @param {?boolean} show
-        @param {goog.math.Coordinate=} position
+        @param {goog.math.Coordinate=} mouseCoord
       ###
-      toggleMenu: (show, position) ->
-        show ?= goog.dom.classlist.contains @menuEl(), 'hidden'
-        goog.dom.classlist.enable @menuEl(), 'hidden', !show
-        @positionMenu position if show
+      toggleMenu: (show, mouseCoord) ->
+        show ?= goog.dom.classlist.contains @ref('menu'), 'hidden'
+        goog.dom.classlist.enable @ref('menu'), 'hidden', !show
+        @positionMenu mouseCoord if show
         clearTimeout @hideMenuTimer
         @hideMenuAfterWhile() if show
 
-      positionMenu: (position) ->
-        position = new goog.positioning.ViewportClientPosition position
-        position.setLastResortOverflow goog.positioning.Overflow.ADJUST_X | goog.positioning.Overflow.ADJUST_Y
-        position.reposition @menuEl(), goog.positioning.Corner.BOTTOM_START
+      hideMenu: ->
+        @toggleMenu false
+
+      positionMenu: (mouseCoord) ->
+        # NOTE(steida): It seems that after rotation change iOS Safari
+        # caches size until scroll, so sometimes x or y is not adjusted.
+        position = new goog.positioning.ViewportClientPosition mouseCoord
+        overflow = goog.positioning.Overflow.ADJUST_X | goog.positioning.Overflow.ADJUST_Y
+        position.setLastResortOverflow overflow
+        position.reposition @ref('menu'),
+          goog.positioning.Corner.TOP_START, @getDeviceMarginBox()
+
+      getDeviceMarginBox: ->
+        left =
+          @ref('back').getBoundingClientRect().right -
+          @ref('menu').getBoundingClientRect().left
+        top = -(@ref('menu').offsetHeight / 2)
+
+        if device.mobile
+          top -= @ref('menu').offsetHeight 
+
+        new goog.math.Box top, 0, 0, -left
 
       componentDidMount: ->
         @setLyricsMaxFontSize()
-        @createAndListenViewportMonitor()
-        @hideMenuAfterWhile()
+        @createAndListenViewportSizeMonitor()
+        @hideMenu()
 
       componentWillUnmount: ->
         @hideMenu()
         @viewportMonitor.dispose()
 
-      createAndListenViewportMonitor: ->
-        @viewportMonitor = new goog.dom
-          .BufferedViewportSizeMonitor new goog.dom.ViewportSizeMonitor
-        @viewportMonitor.listen 'resize', @setLyricsMaxFontSize
+      createAndListenViewportSizeMonitor: ->
+        # NOTE(steida): Update UI asap. If it doesn't work, downgrade to
+        # goog.dom.BufferedViewportSizeMonitor.
+        @viewportMonitor = new goog.dom.ViewportSizeMonitor
+        @viewportMonitor.listen 'resize', @onViewportSizeMonitorResize
+
+      onViewportSizeMonitorResize: (e) ->
+        @hideMenu()
+        @setLyricsMaxFontSize()
 
       hideMenuAfterWhile: ->
         clearTimeout @hideMenuTimer
         @hideMenuTimer = setTimeout @hideMenu, Song.HIDE_MENU_DELAY
-
-      hideMenu: ->
-        @toggleMenu false
 
       componentDidUpdate: ->
         # TODO(steida): Implement fontSize increase and decrease.
@@ -126,16 +170,9 @@ class app.react.pages.Song
         fn()
         songEl.style.visibility = ''
 
-      onMenuMouseHover: (e) ->
-        return if not device.desktop
-        if e.type == 'mouseenter'
-          clearTimeout @hideMenuTimer
-        else
-          @hideMenuAfterWhile()
-
   # TODO(steida): Set by platform.
   @MIN_READABLE_FONT_SIZE: 8
   @MAX_FONT_SIZE: 60
-  @MSG_BACK: goog.getMsg 'Back'
-  @MSG_EDIT: goog.getMsg 'Edit'
+  @MSG_BACK: goog.getMsg 'back'
+  @MSG_EDIT: goog.getMsg 'edit'
   @HIDE_MENU_DELAY: 2000

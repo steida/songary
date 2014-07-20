@@ -23,14 +23,22 @@
     margin 0
     padding 0
     // NOTE(steida): Consider fixed position, but then ViewportClientPosition
-    // in song page does not work.
+    // must be replaced for something else.
     position absolute
     // transition all .5s
 
     &.hidden
       background-color rgba(0, 0, 0, 0)
 
-    > *, .touch-hover
+    a, menuitem
       color #fff
       margin 0
-      padding .625em 1em
+      padding .5em .625em
+
+    menuitem
+      cursor pointer
+      font-weight bold
+
+      /.is-desktop &:hover
+      &.touch-hover
+        text-decoration underline
