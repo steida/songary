@@ -44,10 +44,10 @@ class app.react.pages.Song
               ref: 'back'
             , Song.MSG_BACK
             menuitem
-              onPointerUp: @onFontResizeButtonPointerUp
+              onPointerUp: @onFontResizeButtonPointerUp.bind @, true
             , '+'
             menuitem
-              onPointerUp: @onFontResizeButtonPointerUp
+              onPointerUp: @onFontResizeButtonPointerUp.bind @, false
             , '-'
 
       lyricsHtml: ->
@@ -68,10 +68,13 @@ class app.react.pages.Song
         else
           @hideMenuAfterWhile()
 
-      onFontResizeButtonPointerUp: (e) ->
+      onFontResizeButtonPointerUp: (increase) ->
         if not device.desktop
           clearTimeout @hideMenuTimer
           @hideMenuAfterWhile()
+        fontSize = parseInt @ref('article').style.fontSize, 10
+        if increase then fontSize++ else fontSize--
+        @ref('article').style.fontSize = "#{fontSize}px"
 
       ###*
         NOTE(steida): Nice pattern. Mixin? Pull request to React?
@@ -105,14 +108,14 @@ class app.react.pages.Song
           goog.positioning.Corner.TOP_START, @getDeviceMarginBox()
 
       getDeviceMarginBox: ->
+        top = -(@ref('menu').offsetHeight / 2)
         left =
           @ref('back').getBoundingClientRect().right -
           @ref('menu').getBoundingClientRect().left
-        top = -(@ref('menu').offsetHeight / 2)
 
         if device.mobile
-          left -= Song.LEFT_THUMB_AVERAGE_X_OFFSET
           top -= @ref('menu').offsetHeight
+          left -= Song.LEFT_THUMB_AVERAGE_X_OFFSET
 
         new goog.math.Box top, 0, 0, -left
 
@@ -139,25 +142,20 @@ class app.react.pages.Song
         clearTimeout @hideMenuTimer
         @hideMenuTimer = setTimeout @hideMenu, Song.HIDE_MENU_DELAY
 
-      componentDidUpdate: ->
-        # TODO(steida): Implement fontSize increase and decrease.
-        # @setLyricsMaxFontSize()
-
       ###*
         Detect max lyrics fontSize to fit into screen.
       ###
       setLyricsMaxFontSize: ->
         songElSize = @getSize @getDOMNode()
-        articleEl = @refs['article'].getDOMNode()
         fontSize = Song.MIN_READABLE_FONT_SIZE
         @toAvoidUnnecessaryReflowAndRepaint =>
           while fontSize != Song.MAX_FONT_SIZE
-            articleEl.style.fontSize = "#{fontSize}px"
-            articleElSize = @getSize articleEl
+            @ref('article').style.fontSize = "#{fontSize}px"
+            articleElSize = @getSize @ref('article')
             # NOTE(steida): It seems that width is the best UX pattern.
             fitsInsideProperly = articleElSize.width > songElSize.width
             if fitsInsideProperly
-              articleEl.style.fontSize = "#{--fontSize}px"
+              @ref('article').style.fontSize = "#{--fontSize}px"
               break
             fontSize++
 
@@ -177,4 +175,4 @@ class app.react.pages.Song
   @MIN_READABLE_FONT_SIZE: 8
   @MSG_BACK: goog.getMsg 'back'
   @MSG_EDIT: goog.getMsg 'edit'
-  @LEF_THUMB_AVERAGE_X_OFFSET: 16
+  @LEFT_THUMB_AVERAGE_X_OFFSET: 16
