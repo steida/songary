@@ -18,7 +18,6 @@ class server.Storage extends common.Storage
   promiseOf: (route, routes) ->
     switch route
       when routes.mySong, routes.editMySong
-        # TODO(steida): Load song from Mongo.
         @notFound()
       else
         @ok()
