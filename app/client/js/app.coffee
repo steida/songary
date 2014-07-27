@@ -14,8 +14,6 @@ class App
   ###
   constructor: (router, routes, reactApp, element, appTitle, storage, device) ->
 
-    reactAppComponent = null
-
     onRouterError = (e) ->
       # PATTERN(steida): Here we can handle various errors.
       # For server error, use alert something like "Try it later...".
@@ -28,21 +26,7 @@ class App
 
     syncUI = ->
       document.title = appTitle.get()
-      if !reactAppComponent
-        reactAppComponent = React.renderComponent reactApp.create(), element
-        return
-
-      # PATTERN(steida): Since React component is already rendered, all we
-      # need is forceUpdate. Remember this article?
-      # http://swannodette.github.io/2013/12/17/the-future-of-javascript-mvcs/
-      # Om is using props, so it needs to deal with
-      # http://facebook.github.io/react/docs/component-specs.html#updating-shouldcomponentupdate.
-      # Este.js does not use React props nor state, because app state is
-      # stored in app stores instead. Therefore we can update DOM with
-      # forceUpdate super fastly, because forceUpdate skips
-      # shouldComponentUpdate method. React props and state are nice and all,
-      # but for Este.js, it's better to store app state out of React components.
-      reactAppComponent.forceUpdate()
+      React.renderComponent reactApp.create(), element
 
     routes.addToEste router
     router.listen 'error', onRouterError
