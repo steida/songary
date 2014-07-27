@@ -9,10 +9,9 @@ class App
     @param {Element} element
     @param {app.Title} appTitle
     @param {app.Storage} storage
-    @param {app.Device} device
     @constructor
   ###
-  constructor: (router, routes, reactApp, element, appTitle, storage, device) ->
+  constructor: (router, routes, reactApp, element, appTitle, storage) ->
 
     onRouterError = (e) ->
       # PATTERN(steida): Here we can handle various errors.

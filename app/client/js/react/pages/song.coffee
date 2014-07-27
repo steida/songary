@@ -2,6 +2,7 @@ goog.provide 'app.react.pages.Song'
 
 goog.require 'goog.dom.ViewportSizeMonitor'
 goog.require 'goog.dom.classlist'
+goog.require 'goog.labs.userAgent.device'
 goog.require 'goog.math.Box'
 goog.require 'goog.math.Size'
 goog.require 'goog.positioning.ViewportClientPosition'
@@ -13,10 +14,9 @@ class app.react.pages.Song
     @param {app.Routes} routes
     @param {app.react.Touch} touch
     @param {app.songs.Store} store
-    @param {app.Device} device
     @constructor
   ###
-  constructor: (routes, touch, store, device) ->
+  constructor: (routes, touch, store) ->
     {div} = touch.scroll 'div'
     {article, menu} = React.DOM
     {a, menuitem} = touch.none 'a', 'menuitem'
@@ -62,14 +62,14 @@ class app.react.pages.Song
         @toggleMenu null, new goog.math.Coordinate e.clientX, e.clientY
 
       onMenuMouseHover: (e) ->
-        return if not device.desktop
+        return if not goog.labs.userAgent.device.isDesktop()
         if e.type == 'mouseenter'
           clearTimeout @hideMenuTimer
         else
           @hideMenuAfterWhile()
 
       onFontResizeButtonPointerUp: (increase) ->
-        if not device.desktop
+        if not goog.labs.userAgent.device.isDesktop()
           clearTimeout @hideMenuTimer
           @hideMenuAfterWhile()
         fontSize = parseInt @ref('article').style.fontSize, 10
@@ -113,7 +113,7 @@ class app.react.pages.Song
           @ref('back').getBoundingClientRect().right -
           @ref('menu').getBoundingClientRect().left
 
-        if device.mobile
+        if !goog.labs.userAgent.device.isDesktop()
           top -= @ref('menu').offsetHeight
           left -= Song.LEFT_THUMB_AVERAGE_X_OFFSET
 

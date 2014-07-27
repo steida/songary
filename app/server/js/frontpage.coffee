@@ -14,20 +14,23 @@ class server.FrontPage
   constructor: (@serverApp, @app, @appTitle, @clientData, @version, @isDev) ->
 
   ###*
-    @return {string} Rendered HTML.
+    @return {string} Return HTML to be send to client.
   ###
-  render: ->
+  renderToString: ->
     appHtml = React.renderComponentToString @app.create()
     scriptsHtml = @getScriptsHtml()
 
     html = React.renderComponentToStaticMarkup @serverApp.create
       bodyHtml: appHtml + scriptsHtml
-      version: @version
       title: @appTitle.get()
+      version: @version
 
-    # React can't render doctype so we have to manually add it.
+    # NOTE(steida): Add doctype manually because React doesn't support it.
     '<!DOCTYPE html>' + html
 
+  ###*
+    @return {string}
+  ###
   getScriptsHtml: ->
     scripts = ['/app/client/build/app.js?v=' + @version]
     if @isDev then scripts.push [

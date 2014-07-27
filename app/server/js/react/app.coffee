@@ -1,5 +1,7 @@
 goog.provide 'server.react.App'
 
+goog.require 'goog.labs.userAgent.device'
+
 class server.react.App
 
   ###*
@@ -10,7 +12,7 @@ class server.react.App
 
     @create = React.createClass
       render: ->
-        html lang: 'en',
+        html lang: 'en', className: @getHtmlClassName(),
           head null,
             meta charSet: 'utf-8'
             # NOTE(steida): http://www.mobilexweb.com/blog/ios-7-1-safari-minimal-ui-bugs
@@ -21,3 +23,11 @@ class server.react.App
             # TODO(steida): Base64 inline.
             link href: 'http://fonts.googleapis.com/css?family=PT+Sans&amp;subset=latin,latin-ext', rel: 'stylesheet'
           body dangerouslySetInnerHTML: __html: this.props.bodyHtml
+
+      getHtmlClassName: ->
+        # PATTERN(steida): Favor CSS media queries over this classes. But
+        # sometimes html:not(.is-desktop) is more handy.
+        React['addons']['classSet']
+          'is-mobile': goog.labs.userAgent.device.isMobile()
+          'is-tablet': goog.labs.userAgent.device.isTablet()
+          'is-desktop': goog.labs.userAgent.device.isDesktop()
