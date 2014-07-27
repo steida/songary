@@ -1,7 +1,8 @@
 goog.provide 'app.songs.Store'
 
-goog.require 'este.labs.Store'
 goog.require 'app.songs.Song'
+goog.require 'este.labs.Store'
+goog.require 'goog.array'
 
 class app.songs.Store extends este.labs.Store
 
@@ -33,6 +34,7 @@ class app.songs.Store extends este.labs.Store
     @return {Array.<app.songs.Song>}
   ###
   all: ->
+    goog.array.sortObjectsByKey @songs, 'name'
     @songs
 
   ###*
