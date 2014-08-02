@@ -38,10 +38,14 @@ paths =
   thirdParty:
     development: [
       'bower_components/pointerevents-polyfill/pointerevents.dev.js'
+      'bower_components/firebase/firebase.js'
+      'bower_components/firebase-simple-login/firebase-simple-login.js'
       'bower_components/react/react-with-addons.js'
     ]
     production: [
       'bower_components/pointerevents-polyfill/pointerevents.min.js'
+      'bower_components/firebase/firebase.js'
+      'bower_components/firebase-simple-login/firebase-simple-login.js'
       'bower_components/react/react-with-addons.min.js'
     ]
 
