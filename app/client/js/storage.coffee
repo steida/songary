@@ -27,8 +27,8 @@ class app.Storage extends common.Storage
       @songsStore
     ]
 
-    if @tryCreateLocalStorage()
-      @updateStoreOnLocalStorageChange()
+    @tryCreateLocalStorage()
+    @listenLocalStorage()
     @fetchStoresFromLocalStorage()
     @listenStores()
 
@@ -36,7 +36,7 @@ class app.Storage extends common.Storage
     @const
     @type {string}
   ###
-  @LOCALSTORAGE_KEY: 'songary'
+  localStorageKey: 'songary'
 
   ###*
     @type {goog.storage.Storage}
@@ -63,17 +63,14 @@ class app.Storage extends common.Storage
     - http://git.yathit.com/ydn-db/wiki/Home
     - https://github.com/swannodette/mori
     - https://github.com/benjamine/jsondiffpatch
-    @return {boolean}
     @protected
   ###
   tryCreateLocalStorage: ->
     mechanism = goog.storage.mechanism.mechanismfactory
-      .createHTML5LocalStorage Storage.LOCALSTORAGE_KEY
+      .createHTML5LocalStorage @localStorageKey
     # For instance, Safari in private mode does not allow localStorage.
-    return false if !mechanism
+    return if !mechanism
     @localStorage = new goog.storage.Storage mechanism
-    @preloadDefaultSongs()
-    true
 
   preloadDefaultSongs: ->
     return if @localStorage.get 'songs'
@@ -90,11 +87,12 @@ class app.Storage extends common.Storage
     NOTE(steida): This sync app state across tabs/windows.
     @protected
   ###
-  updateStoreOnLocalStorageChange: ->
+  listenLocalStorage: ->
     # NOTE(steida): IE 9/10/11 implementation of window storage event is
     # broken. http://stackoverflow.com/a/4679754
     # Naive fix via document.hasFocus() does not work. Investigate it later.
-    return if goog.labs.userAgent.browser.isIE()
+    return if !@localStorage || goog.labs.userAgent.browser.isIE()
+
     goog.events.listen window, 'storage', (e) =>
       browserEvent = e.getBrowserEvent()
       storeName = browserEvent.key.split('::')[1]
