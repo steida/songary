@@ -68,6 +68,7 @@ class app.react.pages.Song
         else
           @hideMenuAfterWhile()
 
+      # TODO(steida): Use polymer-gestures once pinch event will be supported.
       onFontResizeButtonPointerUp: (increase) ->
         if not goog.labs.userAgent.device.isDesktop()
           clearTimeout @hideMenuTimer
