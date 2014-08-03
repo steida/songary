@@ -12,13 +12,16 @@ class app.react.Login
 
     @create = React.createClass
       render: ->
-        button onPointerUp: @onButtonPointUp, @getButtonLabel()
+        button
+          disabled: true
+          onPointerUp: @onButtonPointUp
+        , @getButtonLabel()
 
       onButtonPointUp: (e) ->
-        if usersStore.isLogged()
-          usersStore.logout()
-        else
-          usersStore.loginViaFacebook()
+        # if usersStore.isLogged()
+        #   usersStore.logout()
+        # else
+        #   usersStore.loginViaFacebook()
 
       getButtonLabel: ->
         if usersStore.isLogged()

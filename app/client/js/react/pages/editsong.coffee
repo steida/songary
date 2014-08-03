@@ -22,7 +22,7 @@ class app.react.pages.EditSong
 
       render: ->
         editMode = routes.active == routes.editMySong
-        song = if editMode then store.song else store.newSong
+        song = if editMode then store.mySongByRoute routes.active else store.newSong
 
         div className: 'edit-song',
           form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
@@ -30,7 +30,6 @@ class app.react.pages.EditSong
               input
                 autoFocus: !editMode
                 className: 'form-control'
-                disabled: editMode
                 name: 'name'
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_NAME
@@ -38,7 +37,6 @@ class app.react.pages.EditSong
             div className: 'form-group',
               input
                 className: 'form-control'
-                disabled: editMode
                 name: 'artist'
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_ARTIST
@@ -88,7 +86,7 @@ class app.react.pages.EditSong
         @saveSong()
 
       saveSong: ->
-        # PATTERN(steida): Edited model/song is stored immediatelly.
+        # PATTERN(steida): Edited song is saved immediatelly.
         errors = if editMode then song.validate() else store.addNewSong()
         # TODO(steida): Reusable React helper/mixin/whatever.
         if errors.length

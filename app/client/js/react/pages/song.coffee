@@ -26,9 +26,11 @@ class app.react.pages.Song
       viewportMonitor: null
 
       render: ->
+        song = store.mySongByRoute routes.active
+
         div className: 'song', onPointerUp: @onSongPointerUp,
           article
-            dangerouslySetInnerHTML: '__html': @lyricsHtml()
+            dangerouslySetInnerHTML: '__html': @lyricsHtml song
             ref: 'article'
           menu
             className: 'hidden'
@@ -47,12 +49,12 @@ class app.react.pages.Song
               onPointerUp: @onFontResizeButtonPointerUp.bind @, false
             , '-'
             a
-              href: routes.editMySong.createUrl(store.song)
+              href: routes.editMySong.createUrl song
             , Song.MSG_EDIT
 
-      lyricsHtml: ->
+      lyricsHtml: (song) ->
         goog.string
-          .htmlEscape store.song.lyrics
+          .htmlEscape song.lyrics
           .replace /\[([^\]]+)\]/g, (str, chord) ->
             "<sup>#{chord}</sup>"
 

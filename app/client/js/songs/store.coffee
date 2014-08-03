@@ -21,14 +21,10 @@ class app.songs.Store extends este.labs.Store
   songs: null
 
   ###*
+    New song not yet added.
     @type {app.songs.Song}
   ###
   newSong: null
-
-  ###*
-    @type {app.songs.Song}
-  ###
-  song: null
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -54,10 +50,6 @@ class app.songs.Store extends este.labs.Store
     @notify()
     []
 
-  saveSong: ->
-    errors = @song.validate()
-    return errors if errors.length
-
   ###*
     @param {app.songs.Song} song
   ###
@@ -69,10 +61,9 @@ class app.songs.Store extends este.labs.Store
     @param {este.Route} route
     @return {app.songs.Song}
   ###
-  songByRoute: (route) ->
-    goog.array.find @songs, (song) ->
-      song['urlArtist'] == route.params['urlArtist'] &&
-      song['urlName'] == route.params['urlName']
+  mySongByRoute: (route) ->
+    # TODO: my songs
+    goog.array.find @songs, (song) -> song.id == route.params.id
 
   ###*
     @param {app.songs.Song} song
@@ -92,6 +83,32 @@ class app.songs.Store extends este.labs.Store
     song[prop] = value
     song.update()
     @notify()
+    # appModel.update -> @newSong = song
+
+    # console.log 'fok'
+    # pak login
+
+    # userRef = new Firebase 'https://shining-fire-6810.firebaseio.com/users/1'
+    # userRef.set
+    #   newSong: JSON.parse JSON.stringify song
+
+    #
+    # myFirebaseRef.child("location/city").on("value", function(snapshot) {
+    #   alert(snapshot.val());  // Alerts "San Francisco"
+    # });
+    #
+    # console.log song
+
+    # @firebase.user.set
+
+    # save to firebase
+    # on change, update
+    # somewhere elsewhere rerender everything, hmm, storage?
+    # annonymous user
+    # @myFirebaseRef = new Firebase 'https://shining-fire-6810.firebaseio.com/'
+    # myFirebaseRef.set({
+    #   title: "Hello World!",
+    # });
 
   ###*
     @override

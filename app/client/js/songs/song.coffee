@@ -8,13 +8,12 @@ class app.songs.Song
   ###*
     @constructor
   ###
-  constructor: ->
-
-  ###*
-    ID is an empty string until first sync aka user is logged or created.
-    @type {string}
-  ###
-  id: ''
+  constructor: () ->
+    ###*
+      @type {string}
+      @const
+    ###
+    @id = goog.string.getRandomString()
 
   ###*
     ISO 8601 string representation of date/time.
@@ -64,6 +63,7 @@ class app.songs.Song
     @return {Array.<app.ValidationError>}
   ###
   validate: ->
+    @update()
     ['name', 'artist', 'lyrics']
       .filter (prop) => !@[prop].trim()
       .map (prop) =>

@@ -9,13 +9,14 @@ class app.react.pages.Home
     @constructor
   ###
   constructor: (routes, songsStore, touch) ->
-    {div,ul,li,br} = React.DOM
-    {a,button} = touch.scroll 'a', 'button'
+    {div,h1,ul,li,br} = React.DOM
+    {a} = touch.scroll 'a', 'button'
 
     @create = React.createClass
 
       render: ->
         div className: 'home',
+          h1 null, Home.MSG_MY_SONGS,
           ul null, songsStore.all().map (song, i) ->
             li key: i,
               a href: routes.mySong.createUrl(song),
@@ -24,17 +25,12 @@ class app.react.pages.Home
             className: 'btn btn-default'
             href: routes.myNewSong.createUrl()
           , Home.MSG_ADD_NEW_SONG
-          button
-            className: 'btn btn-default'
-            href: routes.myNewSong.createUrl()
-            onPointerUp: @onResetPointerUp
-          , Home.MSG_RESET
-
-      onResetPointerUp: (e) ->
-        reset = confirm 'Do you really want reset everything?'
-        return if !reset
-        window.localStorage.removeItem 'songary::songs'
-        window.location.reload true
+          # a
+          #   className: 'btn btn-default'
+          #   href: routes.myNewSong.createUrl()
+          # , Home.MSG_SONGS
 
   @MSG_ADD_NEW_SONG: goog.getMsg 'add new song'
+  @MSG_MY_SONGS: goog.getMsg 'my songs'
+  @MSG_SONGS: goog.getMsg 'songs'
   @MSG_RESET: goog.getMsg 'reset'

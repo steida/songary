@@ -32,9 +32,11 @@ class app.Title
   @MSG_NOT_FOUND: goog.getMsg 'Page Not Found'
 
   getMySongTitle: ->
+    song = @songsStore.mySongByRoute @routes.active
+    return if !song
     Title.MSG_SONG = goog.getMsg '{$name} - {$artist} | Songary',
-      name: @songsStore.song.name
-      artist: @songsStore.song.artist
+      name: song.name
+      artist: song.artist
 
   getEditMySongTitle: ->
     Title.MSG_EDIT + @getMySongTitle()
