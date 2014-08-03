@@ -32,15 +32,29 @@
 
     a, menuitem
       // NOTE(steida): Override bootstrap.
-      color #fff !important
+      color #eee !important
       margin 0
       padding .5em .625em
       user-select none
 
     menuitem
+      color #fff !important
       cursor pointer
       font-weight bold
+      position relative
+
+      &:before
+        background-color #fff
+        border-radius 2em
+        content ''
+        opacity 0
+        pos absolute 7px 0 7px 0
+        transition opacity .3s
+        z-index 0
 
       /.is-desktop &:hover
       &.touch-hover
-        text-decoration underline
+        // text-decoration underline
+
+        &:before
+          opacity .3
