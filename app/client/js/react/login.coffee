@@ -4,10 +4,10 @@ class app.react.Login
 
   ###*
     @param {app.react.Touch} touch
-    @param {app.users.Store} usersStore
+    @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (touch, usersStore) ->
+  constructor: (touch, userStore) ->
     {button} = touch.none 'button'
 
     @create = React.createClass
@@ -18,14 +18,15 @@ class app.react.Login
         , @getButtonLabel()
 
       onButtonPointUp: (e) ->
-        # if usersStore.isLogged()
-        #   usersStore.logout()
+        # if userStore.isLogged()
+        #   userStore.logout()
         # else
-        #   usersStore.loginViaFacebook()
+        #   userStore.loginViaFacebook()
 
       getButtonLabel: ->
-        if usersStore.isLogged()
-          Login.MSG_LOGOUT = goog.getMsg 'Logout {$displayName}',
-            'displayName': usersStore.user.displayName
-        else
-          Login.MSG_LOGIN_WITH_FACEBOOK = goog.getMsg 'Log in with Facebook'
+        'Log in with Facebook'
+        # if userStore.isLogged()
+        #   Login.MSG_LOGOUT = goog.getMsg 'Logout {$displayName}',
+        #     'displayName': userStore.user.displayName
+        # else
+        #   Login.MSG_LOGIN_WITH_FACEBOOK = goog.getMsg 'Log in with Facebook'

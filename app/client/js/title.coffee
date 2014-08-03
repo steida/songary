@@ -7,10 +7,10 @@ class app.Title
   ###*
     @param {app.Routes} routes
     @param {app.Store} appStore
-    @param {app.songs.Store} songsStore
+    @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (@routes, @appStore, @songsStore) ->
+  constructor: (@routes, @appStore, @userStore) ->
 
   ###*
     @return {string}
@@ -32,7 +32,7 @@ class app.Title
   @MSG_NOT_FOUND: goog.getMsg 'Page Not Found'
 
   getMySongTitle: ->
-    song = @songsStore.mySongByRoute @routes.active
+    song = @userStore.songByRoute @routes.active
     return if !song
     Title.MSG_SONG = goog.getMsg '{$name} - {$artist} | Songary',
       name: song.name

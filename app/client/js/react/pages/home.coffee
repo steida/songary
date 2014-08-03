@@ -4,11 +4,11 @@ class app.react.pages.Home
 
   ###*
     @param {app.Routes} routes
-    @param {app.songs.Store} songsStore
+    @param {app.user.Store} userStore
     @param {app.react.Touch} touch
     @constructor
   ###
-  constructor: (routes, songsStore, touch) ->
+  constructor: (routes, userStore, touch) ->
     {div,h1,ul,li,br} = React.DOM
     {a} = touch.scroll 'a'
 
@@ -17,7 +17,7 @@ class app.react.pages.Home
       render: ->
         div className: 'home',
           h1 null, Home.MSG_MY_SONGS,
-          ul null, songsStore.all().map (song) ->
+          ul null, userStore.allSongs().map (song) ->
             li key: song.id,
               a href: routes.mySong.createUrl(song),
                 "#{song.name} [#{song.artist}]"

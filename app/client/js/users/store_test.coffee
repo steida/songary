@@ -1,6 +1,6 @@
-suite 'app.songs.Store', ->
+suite 'app.user.Store', ->
 
-  Store = app.songs.Store
+  Store = app.user.Store
   store = null
 
   setup ->
@@ -12,9 +12,9 @@ suite 'app.songs.Store', ->
   invalidSong = ->
     validate: -> ['error']
 
-  suite 'all', ->
+  suite 'allSongs', ->
     test 'should return empty array', ->
-      songs = store.all()
+      songs = store.allSongs()
       assert.deepEqual songs, []
 
   suite 'newSong', ->
@@ -25,7 +25,7 @@ suite 'app.songs.Store', ->
     test 'should add valid new song', (done) ->
       song = validSong()
       store.listen 'change', ->
-        assert.equal store.all()[0], song
+        assert.equal store.allSongs()[0], song
         assert.isFalse store.newSong == song
         done()
       store.newSong = song
@@ -38,7 +38,7 @@ suite 'app.songs.Store', ->
       store.listen 'change', -> changeDispatched = true
       store.newSong = song
       errors = store.addNewSong()
-      assert.equal store.all().length, 0
+      assert.equal store.allSongs().length, 0
       assert.isTrue store.newSong == song
       assert.deepEqual errors, ['error']
       assert.isFalse changeDispatched
@@ -48,19 +48,19 @@ suite 'app.songs.Store', ->
       song = store.newSong = validSong()
       store.addNewSong()
       store.listen 'change', ->
-        assert.deepEqual store.all(), []
+        assert.deepEqual store.allSongs(), []
         done()
       store.delete song
 
-  suite 'mySongByRoute', ->
+  suite 'songByRoute', ->
     test 'should return added song looked up with params', ->
       song = store.newSong = urlArtist: 'a', urlName: 'b', validate: -> []
       store.addNewSong()
-      mySongByRoute = store.mySongByRoute params: urlArtist: 'a', urlName: 'b'
-      assert.deepEqual mySongByRoute, song
+      songByRoute = store.songByRoute params: urlArtist: 'a', urlName: 'b'
+      assert.deepEqual songByRoute, song
 
     test 'should return null', ->
-      assert.isNull store.mySongByRoute params: urlArtist: 'a', urlName: 'b'
+      assert.isNull store.songByRoute params: urlArtist: 'a', urlName: 'b'
 
   suite 'updateSong', ->
     test 'should udpate song', (done) ->

@@ -13,7 +13,7 @@ class app.react.pages.Song
   ###*
     @param {app.Routes} routes
     @param {app.react.Touch} touch
-    @param {app.songs.Store} store
+    @param {app.user.Store} store
     @constructor
   ###
   constructor: (routes, touch, store) ->
@@ -26,7 +26,7 @@ class app.react.pages.Song
       viewportMonitor: null
 
       render: ->
-        song = store.mySongByRoute routes.active
+        song = store.songByRoute routes.active
 
         div className: 'song', onPointerUp: @onSongPointerUp,
           article

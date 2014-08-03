@@ -7,7 +7,7 @@ class app.react.pages.EditSong
 
   ###*
     @param {app.Routes} routes
-    @param {app.songs.Store} store
+    @param {app.user.Store} store
     @param {app.react.Touch} touch
     @constructor
   ###
@@ -22,7 +22,8 @@ class app.react.pages.EditSong
 
       render: ->
         editMode = routes.active == routes.editMySong
-        song = if editMode then store.mySongByRoute routes.active else store.newSong
+        song = if editMode then store.songByRoute routes.active else store.newSong
+        return null if !song
 
         div className: 'edit-song',
           form onSubmit: @onFormSubmit, ref: 'form', role: 'form',

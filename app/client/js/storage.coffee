@@ -14,16 +14,16 @@ class app.Storage extends common.Storage
     with all its benefits.
     @param {app.LocalStorage} localStorage
     @param {app.Store} appStore
-    @param {app.songs.Store} songsStore
+    @param {app.user.Store} userStore
     @constructor
     @extends {common.Storage}
   ###
-  constructor: (localStorage, appStore, @songsStore) ->
+  constructor: (localStorage, appStore, @userStore) ->
     super appStore
 
     stores = [
       @appStore
-      @songsStore
+      @userStore
     ]
 
     localStorage.load stores
@@ -39,7 +39,7 @@ class app.Storage extends common.Storage
   promiseOf: (route, routes) ->
     switch route
       when routes.mySong, routes.editMySong
-        song = @songsStore.mySongByRoute route
+        song = @userStore.songByRoute route
         if song then @ok() else @notFound()
       else
         @ok()
