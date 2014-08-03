@@ -10,15 +10,15 @@ class app.react.pages.Home
   ###
   constructor: (routes, songsStore, touch) ->
     {div,h1,ul,li,br} = React.DOM
-    {a} = touch.scroll 'a', 'button'
+    {a} = touch.scroll 'a'
 
     @create = React.createClass
 
       render: ->
         div className: 'home',
           h1 null, Home.MSG_MY_SONGS,
-          ul null, songsStore.all().map (song, i) ->
-            li key: i,
+          ul null, songsStore.all().map (song) ->
+            li key: song.id,
               a href: routes.mySong.createUrl(song),
                 "#{song.name} [#{song.artist}]"
           a
