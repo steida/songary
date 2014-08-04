@@ -1,41 +1,36 @@
 goog.provide 'app.Firebase'
 
+goog.require 'goog.asserts'
+
 class app.Firebase
 
   ###*
     @constructor
   ###
   constructor: ->
-    # TODO(steida): Use server data, make it isomorphic.
-    if window.Firebase
-      @root = new window.Firebase 'https://shining-fire-6810.firebaseio.com/'
-      @authenticated = @root.child '.info/authenticated'
+    @setFireBaseRefs()
+
+  ###*
+    @protected
+  ###
+  setFireBaseRefs: ->
+    # TODO(steida): Use server data for path, make it isomorphic.
+    return if !window.Firebase
+    @root = new window.Firebase 'https://shining-fire-6810.firebaseio.com/'
+    @authenticated = @root.child '.info/authenticated'
 
   ###*
     @param {Function} callback
   ###
-  initSimpleLogin: (callback) ->
-    if window.FirebaseSimpleLogin
-      @authClient = new window.FirebaseSimpleLogin @root, callback
+  simpleLogin: (callback) ->
+    goog.asserts.assert !@authClient, 'Can be called only once'
+    @authClient = new window.FirebaseSimpleLogin @root, callback
 
-# userRef = new Firebase 'https://shining-fire-6810.firebaseio.com/users/1/newSong'
-# userRef.on 'value', (snapshot) =>
-#   json = snapshot.val()
-#   return if !json
-#   newSong = @songsStore.instanceFromJson app.songs.Song, json
-#   @songsStore.newSong = newSong
-#   @notify()
-# @myFirebaseRef = new Firebase 'https://shining-fire-6810.firebaseio.com/'
-# @myFirebaseRef
-#   .child 'songs'
-#   .on 'value', (snapshot) =>
-#     @setState 'songs': snapshot.val()
+  loginViaFacebook: ->
+    @authClient.login 'facebook',
+      rememberMe: true
+      # TODO(steida): user_likes
+      scope: 'email'
 
-# @songsStore.listen 'change', (e) =>
-#   @notify()
-
-# firebase.authenticated.on 'value', (snap) =>
-#   console.log 'firebase.authenticated.on'
-#   setTimeout =>
-#     @notify()
-#   , 10
+  logout: ->
+    @authClient.logout()

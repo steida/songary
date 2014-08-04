@@ -13,25 +13,31 @@ class app.Storage extends common.Storage
     The goal is http://en.wikipedia.org/wiki/Persistent_data_structure
     with all its benefits.
     @param {app.LocalStorage} localStorage
+    @param {app.Firebase} firebase
     @param {app.Store} appStore
     @param {app.user.Store} userStore
     @constructor
     @extends {common.Storage}
   ###
-  constructor: (localStorage, appStore, @userStore) ->
-    super appStore
+  constructor: (localStorage, firebase, @appStore, @userStore) ->
+    super @appStore
 
     stores = [
       @appStore
       @userStore
     ]
 
-    localStorage.load stores
-
     stores.forEach (store) => store.listen 'change', (e) =>
       # TODO(steida): Server sync, consider diff.
       localStorage.set store
       @notify()
+
+    localStorage.load stores
+    firebase.simpleLogin (error, user) =>
+      if error
+        console.log error
+        return
+      @userStore.setUser user
 
   ###*
     @override
