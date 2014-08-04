@@ -93,10 +93,12 @@ class app.user.Store extends este.labs.Store
   toJson: ->
     newSong: @newSong
     songs: @songs
+    user: @user
 
   ###*
     @override
   ###
   fromJson: (json) ->
     @newSong = @instanceFromJson app.songs.Song, json.newSong
+    @user = json.user
     @songs = json.songs.map @instanceFromJson app.songs.Song
