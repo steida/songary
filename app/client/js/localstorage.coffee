@@ -12,13 +12,11 @@ class app.LocalStorage
     @constructor
   ###
   constructor: ->
-    @tryCreateLocalStorage()
+    @tryCreate()
+    @migrate()
 
-  ###*
-    @const
-    @type {string}
-  ###
   localStorageKey: 'songary'
+  localStorageVersion: 1
 
   ###*
     Can be null, Safari in private mode does not allow localStorage.
@@ -30,11 +28,46 @@ class app.LocalStorage
   ###*
     @protected
   ###
-  tryCreateLocalStorage: ->
+  tryCreate: ->
     mechanism = goog.storage.mechanism.mechanismfactory
       .createHTML5LocalStorage @localStorageKey
     return if !mechanism
     @localStorage = new goog.storage.Storage mechanism
+    @ensureVersion()
+
+  ensureVersion: ->
+    version = @localStorage.get '@version'
+    return if version
+    @localStorage.set '@version', @localStorageVersion
+
+  ###*
+    @protected
+  ###
+  migrate: ->
+    return if !@localStorage
+    storageVersion = Number @localStorage.get '@version'
+    scriptVersion = @localStorageVersion
+    userOrig = @localStorage.get 'user'
+    try
+      migrateVersion() for migrateVersion in [
+        =>
+          # Example:
+          # user = @localStorage.get 'user'
+          # user.songs = user.songs.map (song) ->
+          #   lyrics = song.lyrics
+          #   delete song.lyrics
+          #   song.llyrics = lyrics
+          #   song
+          # @localStorage.set 'user', user
+        =>
+          # console.log 'from 2 to 3'
+      ].slice storageVersion - 1, scriptVersion - 1
+    catch e
+      # TODO(steida): Report error to server.
+      @localStorage.set 'user', userOrig
+      return
+    @localStorage.set '@version', scriptVersion
+    return
 
   ###*
     @param {Array.<app.Store>} stores
@@ -66,6 +99,7 @@ class app.LocalStorage
     return if goog.labs.userAgent.browser.isIE()
 
     goog.events.listen window, 'storage', (e) =>
+      # TODO(steida): Reload if localStorageVersion changed.
       browserEvent = e.getBrowserEvent()
       storeName = browserEvent.key.split('::')[1]
       store = goog.array.find stores, (store) -> store.name == storeName
