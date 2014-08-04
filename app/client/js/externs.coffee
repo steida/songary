@@ -7,9 +7,12 @@
   Quoting properties is verbose and tricky.
   Externs ftw.
 ###
-class appSongsStore
-  appSongsStore::songs
-  appSongsStore::newSong
+class appUserStore
+  appUserStore::songs
+  appUserStore::newSong
+  # User.
+  appUserStore::user
+  appUserStore::displayName
 
 # PATTERN(steida): For app.songs.Song create appSongsSong.
 class appSongsSong
