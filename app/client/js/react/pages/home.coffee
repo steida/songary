@@ -16,7 +16,7 @@ class app.react.pages.Home
 
       render: ->
         div className: 'home',
-          h1 null, Home.MSG_MY_SONGS,
+          h1 null, Home.MSG_MY_SONGS
           ul null, userStore.allSongs().map (song) ->
             li key: song.id,
               a href: routes.mySong.createUrl(song),

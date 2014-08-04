@@ -18,6 +18,7 @@ class app.react.Layout
 
       render: ->
         page = @props.page
+        return null if !page
         songPageIsShown = page == song
 
         div className: 'layout',
