@@ -12,4 +12,5 @@ class app.react.Footer
     @create = React.createClass
 
       render: ->
-        login.create null
+        footer null,
+          login.create null

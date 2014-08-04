@@ -33,6 +33,8 @@ class app.LocalStorage
       .createHTML5LocalStorage @localStorageKey
     return if !mechanism
     @localStorage = new goog.storage.Storage mechanism
+    # NOTE(steida): Temp clean.
+    @localStorage.remove 'songs'
     @ensureVersion()
 
   ensureVersion: ->
