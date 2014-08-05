@@ -40,8 +40,6 @@ class app.Storage extends common.Storage
     # NOTE(steida): Persist data into Firebase if user is logged.
     if @userStore.user
       if store instanceof app.user.Store
-        # imho bude řvát, je na to neco v goog.object?
-        # goog.object.unsafeClone ok?
         @firebase
           .userRefOf @userStore.user
           .set store.toJson()
