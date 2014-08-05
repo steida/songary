@@ -1,5 +1,5 @@
 {
-  "name": "este",
+  "name": "songary",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
@@ -9,7 +9,7 @@
     "este-library": "git://github.com/steida/este-library.git",
     "react": "^0.11.0",
     "stylus-nib": "git://github.com/visionmedia/nib.git",
-    "firebase": "~1.0.18",
-    "firebase-simple-login": "~1.6.2"
+    "firebase": "^1.0.18",
+    "firebase-simple-login": "^1.6.2"
   }
 }
