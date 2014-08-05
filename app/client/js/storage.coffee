@@ -19,25 +19,33 @@ class app.Storage extends common.Storage
     @constructor
     @extends {common.Storage}
   ###
-  constructor: (localStorage, firebase, @appStore, @userStore) ->
+  constructor: (@localStorage, @firebase,
+      @appStore,
+      @userStore) ->
+
     super @appStore
 
-    stores = [
-      @appStore
-      @userStore
-    ]
+    @stores = [@appStore, @userStore]
 
-    stores.forEach (store) => store.listen 'change', (e) =>
-      # TODO(steida): Server sync, consider diff.
-      localStorage.set store
-      @notify()
+    @listenStores @onStoreChange
+    @localStorage.load @stores
+    # TODO(steida): Do it on server side. It can takes seconds on client.
+    @firebase.simpleLogin @userStore
 
-    localStorage.load stores
-    firebase.simpleLogin (error, user) =>
-      if error
-        console.log error
-        return
-      @userStore.setUser user
+  listenStores: (callback) ->
+    @stores.forEach (store) => store.listen 'change', callback.bind @, store
+
+  onStoreChange: (store, e) ->
+    @localStorage.set store
+    # NOTE(steida): Persist data into Firebase if user is logged.
+    if @userStore.user
+      if store instanceof app.user.Store
+        # imho bude řvát, je na to neco v goog.object?
+        # goog.object.unsafeClone ok?
+        @firebase
+          .userRefOf @userStore.user
+          .set store.toJson()
+    @notify()
 
   ###*
     @override
