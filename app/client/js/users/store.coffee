@@ -31,16 +31,11 @@ class app.user.Store extends este.labs.Store
 
   ###*
     @param {boolean=} initial
-    @protected
   ###
   setEmpty: (initial) ->
     @songs = []
     @newSong = new app.songs.Song
     @user = if initial then undefined else null
-
-  setUser: (@user) ->
-    @setEmpty() if !@user
-    @notify()
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -110,4 +105,5 @@ class app.user.Store extends este.labs.Store
   fromJson: (json) ->
     @newSong = @instanceFromJson app.songs.Song, json.newSong
     @user = json.user
-    @songs = json.songs.map @instanceFromJson app.songs.Song
+    # NOTE(steida): Because JSON stringify and parse ignore empty array.
+    @songs = (json.songs || []).map @instanceFromJson app.songs.Song

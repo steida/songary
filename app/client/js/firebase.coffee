@@ -39,20 +39,24 @@ class app.Firebase
 
     if !user
       # PATTERN(steida): Logout has to delete all user specific data.
-      userStore.setUser null
+      userStore.setEmpty()
+      userStore.notify()
       return
 
     # NOTE(steida): Would be nice to get all data in one request. RavenDB include ftw.
     userRef = @userRefOf user
 
+    # PATTERN(steida): Project updates only into store. Store dispatches change
+    # event, and app.Storage will decide how store should be persisted.
     # TODO(steida): Use more granular approach to save traffic.
     userRef.once 'value',
       (snap) ->
-        serverUser = snap.val()
-        console.log serverUser
-        # PATTERN(steida): Project updates only into store. Store dispatches change
-        # event, and app.Storage will decide how store should be persisted.
-        userStore.setUser user
+        storeJson = snap.val()
+        if !storeJson
+          storeJson = userStore.toJson()
+        storeJson.user = user
+        userStore.fromJson storeJson
+        userStore.notify()
     , (error) ->
         # TODO(steida): Report to server.
         console.log 'The read failed: ' + error.code

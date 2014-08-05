@@ -1,10 +1,8 @@
 goog.provide 'app.Storage'
 
 goog.require 'common.Storage'
-goog.require 'goog.array'
-goog.require 'goog.labs.userAgent.browser'
-goog.require 'goog.storage.Storage'
-goog.require 'goog.storage.mechanism.mechanismfactory'
+goog.require 'goog.asserts'
+goog.require 'goog.object'
 
 class app.Storage extends common.Storage
 
@@ -37,12 +35,19 @@ class app.Storage extends common.Storage
 
   onStoreChange: (store, e) ->
     @localStorage.set store
-    # NOTE(steida): Persist data into Firebase if user is logged.
+    # NOTE(steida): Persist data into Firebase when user is logged.
     if @userStore.user
       if store instanceof app.user.Store
+        # NOTE(steida): JSON.parse JSON.stringify seems to be really stupid,
+        # but idk how to workaround this issue better for now:
+        # Firebase.set failed: First argument contains a function in property...
+        # TODO(steida): Investigate it. Native .toJSON is too verbose.
+        json = JSON.parse JSON.stringify store.toJson()
+        goog.asserts.assertObject json
         @firebase
           .userRefOf @userStore.user
-          .set store.toJson()
+          .set json
+
     @notify()
 
   ###*
