@@ -3,7 +3,6 @@ goog.provide 'app.react.Layout'
 class app.react.Layout
 
   ###*
-    PATTERN(steida): Layout is responsible for mobile/tablet/desktop look.
     @param {app.Routes} routes
     @param {app.react.Header} header
     @param {app.react.Footer} footer
