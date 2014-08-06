@@ -33,6 +33,10 @@ class app.Storage extends common.Storage
   listenStores: (callback) ->
     @stores.forEach (store) => store.listen 'change', callback.bind @, store
 
+  ###*
+    @param {app.Store} store
+    @param {goog.events.Event} e
+  ###
   onStoreChange: (store, e) ->
     @localStorage.set store
     # NOTE(steida): Persist data into Firebase when user is logged.
