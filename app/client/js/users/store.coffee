@@ -12,7 +12,7 @@ class app.user.Store extends este.labs.Store
   ###
   constructor: ->
     super 'user'
-    @setEmpty true
+    @setEmpty()
 
   ###*
     @type {Array.<app.songs.Song>}
@@ -25,9 +25,9 @@ class app.user.Store extends este.labs.Store
   newSong: null
 
   ###*
-    @type {Object|undefined}
+    @type {Object}
   ###
-  user: undefined
+  user: null
 
   ###*
     @param {boolean=} initial
@@ -35,7 +35,7 @@ class app.user.Store extends este.labs.Store
   setEmpty: (initial) ->
     @songs = []
     @newSong = new app.songs.Song
-    @user = if initial then undefined else null
+    @user = null
 
   ###*
     @return {Array.<app.songs.Song>}
