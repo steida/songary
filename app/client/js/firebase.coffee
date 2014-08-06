@@ -51,9 +51,7 @@ class app.Firebase
     # TODO(steida): Use more granular approach to save traffic.
     userRef.once 'value',
       (snap) ->
-        storeJson = snap.val()
-        if !storeJson
-          storeJson = userStore.toJson()
+        storeJson = snap.val() ? userStore.toJson()
         storeJson.user = user
         userStore.fromJson storeJson
         userStore.notify()
