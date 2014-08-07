@@ -127,6 +127,9 @@ class app.react.pages.Song
         @createAndListenViewportSizeMonitor()
         @hideMenu()
 
+      componentDidUpdate: ->
+        @setLyricsMaxFontSize()
+
       componentWillUnmount: ->
         @hideMenu()
         @viewportMonitor.dispose()
