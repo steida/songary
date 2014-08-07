@@ -12,7 +12,12 @@ class appUserStore
   appUserStore::newSong
   # User.
   appUserStore::user
+  # User props and nested props.
   appUserStore::displayName
+  appUserStore::id
+  appUserStore::provider
+  appUserStore::thirdPartyUserData
+  appUserStore::uid
 
 # PATTERN(steida): For app.songs.Song create appSongsSong.
 class appSongsSong
