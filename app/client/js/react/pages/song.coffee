@@ -13,10 +13,10 @@ class app.react.pages.Song
   ###*
     @param {app.Routes} routes
     @param {app.react.Touch} touch
-    @param {app.user.Store} store
+    @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (routes, touch, store) ->
+  constructor: (routes, touch, userStore) ->
     {div} = touch.scroll 'div'
     {article, menu} = React.DOM
     {a, menuitem} = touch.none 'a', 'menuitem'
@@ -26,7 +26,7 @@ class app.react.pages.Song
       viewportMonitor: null
 
       render: ->
-        song = store.songByRoute routes.active
+        song = userStore.songByRoute routes.active
 
         div className: 'song', onPointerUp: @onSongPointerUp,
           article
@@ -54,7 +54,7 @@ class app.react.pages.Song
 
       lyricsHtml: (song) ->
         goog.string
-          .htmlEscape song.lyrics
+          .htmlEscape song.getDisplayLyrics()
           .replace /\[([^\]]+)\]/g, (str, chord) ->
             "<sup>#{chord}</sup>"
 

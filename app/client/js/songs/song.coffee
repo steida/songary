@@ -15,6 +15,10 @@ class app.songs.Song
     ###
     @id = goog.string.getRandomString()
 
+  @MSG_MISSING_LYRICS: goog.getMsg 'missing lyrics'
+  @MSG_UNKNOWN_ARTIST: goog.getMsg 'unknown artist'
+  @MSG_UNKNOWN_NAME: goog.getMsg 'unknown name'
+
   ###*
     ISO 8601 string representation of date/time.
     @type {string}
@@ -79,3 +83,12 @@ class app.songs.Song
     @name = '' if !@urlName
     @urlArtist = este.string.toFancyUrl @artist
     @artist = '' if !@urlArtist
+
+  getDisplayName: ->
+    @name || Song.MSG_UNKNOWN_NAME
+
+  getDisplayArtist: ->
+    @artist || Song.MSG_UNKNOWN_ARTIST
+
+  getDisplayLyrics: ->
+    @lyrics || Song.MSG_MISSING_LYRICS

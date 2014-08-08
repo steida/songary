@@ -11,6 +11,16 @@ class app.Firebase
     @setFireBaseRefs()
 
   ###*
+    @type {Firebase}
+  ###
+  userRef: null
+
+  ###*
+    @type {boolean}
+  ###
+  userWasLogged: false
+
+  ###*
     @protected
   ###
   setFireBaseRefs: ->
@@ -38,26 +48,37 @@ class app.Firebase
       return
 
     if !user
-      # PATTERN(steida): Logout has to delete all user specific data.
-      userStore.setEmpty()
+      # NOTE(steida): Stop listening changes after logout.
+      @userRef?.off 'value'
+      # PATTERN(steida): Logout deletes all user data in local storage.
+      if @userWasLogged
+        userStore.setEmpty()
       userStore.notify()
+      # TODO(steida): Redirect to home.
       return
 
-    # NOTE(steida): Would be nice to get all data in one request. RavenDB include ftw.
-    userRef = @userRefOf user
+    @userWasLogged = true
+    @userRef = @userRefOf user
 
-    # PATTERN(steida): Project updates only into store. Store dispatches change
-    # event, and app.Storage will decide how store should be persisted.
+    # NOTE(steida): Would be nice to get all data in one request. RavenDB include ftw.
     # TODO(steida): Use more granular approach to save traffic.
-    userRef.once 'value',
-      (snap) ->
+    @userRef.on 'value',
+      (snap) =>
+        if goog.DEBUG
+          console.log 'On userRef value.'
+        # NOTE(steida): For not yet persisted user, snap.val() is null.
+        # PATTERN(steida): Project updates only into store. Store dispatches change
+        # event, and then app.Storage will decide how store should be persisted.
         storeJson = snap.val() ? userStore.toJson()
         storeJson.user = user
+        # previous = JSON.stringify userStore.toJson()
+        # console.log previous, previous
+        # return if previous == JSON.stringify storeJson
         userStore.fromJson storeJson
-        userStore.notify()
+        userStore.silentNotify()
     , (error) ->
-        # TODO(steida): Report to server.
-        console.log 'The read failed: ' + error.code
+      # TODO(steida): Report to server.
+      console.log 'The read failed: ' + error.code
 
   ###*
     @param {Object} user

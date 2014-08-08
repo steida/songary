@@ -20,7 +20,7 @@ class app.react.pages.Home
           ul null, userStore.allSongs().map (song) ->
             li key: song.id,
               a href: routes.mySong.createUrl(song),
-                "#{song.name} [#{song.artist}]"
+                "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
           a
             className: 'btn btn-default'
             href: routes.myNewSong.createUrl()

@@ -7,11 +7,11 @@ class app.react.pages.EditSong
 
   ###*
     @param {app.Routes} routes
-    @param {app.user.Store} store
+    @param {app.user.Store} userStore
     @param {app.react.Touch} touch
     @constructor
   ###
-  constructor: (routes, store, touch) ->
+  constructor: (routes, userStore, touch) ->
     {p,div,form,input,textarea,button} = React.DOM
     {a} = touch.none 'a'
 
@@ -22,8 +22,7 @@ class app.react.pages.EditSong
 
       render: ->
         editMode = routes.active == routes.editMySong
-        song = if editMode then store.songByRoute routes.active else store.newSong
-        return null if !song
+        song = if editMode then userStore.songByRoute routes.active else userStore.newSong
 
         div className: 'edit-song',
           form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
@@ -76,11 +75,7 @@ class app.react.pages.EditSong
         @chordproTextarea_.dispose()
 
       onFieldChange: (e) ->
-        # NOTE(steida): Assert to make compiler happy.
-        goog.asserts.assertInstanceof song, app.songs.Song
-        # PATTERN(steida): All changes are immediatelly stored into store.
-        # Store is asap synced with local/rest storages.
-        store.updateSong song, e.target.name, e.target.value
+        userStore.updateSong song, e.target.name, e.target.value
 
       onFormSubmit: (e) ->
         e.preventDefault()
@@ -88,7 +83,7 @@ class app.react.pages.EditSong
 
       saveSong: ->
         # PATTERN(steida): Edited song is saved immediatelly.
-        errors = if editMode then song.validate() else store.addNewSong()
+        errors = if editMode then song.validate() else userStore.addNewSong()
         # TODO(steida): Reusable React helper/mixin/whatever.
         if errors.length
           alert errors[0].message
@@ -99,7 +94,7 @@ class app.react.pages.EditSong
 
       onDeleteButtonClick: ->
         return if not confirm EditSong.MSG_DELETE_QUESTION
-        store.delete song
+        userStore.delete song
         routes.home.redirect()
 
   # PATTERN(steida): String localization. Remember, every string has to be

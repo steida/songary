@@ -12,6 +12,11 @@ class app.Title
   ###
   constructor: (@routes, @appStore, @userStore) ->
 
+  @MSG_EDIT: goog.getMsg 'edit: '
+  @MSG_HOME: goog.getMsg 'Songary | Your personal songbook'
+  @MSG_MY_NEW_SONG: goog.getMsg 'New Song | Songary'
+  @MSG_NOT_FOUND: goog.getMsg 'Page Not Found'
+
   ###*
     @return {string}
   ###
@@ -22,21 +27,18 @@ class app.Title
     switch @routes.active
       when @routes.home then Title.MSG_HOME
       when @routes.myNewSong then Title.MSG_MY_NEW_SONG
+      # TODO(steida): Add 'if not userStore.songByRoute routes.active' check.
       when @routes.mySong then @getMySongTitle()
       when @routes.editMySong then @getEditMySongTitle()
       else Title.MSG_NOT_FOUND
 
-  @MSG_EDIT: goog.getMsg 'edit: '
-  @MSG_HOME: goog.getMsg 'Songary | Your personal songbook'
-  @MSG_MY_NEW_SONG: goog.getMsg 'New Song | Songary'
-  @MSG_NOT_FOUND: goog.getMsg 'Page Not Found'
 
   getMySongTitle: ->
     song = @userStore.songByRoute @routes.active
     return if !song
     Title.MSG_SONG = goog.getMsg '{$name} - {$artist} | Songary',
-      name: song.name
-      artist: song.artist
+      name: song.getDisplayName()
+      artist: song.getDisplayArtist()
 
   getEditMySongTitle: ->
     Title.MSG_EDIT + @getMySongTitle()

@@ -6,10 +6,10 @@ class app.react.Layout
     @param {app.Routes} routes
     @param {app.react.Header} header
     @param {app.react.Footer} footer
-    @param {app.react.pages.Song} song
+    @param {app.react.pages.Song} songPage
     @constructor
   ###
-  constructor: (routes, header, footer, song) ->
+  constructor: (routes, header, footer, songPage) ->
 
     {div} = React.DOM
 
@@ -17,8 +17,7 @@ class app.react.Layout
 
       render: ->
         page = @props.page
-        return null if !page
-        songPageIsShown = page == song
+        songPageIsShown = page == songPage
 
         div className: 'layout',
           header.create() unless songPageIsShown

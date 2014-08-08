@@ -27,29 +27,30 @@ class app.Storage extends common.Storage
 
     @listenStores @onStoreChange
     @localStorage.load @stores
-    # TODO(steida): Do it on server side. It can takes seconds on client.
     @firebase.simpleLogin @userStore
+    # TODO(steida): Do it on server side. It takes seconds on client.
 
   listenStores: (callback) ->
     @stores.forEach (store) => store.listen 'change', callback.bind @, store
 
   ###*
     @param {app.Store} store
-    @param {goog.events.Event} e
+    @param {este.labs.Store.Event} e
   ###
   onStoreChange: (store, e) ->
     @localStorage.set store
-    # NOTE(steida): Persist data into Firebase when user is logged.
-    if @userStore.user
-      if store instanceof app.user.Store
-        # NOTE(steida): JSON.parse JSON.stringify seems to be really stupid,
-        # but idk how to workaround this issue better for now:
-        # Firebase.set failed: First argument contains a function in property...
-        # TODO(steida): Investigate it. Native .toJSON is too verbose.
-        json = JSON.parse JSON.stringify store.toJson()
-        goog.asserts.assertObject json
-        # TODO(steida): Use more granular approach to store user data.
-        @firebase.userRef.set json
+    # console.log e.silent
+    # if not e.silent
+    # if @userStore.user
+    #   if store instanceof app.user.Store
+    #     # NOTE(steida): JSON.parse JSON.stringify seems to be really stupid,
+    #     # but idk how to workaround this issue better for now:
+    #     # Firebase.set failed: First argument contains a function in property...
+    #     # TODO(steida): Investigate it. Native .toJSON is too verbose.
+    #     json = JSON.parse JSON.stringify store.toJson()
+    #     # goog.asserts.assertObject json
+    #     # TODO(steida): Use more granular approach to store user data.
+    #     # @firebase.userRef.set json
 
     @notify()
 
