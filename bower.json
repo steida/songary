@@ -1,6 +1,6 @@
 {
   "name": "songary",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "dependencies": {
     "Magic": "https://github.com/miniMAC/magic.git#^1.0.0",

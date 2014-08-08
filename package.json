@@ -1,6 +1,6 @@
 {
   "name": "Songary",
-  "version": "0.0.1-23",
+  "version": "0.0.1",
   "author": "Daniel Steigerwald <daniel@steigerwald.cz>",
   "private": true,
   "dependencies": {
