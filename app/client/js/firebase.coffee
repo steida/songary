@@ -5,10 +5,12 @@ goog.require 'goog.asserts'
 class app.Firebase
 
   ###*
+    @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: ->
+  constructor: (@userStore) ->
     @setFireBaseRefs()
+    @authClient = new window.FirebaseSimpleLogin @root, @onSimpleLogin.bind @
 
   ###*
     @type {Firebase}
@@ -24,20 +26,12 @@ class app.Firebase
     @root = new window.Firebase 'https://shining-fire-6810.firebaseio.com/'
 
   ###*
-    @param {app.user.Store} userStore
-  ###
-  simpleLogin: (userStore) ->
-    goog.asserts.assert !@authClient, 'Can be called only once'
-    @authClient = new window.FirebaseSimpleLogin @root, @onSimpleLogin.bind @, userStore
-
-  ###*
     NOTE(steida): This method is called whenever user login status has changed.
     TODO(steida): Refactor.
-    @param {app.user.Store} userStore
     @param {Object} error
     @param {Object} user
   ###
-  onSimpleLogin: (userStore, error, user) ->
+  onSimpleLogin: (error, user) ->
     if error
       # TODO(steida): Report to server.
       console.log error
@@ -45,16 +39,17 @@ class app.Firebase
 
     # TODO(steida): Refactor it.
     if !user
+      # debugger
       # NOTE(steida): Stop listening changes after logout.
       # @stopListeningUserValue()
       @userRef?.off 'value'
       # PATTERN(steida): Logout deletes all user data in local storage.
-      # TODO(steida): This should belong into userStore.
+      # TODO(steida): This should belong into @userStore.
       if @userRef
-        userStore.setEmpty()
+        @userStore.setEmpty()
       else
-        userStore.user = null
-      userStore.notify()
+        @userStore.user = null
+      @userStore.notify()
       # TODO(steida): Redirect to home.
       return
 
@@ -65,10 +60,10 @@ class app.Firebase
     @userRef.on 'value',
       (snap) =>
         # NOTE(steida): For not yet persisted user, snap.val() is null.
-        storeJson = snap.val() ? userStore.toJson()
+        storeJson = snap.val() ? @userStore.toJson()
         storeJson.user = user
-        userStore.fromJson storeJson
-        userStore.notify()
+        @userStore.fromJson storeJson
+        @userStore.notify()
     , (error) ->
       # TODO(steida): Report to server.
       console.log 'The read failed: ' + error.code
@@ -90,3 +85,4 @@ class app.Firebase
 
   logout: ->
     @authClient.logout()
+    console.log 'logout'
