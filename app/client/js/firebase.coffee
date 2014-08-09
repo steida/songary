@@ -9,8 +9,7 @@ class app.Firebase
     @constructor
   ###
   constructor: (@userStore) ->
-    @setFireBaseRefs()
-    @authClient = new window.FirebaseSimpleLogin @root, @onSimpleLogin.bind @
+    @setRefs()
 
   ###*
     @type {Firebase}
@@ -20,10 +19,19 @@ class app.Firebase
   ###*
     @protected
   ###
-  setFireBaseRefs: ->
+  setRefs: ->
     # TODO(steida): Use server data for path, make it isomorphic.
     return if !window.Firebase
     @root = new window.Firebase 'https://shining-fire-6810.firebaseio.com/'
+
+  ###*
+    # TODO(steida): Do it on server side. It takes seconds on client.
+  ###
+  simpleLogin: ->
+    # TODO(steida): Make it isomorphic.
+    return if !window.FirebaseSimpleLogin
+    goog.asserts.assert !@authClient
+    @authClient = new window.FirebaseSimpleLogin @root, @onSimpleLogin.bind @
 
   ###*
     NOTE(steida): This method is called whenever user login status has changed.
@@ -37,11 +45,8 @@ class app.Firebase
       console.log error
       return
 
-    # TODO(steida): Refactor it.
     if !user
-      # debugger
       # NOTE(steida): Stop listening changes after logout.
-      # @stopListeningUserValue()
       @userRef?.off 'value'
       # PATTERN(steida): Logout deletes all user data in local storage.
       # TODO(steida): This should belong into @userStore.

@@ -107,10 +107,22 @@ class app.LocalStorage
       return if !storeName
       store = goog.array.find stores, (store) -> store.name == storeName
       return if !store
+
+      # NOTE(steida): Because FirebaseSimpleLogin does not propagate login
+      # state across browser windows, we need to track change manually.
+      if store instanceof app.user.Store
+        userWasLogged = !!store.user
+
       # TODO(steida): Try/Catch in case of error. Report error to server.
       json = (`/** @type {Object} */`) JSON.parse browserEvent.newValue
       store.fromJson json
       store.notify()
+
+      # NOTE(steida): Reload browser if user login state has changed.
+      if store instanceof app.user.Store
+        userLogged = !userWasLogged && store.user
+        userLogout = userWasLogged && !store.user
+        location.reload() if userLogged || userLogout
 
   ###*
     @param {app.Store} store

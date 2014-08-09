@@ -25,15 +25,15 @@ class app.Storage extends common.Storage
     @stores = [@appStore, @userStore]
 
     @pendingStores = new goog.structs.Set
-    # NOTE(steida): It saves traffic and prevents race conditions.
-    @savePendingStoresThrottle = new goog.async.Throttle @savePendingStores,
+    # NOTE(steida): It saves traffic and prevents race conditions for
+    # localStorage store event. Not sure why, probably because get and set
+    # methods are not called in one transaction.
+    @savePendingStoresThrottled = new goog.async.Throttle @savePendingStores,
       Storage.THROTTLE_MS, @
 
     @localStorage.load @stores
     @listenStores()
-
-    # # TODO(steida): Do it on server side. It takes seconds on client.
-    # @firebase.simpleLogin @userStore
+    @firebase.simpleLogin()
 
   @THROTTLE_MS: 1000
 
@@ -68,7 +68,7 @@ class app.Storage extends common.Storage
     if goog.DEBUG
       console.log 'app.Storage onStoreChange called'
     @pendingStores.add store
-    @savePendingStoresThrottle.fire()
+    @savePendingStoresThrottled.fire()
     @notify()
 
   ###*
