@@ -104,11 +104,11 @@ class app.LocalStorage
       # TODO(steida): Reload if localStorageVersion changed.
       browserEvent = e.getBrowserEvent()
       storeName = browserEvent.key.split('::')[1]
+      return if !storeName
       store = goog.array.find stores, (store) -> store.name == storeName
       return if !store
       # TODO(steida): Try/Catch in case of error. Report error to server.
-      json = JSON.parse browserEvent.newValue
-      goog.asserts.assertObject json
+      json = (`/** @type {Object} */`) JSON.parse browserEvent.newValue
       store.fromJson json
       store.notify()
 

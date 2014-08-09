@@ -1,15 +1,15 @@
 goog.provide 'app.Storage'
 
 goog.require 'common.Storage'
-goog.require 'goog.asserts'
-goog.require 'goog.object'
+goog.require 'goog.async.Throttle'
+goog.require 'goog.structs.Set'
 
 class app.Storage extends common.Storage
 
   ###*
-    PATTERN(steida): This should be one place to change/sync app state.
-    The goal is http://en.wikipedia.org/wiki/Persistent_data_structure
-    with all its benefits.
+    PATTERN(steida): React components read from and write to app stores.
+    app.Storage listen app stores change events and decide how stores should be
+    persisted and synced with backend.
     @param {app.LocalStorage} localStorage
     @param {app.Firebase} firebase
     @param {app.Store} appStore
@@ -20,38 +20,53 @@ class app.Storage extends common.Storage
   constructor: (@localStorage, @firebase,
       @appStore,
       @userStore) ->
-
     super @appStore
 
     @stores = [@appStore, @userStore]
 
-    @listenStores @onStoreChange
-    @localStorage.load @stores
-    @firebase.simpleLogin @userStore
-    # TODO(steida): Do it on server side. It takes seconds on client.
+    @pendingStores = new goog.structs.Set
+    # NOTE(steida): It saves traffic and prevents race conditions.
+    @savePendingStoresThrottle = new goog.async.Throttle @savePendingStores,
+      Storage.THROTTLE_MS, @
 
-  listenStores: (callback) ->
-    @stores.forEach (store) => store.listen 'change', callback.bind @, store
+    @localStorage.load @stores
+    @listenStores()
+
+    # TODO(steida): Do it on server side. It takes seconds on client.
+    @firebase.simpleLogin @userStore
+
+  @THROTTLE_MS: 1000
+
+  savePendingStores: ->
+    stores = @pendingStores.getValues()
+    @pendingStores.clear()
+    @saveStore store for store in stores
 
   ###*
     @param {app.Store} store
-    @param {este.labs.Store.Event} e
   ###
-  onStoreChange: (store, e) ->
+  saveStore: (store) ->
     @localStorage.set store
-    # console.log e.silent
-    # if not e.silent
-    # if @userStore.user
-    #   if store instanceof app.user.Store
-    #     # NOTE(steida): JSON.parse JSON.stringify seems to be really stupid,
-    #     # but idk how to workaround this issue better for now:
-    #     # Firebase.set failed: First argument contains a function in property...
-    #     # TODO(steida): Investigate it. Native .toJSON is too verbose.
-    #     json = JSON.parse JSON.stringify store.toJson()
-    #     # goog.asserts.assertObject json
-    #     # TODO(steida): Use more granular approach to store user data.
-    #     # @firebase.userRef.set json
+    if @firebase.userRef
+      if @userStore.user && store instanceof app.user.Store
+        # TODO(steida): JSON.parse JSON.stringify seems to be really stupid,
+        # but idk how to workaround this issue better for now.
+        # Firebase.set failed: First argument contains a function in property...
+        # Investigate it.
+        json = (`/** @type {Object} */`) JSON.parse JSON.stringify store.toJson()
+        # TODO(steida): Use more granular approach.
+        @firebase.userRef.set json
 
+  listenStores: ->
+    @stores.forEach (store) =>
+      store.listen 'change', @onStoreChange.bind @, store
+
+  ###*
+    @param {app.Store} store
+  ###
+  onStoreChange: (store) ->
+    @pendingStores.add store
+    @savePendingStoresThrottle.fire()
     @notify()
 
   ###*

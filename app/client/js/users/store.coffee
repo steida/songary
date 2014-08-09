@@ -29,10 +29,7 @@ class app.user.Store extends este.labs.Store
   ###
   user: null
 
-  ###*
-    @param {boolean=} initial
-  ###
-  setEmpty: (initial) ->
+  setEmpty: ->
     @songs = []
     @newSong = new app.songs.Song
     @user = null
