@@ -26,8 +26,8 @@ class app.Storage extends common.Storage
 
     @pendingStores = new goog.structs.Set
     # NOTE(steida): It saves traffic and prevents race conditions for
-    # localStorage store event. Not sure why, probably because get and set
-    # methods are not called in one transaction.
+    # localStorage store event, probably because get and set methods are not
+    # called in transaction.
     @savePendingStoresThrottled = new goog.async.Throttle @savePendingStores,
       Storage.THROTTLE_MS, @
 
@@ -65,8 +65,6 @@ class app.Storage extends common.Storage
     @param {app.Store} store
   ###
   onStoreChange: (store) ->
-    if goog.DEBUG
-      console.log 'app.Storage onStoreChange called'
     @pendingStores.add store
     @savePendingStoresThrottled.fire()
     @notify()
