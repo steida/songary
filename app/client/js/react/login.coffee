@@ -14,7 +14,6 @@ class app.react.Login
     @create = React.createClass
       render: ->
         button
-          # disabled: !userStore.user
           onPointerUp: @onButtonPointUp
         , @getButtonLabel()
 
