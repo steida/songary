@@ -41,23 +41,28 @@ class app.Firebase
   ###
   onSimpleLogin: (error, user) ->
     if error
-      # TODO(steida): Report to server.
-      console.log error
-      return
+      @onUserError error
+    else if !user
+      @onUserLogout()
+    else
+      @onUserLogin user
 
-    if !user
-      # NOTE(steida): Stop listening changes after logout.
-      @userRef?.off 'value'
-      # PATTERN(steida): Logout deletes all user data in local storage.
-      # TODO(steida): This should belong into @userStore.
-      if @userRef
-        @userStore.setEmpty()
-      else
-        @userStore.user = null
-      @userStore.notify()
-      # TODO(steida): Redirect to home.
-      return
+  onUserError: (error) ->
+    # TODO(steida): Report to server.
+    console.log error
 
+  onUserLogout: ->
+    # NOTE(steida): Stop listening changes after logout.
+    @userRef?.off 'value'
+    # PATTERN(steida): Logout deletes all user data in local storage.
+    # TODO(steida): This should belong into @userStore.
+    if @userRef
+      @userStore.setEmpty()
+    else
+      @userStore.user = null
+    @userStore.notify()
+
+  onUserLogin: (user) ->
     @userRef = @userRefOf user
 
     # NOTE(steida): Would be nice to get all data in one request. RavenDB include ftw.
