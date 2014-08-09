@@ -105,6 +105,8 @@ class app.user.Store extends este.labs.Store
     # NOTE(steida): Because JSON stringify and parse ignore empty array.
     @songs = (@asArray(json.songs) || []).map @instanceFromJson app.songs.Song
 
+  # PATTERN(steida): Use only server unique props, because user is going to be
+  # saved into localStorage, which is shared across browser tabs/windows.
   getJsonUser: (user) ->
     return null if !user
     displayName: user.displayName
