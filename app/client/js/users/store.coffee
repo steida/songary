@@ -93,7 +93,7 @@ class app.user.Store extends este.labs.Store
   ###
   toJson: ->
     newSong: @newSong
-    songs: @songs
+    songs: @asObject @songs
     user: @getJsonUser @user
 
   ###*
@@ -103,7 +103,7 @@ class app.user.Store extends este.labs.Store
     @newSong = @instanceFromJson app.songs.Song, json.newSong
     @user = @getJsonUser json.user
     # NOTE(steida): Because JSON stringify and parse ignore empty array.
-    @songs = (json.songs || []).map @instanceFromJson app.songs.Song
+    @songs = (@asArray(json.songs) || []).map @instanceFromJson app.songs.Song
 
   getJsonUser: (user) ->
     return null if !user
