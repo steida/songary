@@ -32,8 +32,8 @@ class app.Storage extends common.Storage
     @localStorage.load @stores
     @listenStores()
 
-    # TODO(steida): Do it on server side. It takes seconds on client.
-    @firebase.simpleLogin @userStore
+    # # TODO(steida): Do it on server side. It takes seconds on client.
+    # @firebase.simpleLogin @userStore
 
   @THROTTLE_MS: 1000
 
@@ -65,6 +65,8 @@ class app.Storage extends common.Storage
     @param {app.Store} store
   ###
   onStoreChange: (store) ->
+    if goog.DEBUG
+      console.log 'app.Storage onStoreChange called'
     @pendingStores.add store
     @savePendingStoresThrottle.fire()
     @notify()
