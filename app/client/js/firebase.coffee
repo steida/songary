@@ -85,4 +85,3 @@ class app.Firebase
 
   logout: ->
     @authClient.logout()
-    console.log 'logout'
