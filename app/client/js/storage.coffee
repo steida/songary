@@ -48,7 +48,7 @@ class app.Storage extends common.Storage
   saveStore: (store) ->
     @localStorage.set store
     if @firebase.userRef
-      if @userStore.user && store instanceof app.user.Store
+      if store instanceof app.user.Store && @userStore.user
         # TODO(steida): JSON.parse JSON.stringify seems to be really stupid,
         # but idk how to workaround this issue better for now.
         # Firebase.set failed: First argument contains a function in property...
