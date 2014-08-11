@@ -12,10 +12,12 @@ Read [Este.js](https://github.com/steida/este).
 
 How? Just read code, there are plethora of comments. 
 
-### Techniques
+### Illustrated Techniques
   - frontend/mobile/offline first
-  - isomorphic
-  - Closure Tools, Facebook React, Polymer PointerEvents
+  - isomorphic web apps
+  - Closure Tools
+  - Facebook React
+  - Polymer PointerEvents
   - one way data flow
   - clean architecture
   - promises everywhere
@@ -24,4 +26,4 @@ How? Just read code, there are plethora of comments.
   - DI container
   - statically typed code written in CoffeeScript
   - killer React.js syntax
-  - <70 kB gzipped
+  - Firebase
