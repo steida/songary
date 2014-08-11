@@ -34,58 +34,63 @@ class app.Firebase
     @authClient = new window.FirebaseSimpleLogin @root, @onSimpleLogin.bind @
 
   ###*
-    NOTE(steida): This method is called whenever user login status has changed.
-    TODO(steida): Refactor.
+    This method is called whenever user login status has changed. Unfortunatelly
+    it does not report change across browser tabs/windows.
     @param {Object} error
     @param {Object} user
+    @protected
   ###
   onSimpleLogin: (error, user) ->
     if error
       @onUserError error
-    else if !user
-      @onUserLogout()
-    else
+    else if user
       @onUserLogin user
+    else
+      @onUserLogout()
 
+  ###*
+    @param {Object} error Firebase error.
+    @protected
+  ###
   onUserError: (error) ->
     # TODO(steida): Report to server.
     console.log error
 
-  onUserLogout: ->
-    # NOTE(steida): Stop listening changes after logout.
-    @userRef?.off 'value'
-    # PATTERN(steida): Logout deletes all user data in local storage.
-    # TODO(steida): This should belong into @userStore.
-    if @userRef
-      @userStore.setEmpty()
-    else
-      @userStore.user = null
-    @userStore.notify()
-
+  ###*
+    @param {Object} user Firebase user.
+    @protected
+  ###
   onUserLogin: (user) ->
     @userRef = @userRefOf user
-
-    # NOTE(steida): Would be nice to get all data in one request. RavenDB include ftw.
-    # TODO(steida): Use more granular approach.
-    @userRef.on 'value',
-      (snap) =>
-        # NOTE(steida): For not yet persisted user, snap.val() is null.
-        storeJson = snap.val() ? @userStore.toJson()
-        storeJson.user = user
-        @userStore.fromJson storeJson
-        @userStore.notify()
-    , (error) ->
-      # TODO(steida): Report to server.
-      console.log 'The read failed: ' + error.code
+    @listenUserRefValue user
 
   ###*
     @param {Object} user
     @return {Firebase}
+    @protected
   ###
   userRefOf: (user) ->
     @root
       .child 'users'
       .child user.uid
+
+  ###*
+    @param {Object} user Firebase user. NOTE(steida): Now user is always stored,
+    to be readonly. Later it will be customizable.
+    @protected
+  ###
+  listenUserRefValue: (user) ->
+    @userRef?.on 'value',
+      (snap) =>
+        console.log "on @userRef.on 'value',"
+        @userStore.updateFromServer user, snap.val()
+    , (error) ->
+      # TODO(steida): Report to server.
+      console.log 'The read failed: ' + error.code
+
+  onUserLogout: ->
+    @userRef?.off 'value'
+    @userStore.onLogout !!@userRef
 
   loginViaFacebook: ->
     @authClient.login 'facebook',

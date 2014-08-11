@@ -2,6 +2,8 @@ goog.provide 'app.Storage'
 
 goog.require 'common.Storage'
 goog.require 'goog.async.Throttle'
+goog.require 'goog.object'
+goog.require 'goog.structs.Map'
 goog.require 'goog.structs.Set'
 
 class app.Storage extends common.Storage
@@ -20,49 +22,83 @@ class app.Storage extends common.Storage
   constructor: (@localStorage, @firebase,
       @appStore,
       @userStore) ->
+
     super @appStore
 
     @stores = [@appStore, @userStore]
-
+    @storesStates = new goog.structs.Map
     @pendingStores = new goog.structs.Set
-    # NOTE(steida): It saves traffic and prevents race conditions for
-    # localStorage store event, probably because get and set methods are not
-    # called in transaction.
-    @savePendingStoresThrottled = new goog.async.Throttle @savePendingStores,
-      Storage.THROTTLE_MS, @
+    @savePendingStoresThrottled = new goog.async
+      .Throttle @savePendingStores, Storage.THROTTLE_MS, @
 
     @localStorage.load @stores
     @listenStores()
     @firebase.simpleLogin()
 
+  ###*
+    NOTE(steida): Saves traffic and prevents race conditions for
+    localStorage store events too. Probably because get and set methods
+    aren't called in one transaction.
+  ###
   @THROTTLE_MS: 1000
 
+  ###*
+    @protected
+  ###
   savePendingStores: ->
     stores = @pendingStores.getValues()
     @pendingStores.clear()
     @saveStore store for store in stores
 
   ###*
-    @param {app.Store} store
+    @param {este.labs.Store} store
+    @protected
   ###
   saveStore: (store) ->
-    @localStorage.set store
+    storeAsJson = @cloneAsJson store
+    return if not @storeStateHasChanged store, storeAsJson
+    console.log 'saveStore called'
+    @localStorage.set store, storeAsJson
     if @firebase.userRef
       if store instanceof app.user.Store && @userStore.user
-        # TODO(steida): JSON.parse JSON.stringify seems to be really stupid,
-        # but idk how to workaround this issue better for now.
-        # Firebase.set failed: First argument contains a function in property...
-        # Investigate it.
-        json = (`/** @type {Object} */`) JSON.parse JSON.stringify store.toJson()
         # TODO(steida): Use more granular approach.
-        @firebase.userRef.set json
+        @firebase.userRef.set storeAsJson
 
+  ###*
+    Deep copy without functions. JSON.parse JSON.stringify might not be
+    the fastest, http://jsperf.com/deep-copy-vs-json-stringify-json-parse,
+    but it's robust. Firebase and the others need pure JSON (normalized
+    object without functions).
+    @param {este.labs.Store} store
+    @return {Object}
+    @protected
+  ###
+  cloneAsJson: (store) ->
+    (`/** @type {Object} */`) JSON.parse JSON.stringify store.toJson()
+
+  ###*
+    Check if store state has changed.
+    NOTE(steida): I wish I have Something like React, but for state diff.
+    @param {este.labs.Store} store
+    @param {Object} storeAsJson
+    @return {boolean}
+  ###
+  storeStateHasChanged: (store, storeAsJson) ->
+    storeAsJsonString = JSON.stringify storeAsJson
+    return false if @storesStates.get(store) == storeAsJsonString
+    @storesStates.set store, storeAsJsonString
+    true
+
+  ###*
+    @protected
+  ###
   listenStores: ->
     @stores.forEach (store) =>
       store.listen 'change', @onStoreChange.bind @, store
 
   ###*
-    @param {app.Store} store
+    @param {este.labs.Store} store
+    @protected
   ###
   onStoreChange: (store) ->
     @pendingStores.add store

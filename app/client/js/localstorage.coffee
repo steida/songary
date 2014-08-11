@@ -125,8 +125,9 @@ class app.LocalStorage
         location.reload() if userLogged || userLogout
 
   ###*
-    @param {app.Store} store
+    @param {este.labs.Store} store
+    @param {Object} storeAsJson
   ###
-  set: (store) ->
+  set: (store, storeAsJson) ->
     return if !@localStorage
-    @localStorage.set store.name, store.toJson()
+    @localStorage.set store.name, storeAsJson
