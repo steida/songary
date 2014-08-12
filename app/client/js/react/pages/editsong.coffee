@@ -71,6 +71,11 @@ class app.react.pages.EditSong
         @chordproTextarea_ = new goog.ui.Textarea ''
         @chordproTextarea_.decorate @refs['lyrics'].getDOMNode()
 
+      componentDidUpdate: ->
+        # NOTE(steida): This is for remote updates when other device changes
+        # lyrics data. For local changes local Textarea is updated correctly.
+        @chordproTextarea_.resize()
+
       componentWillUnmount: ->
         @chordproTextarea_.dispose()
 
