@@ -116,7 +116,7 @@ class app.LocalStorage
       # TODO(steida): Try/Catch in case of error. Report error to server.
       json = (`/** @type {Object} */`) JSON.parse browserEvent.newValue
       store.fromJson json
-      store.notify()
+      store.serverNotify()
 
       # NOTE(steida): Reload browser if user login state has changed.
       if store instanceof app.user.Store
