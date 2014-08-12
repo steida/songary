@@ -41,6 +41,9 @@ class Firebase
   ###
   constructor: (firebaseURL) ->
 
+  @ServerValue:
+    TIMESTAMP: null
+
   ###*
     @param {string} authToken
     @param {Function=} onComplete
