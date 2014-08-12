@@ -28,19 +28,21 @@ class app.Storage extends common.Storage
     @stores = [@appStore, @userStore]
     @storesStates = new goog.structs.Map
     @pendingStores = new goog.structs.Set
-    @savePendingStoresThrottled = new goog.async
-      .Throttle @savePendingStores, Storage.THROTTLE_MS, @
 
+    @startThrottledSaving()
     @localStorage.load @stores
     @listenStores()
     @firebase.simpleLogin()
 
-  ###*
-    NOTE(steida): Saves traffic and prevents race conditions for
-    localStorage store events too. Probably because get and set methods
-    aren't called in one transaction.
-  ###
   @THROTTLE_MS: 1000
+
+  ###*
+    Saves localStorage and network traffic. Not more then one sync per second.
+    @protected
+  ###
+  startThrottledSaving: ->
+    @savePendingStoresThrottled = new goog.async
+      .Throttle @savePendingStores, Storage.THROTTLE_MS, @
 
   ###*
     @protected
@@ -49,19 +51,29 @@ class app.Storage extends common.Storage
     stores = @pendingStores.getValues()
     @pendingStores.clear()
     @saveStore store for store in stores
+    return
 
   ###*
     @param {este.labs.Store} store
+    @param {boolean=} fromServer
     @protected
   ###
-  saveStore: (store) ->
+  saveStore: (store, fromServer = false) ->
     storeAsJson = @cloneAsJson store
-    return if not @storeStateHasChanged store, storeAsJson
-    console.log 'saveStore called'
+
+    # Imho nepotřebuju, zakomentovat, odzkoušet, vykopnout.
+    # Hmm, zruším a mám smyčku.
+    # return if not @storeStateChanged store, storeAsJson
+
     @localStorage.set store, storeAsJson
-    if @firebase.userRef
+    console.log 'localStorage set'
+
+    if not fromServer
       if store instanceof app.user.Store && @userStore.user
-        # TODO(steida): Use more granular approach.
+        # TODO(steida): Encapsulate somehow.
+        # storeAsJson.created ?= Firebase.ServerValue.TIMESTAMP
+        # storeAsJson.updated = Firebase.ServerValue.TIMESTAMP
+        console.log 'before firebase set'
         @firebase.userRef.set storeAsJson
 
   ###*
@@ -83,7 +95,7 @@ class app.Storage extends common.Storage
     @param {Object} storeAsJson
     @return {boolean}
   ###
-  storeStateHasChanged: (store, storeAsJson) ->
+  storeStateChanged: (store, storeAsJson) ->
     storeAsJsonString = JSON.stringify storeAsJson
     return false if @storesStates.get(store) == storeAsJsonString
     @storesStates.set store, storeAsJsonString
@@ -98,9 +110,20 @@ class app.Storage extends common.Storage
 
   ###*
     @param {este.labs.Store} store
+    @param {goog.events.Event} e
     @protected
   ###
-  onStoreChange: (store) ->
+  onStoreChange: (store, e) ->
+    # PATTERN(steida): Server changes are applied immediately.
+    # NOTE(steida): Firebase dispatches events on client too. That seems to be
+    # stupid but its ok, since on set Firebase.ServerValue.TIMESTAMP is
+    # replaced with local time value, and we need to store that value on client.
+    if e.server
+      @saveStore store, true
+      @notify()
+      return
+
+    # NOTE(steida): Postpone local changes to save traffic and localStorage.
     @pendingStores.add store
     @savePendingStoresThrottled.fire()
     @notify()
