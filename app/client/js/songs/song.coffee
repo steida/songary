@@ -15,21 +15,12 @@ class app.songs.Song
     ###
     @id = goog.string.getRandomString()
 
+    # set created and updated
+    # a po update, novej updated
+
   @MSG_MISSING_LYRICS: goog.getMsg 'missing lyrics'
   @MSG_UNKNOWN_ARTIST: goog.getMsg 'unknown artist'
   @MSG_UNKNOWN_NAME: goog.getMsg 'unknown name'
-
-  ###*
-    ISO 8601 string representation of date/time.
-    @type {string}
-  ###
-  created: ''
-
-  ###*
-    ISO 8601 string representation of date/time.
-    @type {string}
-  ###
-  updated: ''
 
   ###*
     @type {string}
