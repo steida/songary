@@ -21,7 +21,8 @@ class App
       # Use goog.DEBUG to detect development/production mode.
       # All sync/async errors are handled since we are using promises.
       # Use e.reason to check what happen.
-      console.log e.reason
+      if goog.DEBUG
+        console.log e.reason
 
     syncUI = ->
       document.title = appTitle.get()

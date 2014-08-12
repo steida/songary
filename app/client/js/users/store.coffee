@@ -140,7 +140,8 @@ class app.user.Store extends este.labs.Store
     localUserStoreJson = @toJson()
     @mergeSongs localUserStoreJson, serverUserStoreJson
     @fromJson localUserStoreJson
-    console.log 'store serverNotify'
+    if goog.DEBUG
+      console.log 'store serverNotify'
     @serverNotify()
 
   ###*

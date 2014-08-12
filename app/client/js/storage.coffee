@@ -66,14 +66,16 @@ class app.Storage extends common.Storage
     # return if not @storeStateChanged store, storeAsJson
 
     @localStorage.set store, storeAsJson
-    console.log 'localStorage set'
+    if goog.DEBUG
+      console.log 'localStorage set'
 
     if not fromServer
       if store instanceof app.user.Store && @userStore.user
         # TODO(steida): Encapsulate somehow.
         # storeAsJson.created ?= Firebase.ServerValue.TIMESTAMP
         # storeAsJson.updated = Firebase.ServerValue.TIMESTAMP
-        console.log 'before firebase set'
+        if goog.DEBUG
+          console.log 'before firebase set'
         @firebase.userRef.set storeAsJson
 
   ###*
@@ -116,8 +118,8 @@ class app.Storage extends common.Storage
   onStoreChange: (store, e) ->
     # PATTERN(steida): Server changes are applied immediately.
     # NOTE(steida): Firebase dispatches events on client too. That seems to be
-    # stupid but its ok, since on set Firebase.ServerValue.TIMESTAMP is
-    # replaced with local time value, and we need to store that value on client.
+    # stupid but its ok, since on set Firebase.ServerValue.TIMESTAMP is replaced
+    # with local time value, and we need to store that value on client.
     if e.server
       @saveStore store, true
       @notify()

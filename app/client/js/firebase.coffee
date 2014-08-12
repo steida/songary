@@ -54,7 +54,8 @@ class app.Firebase
   ###
   onUserError: (error) ->
     # TODO(steida): Report to server.
-    console.log error
+    if goog.DEBUG
+      console.log error
 
   ###*
     @param {Object} user Firebase user.
@@ -82,11 +83,13 @@ class app.Firebase
   listenUserRefValue: (user) ->
     @userRef?.on 'value',
       (snap) =>
-        console.log "on @userRef.on 'value',"
+        if goog.DEBUG
+          console.log "on @userRef.on 'value',"
         @userStore.updateFromServer user, snap.val()
     , (error) ->
       # TODO(steida): Report to server.
-      console.log 'The read failed: ' + error.code
+      if goog.DEBUG
+        console.log 'The read failed: ' + error.code
 
   onUserLogout: ->
     @userRef?.off 'value'
