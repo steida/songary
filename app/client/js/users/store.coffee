@@ -14,6 +14,18 @@ class app.user.Store extends este.labs.Store
     super 'user'
     @setEmpty()
 
+  # ###*
+  #   TODO(steida): If ok, move to este.labs.Store.
+  #   @type {?number}
+  # ###
+  # created: null
+  #
+  # ###*
+  #   TODO(steida): If ok, move to este.labs.Store.
+  #   @type {?number}
+  # ###
+  # updated: null
+
   ###*
     @type {Array.<app.songs.Song>}
   ###
@@ -92,18 +104,22 @@ class app.user.Store extends este.labs.Store
     @override
   ###
   toJson: ->
+    # created: @created
     newSong: @newSong
     songs: @asObject @songs
+    # updated: @updated
     user: @getJsonUser @user
 
   ###*
     @override
   ###
   fromJson: (json) ->
+    # @created = json.created
     @newSong = @instanceFromJson app.songs.Song, json.newSong
-    @user = @getJsonUser json.user
     # NOTE(steida): '|| []'' because JSON stringify and parse ignores empty array.
     @songs = @asArray(json.songs || []).map @instanceFromJson app.songs.Song
+    @user = @getJsonUser json.user
+    # @updated = json.updated
 
   # PATTERN(steida): Use only server unique props, because user is going to be
   # saved into localStorage, which is shared across browser tabs/windows.
@@ -124,22 +140,22 @@ class app.user.Store extends este.labs.Store
     localUserStoreJson = @toJson()
     @mergeSongs localUserStoreJson, serverUserStoreJson
     @fromJson localUserStoreJson
-    console.log 'updateFromServer notify'
-    @notify()
+    console.log 'store serverNotify'
+    @serverNotify()
 
   ###*
     @param {Object} localUserStoreJson
     @param {Object} serverUserStoreJson
   ###
   mergeSongs: (localUserStoreJson, serverUserStoreJson) ->
-    # serverUserStoreJson can be null.
+    # serverUserStoreJson can be null for new user.
     return if !serverUserStoreJson
     serverSongs = serverUserStoreJson.songs
     return if !serverSongs
-    for id, serverSong of serverSongs
-      localSong = localUserStoreJson.songs[id]
+    for serverSongId, serverSong of serverSongs
+      localSong = localUserStoreJson.songs[serverSongId]
       if !localSong
-        localUserStoreJson.songs[id] = serverSong
+        localUserStoreJson.songs[serverSongId] = serverSong
         continue
       @mergeSong localSong, serverSong
     return
@@ -149,9 +165,9 @@ class app.user.Store extends este.labs.Store
     @param {Object} serverSong
   ###
   mergeSong: (localSong, serverSong) ->
-    # localSong.name = serverSong.name
-    # localSong.artist = serverSong.artist
-    # localSong.lyrics = serverSong.lyrics
+    localSong.name = serverSong.name
+    localSong.artist = serverSong.artist
+    localSong.lyrics = serverSong.lyrics
 
   ###*
     PATTERN(steida): Logout deletes all user data in memory and in local storage,
