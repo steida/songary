@@ -138,6 +138,7 @@ gulp.task 'watch', ->
     coffee: 'coffee'
     css: 'livereload-notify'
     js: 'js'
+    jsx: 'jsx'
     styl: 'stylus'
   , (task) -> gulp.start task
 

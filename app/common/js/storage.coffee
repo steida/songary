@@ -17,13 +17,14 @@ class common.Storage extends este.labs.Storage
   ###*
     @override
   ###
-  load: (route, routes) ->
-    @promiseOf route, routes
+  load: (route, params, routes) ->
+    @promiseOf route, params, routes
       .then @setHttpStatus.bind @
       .thenCatch @setHttpStatus.bind @
 
   ###*
     @param {este.Route} route
+    @param {Object} params
     @param {este.Routes} routes
     @return {!goog.Promise}
     @protected

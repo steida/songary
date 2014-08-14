@@ -133,10 +133,10 @@ class app.Storage extends common.Storage
   ###*
     @override
   ###
-  promiseOf: (route, routes) ->
+  promiseOf: (route, params, routes) ->
     switch route
       when routes.mySong, routes.editMySong
-        song = @userStore.songByRoute route
+        song = @userStore.songById params.id
         if song then @ok() else @notFound()
       else
         @ok()

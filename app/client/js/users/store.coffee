@@ -75,11 +75,18 @@ class app.user.Store extends este.labs.Store
     @notify()
 
   ###*
+    @param {string} id
+    @return {app.songs.Song}
+  ###
+  songById: (id) ->
+    goog.array.find @songs, (song) -> song.id == id
+
+  ###*
     @param {este.Route} route
     @return {app.songs.Song}
   ###
   songByRoute: (route) ->
-    goog.array.find @songs, (song) -> song.id == route.params.id
+    @songById route.params.id
 
   ###*
     @param {app.songs.Song} song

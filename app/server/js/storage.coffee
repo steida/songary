@@ -15,7 +15,7 @@ class server.Storage extends common.Storage
   ###*
     @override
   ###
-  promiseOf: (route, routes) ->
+  promiseOf: (route, params, routes) ->
     switch route
       when routes.mySong, routes.editMySong
         @notFound()
