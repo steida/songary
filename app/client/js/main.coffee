@@ -8,9 +8,11 @@ goog.require 'app.DiContainer'
 app.main = (data) ->
 
   container = new app.DiContainer
+
   container.configure
     resolve: App
     with: element: document.body
+
   container.resolveApp()
 
 goog.exportSymbol 'app.main', app.main

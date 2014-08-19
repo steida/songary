@@ -16,22 +16,16 @@ server.main = (config) ->
       isDev: config['env']['development']
       port: config['server']['port']
       express: require 'express'
+      compression: require 'compression'
+      favicon: require 'static-favicon'
+      bodyParser: require 'body-parser'
+      methodOverride: require 'method-override'
   ,
     resolve: server.FrontPage
     with:
       isDev: config['env']['development']
       version: config['version']
       clientData: {}
-  ,
-    resolve: server.Middleware
-    with:
-      compression: require 'compression'
-      favicon: require 'static-favicon'
-      bodyParser: require 'body-parser'
-      methodOverride: require 'method-override'
-  ,
-    resolve: app.Storage
-    as: server.Storage
 
   container.resolveServerApp()
 

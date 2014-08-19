@@ -18,11 +18,11 @@ class app.react.pages.EditSong
     editMode = false
     song = null
 
-    @create = React.createClass
+    @component = React.createClass
 
       render: ->
         editMode = routes.active == routes.editMySong
-        song = if editMode then userStore.songByRoute routes.active else userStore.newSong
+        song = if editMode then userStore.activeSong else userStore.newSong
 
         div className: 'edit-song',
           form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
@@ -72,8 +72,7 @@ class app.react.pages.EditSong
         @chordproTextarea_.decorate @refs['lyrics'].getDOMNode()
 
       componentDidUpdate: ->
-        # NOTE(steida): This is for remote updates when other device changes
-        # lyrics data. For local changes local Textarea is updated correctly.
+        # For update from other devices. Locally it's not needed.
         @chordproTextarea_.resize()
 
       componentWillUnmount: ->
@@ -87,9 +86,8 @@ class app.react.pages.EditSong
         @saveSong()
 
       saveSong: ->
-        # PATTERN(steida): Edited song is saved immediatelly.
         errors = if editMode then song.validate() else userStore.addNewSong()
-        # TODO(steida): Reusable React helper/mixin/whatever.
+        # TODO: Reusable helper/mixin/whatever.
         if errors.length
           alert errors[0].message
           field = this.refs['form'].getDOMNode().elements[errors[0].prop]
@@ -102,8 +100,8 @@ class app.react.pages.EditSong
         userStore.delete song
         routes.home.redirect()
 
-  # PATTERN(steida): String localization. Remember, every string has to be
-  # wrapped with goog.getMsg method.
+  # PATTERN: String localization. Remember, every string has to be wrapped with
+  # goog.getMsg method.
   @MSG_BACK_TO_SONGS: goog.getMsg 'Back to Songs'
   @MSG_CREATE_NEW_SONG: goog.getMsg 'Add new song'
   @MSG_DELETE: goog.getMsg 'Delete'

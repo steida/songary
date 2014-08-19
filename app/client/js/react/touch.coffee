@@ -1,4 +1,3 @@
-# TODO(steida): Wait for a while then move into este library.
 goog.provide 'app.react.Touch'
 
 goog.require 'goog.dom.classlist'
@@ -7,8 +6,7 @@ goog.require 'goog.events'
 class app.react.Touch
 
   ###*
-    Temp workaround, because React does not support custom attributes yet,
-    and Polymer PointerEvents needs touch-action.
+    Helper for PointerEvents because React.js doesn't support custom props.
     # http://www.polymer-project.org/platform/pointer-events.html#basic-usage
     @constructor
   ###
@@ -43,8 +41,6 @@ class app.react.Touch
     @return {Object}
   ###
   scroll: (var_args) ->
-    # NOTE(steida): scroll doesn't work anymore for some reason.
-    # http://www.polymer-project.org/platform/pointer-events.html
     @createTouchableComponents arguments, 'pan-x pan-y'
 
   ###*

@@ -1,22 +1,23 @@
 goog.provide 'server.Storage'
 
-goog.require 'common.Storage'
+goog.require 'este.labs.Storage'
 
-class server.Storage extends common.Storage
+class server.Storage extends este.labs.Storage
 
   ###*
-    @param {app.Store} appStore
     @constructor
-    @extends {common.Storage}
+    @extends {este.labs.Storage}
+    @final
   ###
-  constructor: (appStore) ->
-    super appStore
+  constructor: ->
+    super()
 
   ###*
     @override
   ###
-  promiseOf: (route, params, routes) ->
+  load: (route, params, routes) ->
     switch route
+      # TODO: Make user isomorphic.
       when routes.mySong, routes.editMySong
         @notFound()
       else

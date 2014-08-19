@@ -11,8 +11,8 @@ class app.react.Header
     {header,h1} = React.DOM
     {a} = touch.none 'a'
 
-    @create = React.createClass
+    @component = React.createClass
       render: ->
-        header null,
-          h1 null,
-            a href: routes.home.createUrl(), 'Songary'
+        header {},
+          h1 {},
+            a href: routes.home.url(), 'Songary'

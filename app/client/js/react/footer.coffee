@@ -9,8 +9,7 @@ class app.react.Footer
   constructor: (login) ->
     {footer} = React.DOM
 
-    @create = React.createClass
-
+    @component = React.createClass
       render: ->
-        footer null,
-          login.create null
+        footer {},
+          login.component {}

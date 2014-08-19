@@ -11,10 +11,13 @@ class app.react.pages.NotFound
     {div,h1,p} = React.DOM
     {a} = touch.none 'a'
 
-    @create = React.createClass
+    @component = React.createClass
 
       render: ->
+        # throw 'fok'
+        # a+
+
         div className: 'notfound',
-          h1 null, "This page isn't available"
-          p null, 'The link may be broken, or the page may have been removed.'
-          a href: routes.home.createUrl(), 'Continue here please.'
+          h1 {}, "This page isn't available"
+          p {}, 'The link may be broken, or the page may have been removed.'
+          a href: routes.home.url(), 'Continue here please.'

@@ -1,12 +1,20 @@
 ###
   App specific externs.
 
-  PATTERN(steida): There are several ways to prevent the compiler from
-  renaming symbols: http://stackoverflow.com/questions/11681070/exposing-dynamically-created-functions-on-objects-with-closure-compiler
-  Expose annotation seems to be ideal, but unfortunatelly it's brittle: http://goo.gl/rOQP2c
-  Quoting properties is verbose and tricky.
-  Externs ftw.
+  There are several ways how to prevent compiler from mangling symbols:
+  @see http://stackoverflow.com/questions/11681070/exposing-dynamically-created-functions-on-objects-with-closure-compiler
+
+  Expose annotation seems to be ideal, but unfortunatelly it doesn't work:
+  @see http://goo.gl/rOQP2c
+
+  Quoting properties everywhere is verbose and brittle, one can easily forget.
+
+  PATTERN: Put all app specific properties which should not be mangled here. It
+  does not matter exact className, just property name. It will not be mangled
+  across whole app.
+
 ###
+
 class appUserStore
   appUserStore::songs
   appUserStore::newSong
@@ -19,7 +27,7 @@ class appUserStore
   appUserStore::thirdPartyUserData
   appUserStore::uid
 
-# PATTERN(steida): For app.songs.Song create appSongsSong.
+# For app.songs.Song create appSongsSong.
 class appSongsSong
   appSongsSong::id
   appSongsSong::created
@@ -31,7 +39,12 @@ class appSongsSong
   appSongsSong::creator
   appSongsSong::lyrics
 
-# TODO(steida): Move to separate externs repo. Use typedef.
+class appRoutesParams
+  appRoutesParams::id
+  appRoutesParams::artist
+  appRoutesParams::song
+
+# TODO: Move to separate externs repo. Use typedef.
 
 class Firebase
 
@@ -117,7 +130,7 @@ class Firebase
 
   goOnline: ->
 
-  # TODO(steida): This should be Firebase Query interface or base class.
+  # TODO: This should be Firebase Query interface or base class.
   # Now everything is externed on Firebase class. Use more accurate annotations.
 
   ###*

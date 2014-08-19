@@ -14,18 +14,18 @@ class server.FrontPage
   constructor: (@serverApp, @app, @appTitle, @clientData, @version, @isDev) ->
 
   ###*
-    @return {string} Return HTML to be send to client.
+    @return {string} HTML string
   ###
-  renderToString: ->
-    appHtml = React.renderComponentToString @app.create()
+  render: ->
+    appHtml = React.renderComponentToString @app.component()
     scriptsHtml = @getScriptsHtml()
 
-    html = React.renderComponentToStaticMarkup @serverApp.create
+    html = React.renderComponentToStaticMarkup @serverApp.component
       bodyHtml: appHtml + scriptsHtml
       title: @appTitle.get()
       version: @version
 
-    # NOTE(steida): Add doctype manually because React doesn't support it.
+    # Add doctype manually because React doesn't support it.
     '<!DOCTYPE html>' + html
 
   ###*

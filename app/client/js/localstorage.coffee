@@ -1,6 +1,5 @@
 goog.provide 'app.LocalStorage'
 
-goog.require 'common.Storage'
 goog.require 'goog.array'
 goog.require 'goog.labs.userAgent.browser'
 goog.require 'goog.storage.Storage'
@@ -38,7 +37,7 @@ class app.LocalStorage
   ensureVersion: ->
     version = @localStorage.get '@version'
     return if version
-    # NOTE(steida): Update to version 1.
+    # Forse update to version 1.
     @localStorage.remove 'songs'
     @localStorage.set '@version', @localStorageVersion
 
@@ -65,14 +64,14 @@ class app.LocalStorage
           # console.log 'from 2 to 3'
       ].slice storageVersion - 1, scriptVersion - 1
     catch e
-      # TODO(steida): Report error to server.
+      # TODO: Report error to server.
       @localStorage.set 'user', userOrig
       return
     @localStorage.set '@version', scriptVersion
     return
 
   ###*
-    @param {Array.<app.Store>} stores
+    @param {Array.<este.labs.Store>} stores
   ###
   load: (stores) ->
     return if !@localStorage
@@ -80,19 +79,19 @@ class app.LocalStorage
     @listenWindowStorage stores
 
   ###*
-    @param {Array.<app.Store>} stores
+    @param {Array.<este.labs.Store>} stores
     @protected
   ###
   loadFromJson: (stores) ->
     stores.forEach (store) =>
       json = @localStorage.get store.name
       return if !json
-      # TODO(steida): Try/Catch in case of error. Report error to server.
+      # TODO: Try/Catch in case of error. Report error to server.
       store.fromJson json
 
   ###*
     Sync app state across tabs/windows.
-    @param {Array.<app.Store>} stores
+    @param {Array.<este.labs.Store>} stores
     @protected
   ###
   listenWindowStorage: (stores) ->
@@ -101,24 +100,24 @@ class app.LocalStorage
     return if goog.labs.userAgent.browser.isIE()
 
     goog.events.listen window, 'storage', (e) =>
-      # TODO(steida): Reload if localStorageVersion changed.
+      # TODO: Reload if localStorageVersion changed.
       browserEvent = e.getBrowserEvent()
       storeName = browserEvent.key.split('::')[1]
       return if !storeName
       store = goog.array.find stores, (store) -> store.name == storeName
       return if !store
 
-      # NOTE(steida): Because FirebaseSimpleLogin does not propagate login
-      # state across browser windows, we need to track change manually.
+      # Because FirebaseSimpleLogin does not propagate login state across
+      # browser windows, we need to track change manually.
       if store instanceof app.user.Store
         userWasLogged = !!store.user
 
-      # TODO(steida): Try/Catch in case of error. Report error to server.
+      # TODO: Try/Catch in case of error. Report error to server.
       json = (`/** @type {Object} */`) JSON.parse browserEvent.newValue
       store.fromJson json
       store.serverNotify()
 
-      # NOTE(steida): Reload browser if user login state has changed.
+      # Reload browser on user login state change.
       if store instanceof app.user.Store
         userLogged = !userWasLogged && store.user
         userLogout = userWasLogged && !store.user

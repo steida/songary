@@ -21,12 +21,12 @@ class app.react.pages.Song
     {article, menu} = React.DOM
     {a, menuitem} = touch.none 'a', 'menuitem'
 
-    @create = React.createClass
+    @component = React.createClass
 
       viewportMonitor: null
 
       render: ->
-        song = userStore.songByRoute routes.active
+        song = userStore.activeSong
 
         div className: 'song', onPointerUp: @onSongPointerUp,
           article
@@ -39,7 +39,7 @@ class app.react.pages.Song
             ref: 'menu'
           ,
             a
-              href: routes.home.createUrl()
+              href: routes.home.url()
               ref: 'back'
             , Song.MSG_BACK
             menuitem
@@ -49,8 +49,11 @@ class app.react.pages.Song
               onPointerUp: @onFontResizeButtonPointerUp.bind @, false
             , '-'
             a
-              href: routes.editMySong.createUrl song
+              href: routes.editMySong.url song
             , Song.MSG_EDIT
+
+      ref: (name) ->
+        @refs[name].getDOMNode()
 
       lyricsHtml: (song) ->
         goog.string
@@ -70,7 +73,7 @@ class app.react.pages.Song
         else
           @hideMenuAfterWhile()
 
-      # TODO(steida): Use polymer-gestures once pinch event will be supported.
+      # TODO: Use polymer-gestures once pinch event will be supported.
       onFontResizeButtonPointerUp: (increase) ->
         if not goog.labs.userAgent.device.isDesktop()
           clearTimeout @hideMenuTimer
@@ -78,14 +81,6 @@ class app.react.pages.Song
         fontSize = parseInt @ref('article').style.fontSize, 10
         if increase then fontSize++ else fontSize--
         @ref('article').style.fontSize = "#{fontSize}px"
-
-      ###*
-        NOTE(steida): Nice pattern. Mixin? Pull request to React?
-        @param {string} name
-        @return {Element}
-      ###
-      ref: (name) ->
-        @refs[name].getDOMNode()
 
       ###*
         @param {?boolean} show
@@ -102,8 +97,8 @@ class app.react.pages.Song
         @toggleMenu false
 
       positionMenu: (mouseCoord) ->
-        # NOTE(steida): It seems that after rotation change iOS Safari
-        # caches size until scroll, so sometimes x or y is not adjusted.
+        # It seems that after rotation change iOS Safari caches size until
+        # scroll, so sometimes x or y is not adjusted.
         position = new goog.positioning.ViewportClientPosition mouseCoord
         overflow = goog.positioning.Overflow.ADJUST_X | goog.positioning.Overflow.ADJUST_Y
         position.setLastResortOverflow overflow
@@ -135,8 +130,8 @@ class app.react.pages.Song
         @viewportMonitor.dispose()
 
       createAndListenViewportSizeMonitor: ->
-        # NOTE(steida): Update UI asap. If it doesn't work, downgrade to
-        # goog.dom.BufferedViewportSizeMonitor.
+        # Update font size asap seems to be the best. In case of problems,
+        # downgrade to goog.dom.BufferedViewportSizeMonitor.
         @viewportMonitor = new goog.dom.ViewportSizeMonitor
         @viewportMonitor.listen 'resize', @onViewportSizeMonitorResize
 
@@ -158,7 +153,7 @@ class app.react.pages.Song
           while fontSize != Song.MAX_FONT_SIZE
             @ref('article').style.fontSize = "#{fontSize}px"
             articleElSize = @getSize @ref('article')
-            # NOTE(steida): It seems that width is the best UX pattern.
+            # It seems that width is the best UX pattern.
             fitsInsideProperly = articleElSize.width > songElSize.width
             if fitsInsideProperly
               @ref('article').style.fontSize = "#{--fontSize}px"
@@ -168,17 +163,18 @@ class app.react.pages.Song
       getSize: (el) ->
         new goog.math.Size el.offsetWidth, el.offsetHeight
 
-      # TODO(steida): Measure it via Chrome dev tools.
+      # TODO: Measure it via Chrome dev tools.
       toAvoidUnnecessaryReflowAndRepaint: (fn) ->
         songEl = @getDOMNode()
         songEl.style.visibility = 'hidden'
         fn()
         songEl.style.visibility = ''
 
-  # TODO(steida): Set by platform.
+  # TODO: Set by platform.
   @HIDE_MENU_DELAY: 2000
   @MAX_FONT_SIZE: 60
   @MIN_READABLE_FONT_SIZE: 8
+  @LEFT_THUMB_AVERAGE_X_OFFSET: 16
+
   @MSG_BACK: goog.getMsg 'back'
   @MSG_EDIT: goog.getMsg 'edit'
-  @LEFT_THUMB_AVERAGE_X_OFFSET: 16

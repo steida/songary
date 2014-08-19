@@ -11,7 +11,7 @@ class app.react.Login
   constructor: (touch, userStore, firebase) ->
     {button} = touch.none 'button'
 
-    @create = React.createClass
+    @component = React.createClass
       render: ->
         button
           onPointerUp: @onButtonPointUp

@@ -1,39 +1,41 @@
 goog.provide 'App'
 
+goog.require 'goog.async.throwException'
+
 class App
 
   ###*
-    @param {este.Router} router
     @param {app.Routes} routes
+    @param {este.Router} router
+    @param {app.Storage} storage
+    @param {app.Title} appTitle
     @param {app.react.App} reactApp
     @param {Element} element
-    @param {app.Title} appTitle
-    @param {app.Storage} storage
     @constructor
   ###
-  constructor: (router, routes, reactApp, element, appTitle, storage) ->
-
-    onRouterError = (e) ->
-      # PATTERN(steida): Here we can handle various errors.
-      # For server error, use alert something like "Try it later...".
-      # For client error, log it, then show link to reload app in popup.
-      # Never reload automatically since it can cause loop.
-      # Use goog.DEBUG to detect development/production mode.
-      # All sync/async errors are handled since we are using promises.
-      # Use e.reason to check what happen.
-      if goog.DEBUG
-        console.log e.reason
+  constructor: (routes, router, storage, appTitle, reactApp, element) ->
 
     syncUI = ->
-      document.title = appTitle.get()
-      React.renderComponent reactApp.create(), element
+      if routes.active
+        document.title = appTitle.get()
+        React.renderComponent reactApp.component(), element
 
-    routes.addToEste router
-    router.listen 'error', onRouterError
+    routes.addToEste router, (route, params) ->
+      storage.load route, params, routes
+        .then ->
+          routes.setActive route, params
+        .thenCatch (reason) ->
+          routes.trySetErrorRoute reason
+        .then ->
+          syncUI()
+        .thenCatch (reason) ->
+          # TODO: Report error to server.
+          # TODO: Show something more beautiful.
+          alert 'Something is wrong, please reload browser.'
+          # Ensure error is shown correctly in dev console.
+          goog.async.throwException reason if goog.DEBUG
+          # Rethrow to ensure este.Router will not change url.
+          throw reason
 
-    # PATTERN(steida): Listen all listenables representing app state here.
-    # Don't worry about performance, all data should be fetched already.
-    # Only data supposed to be shown are processed with React virtual DOM diff.
-    routes.listen 'change', syncUI
-    storage.listen 'change', syncUI
     router.start()
+    storage.listen 'change', syncUI

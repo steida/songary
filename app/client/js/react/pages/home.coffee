@@ -12,22 +12,22 @@ class app.react.pages.Home
     {div,h1,ul,li,br} = React.DOM
     {a} = touch.scroll 'a'
 
-    @create = React.createClass
+    @component = React.createClass
 
       render: ->
         div className: 'home',
-          h1 null, Home.MSG_MY_SONGS
-          ul null, userStore.allSongs().map (song) ->
+          h1 {}, Home.MSG_MY_SONGS
+          ul {}, userStore.allSongs().map (song) ->
             li key: song.id,
-              a href: routes.mySong.createUrl(song),
+              a href: routes.mySong.url(song),
                 "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
           a
             className: 'btn btn-default'
-            href: routes.myNewSong.createUrl()
+            href: routes.myNewSong.url()
           , Home.MSG_ADD_NEW_SONG
           # a
           #   className: 'btn btn-default'
-          #   href: routes.myNewSong.createUrl()
+          #   href: routes.myNewSong.url()
           # , Home.MSG_SONGS
 
   @MSG_ADD_NEW_SONG: goog.getMsg 'add new song'

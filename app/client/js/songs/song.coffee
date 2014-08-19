@@ -66,7 +66,7 @@ class app.songs.Song
         new app.ValidationError prop, Song.MSG_FILL_OUT
 
   update: ->
-    # PATTERN(steida): Look, we really don't need to use html5 form validation.
+    # PATTERN: No, we don't need HTML5 form validations. It's anti-pattern.
     @name = @name.slice 0, 100
     @artist = @artist.slice 0, 100
     @lyrics = @lyrics.slice 0, 32000

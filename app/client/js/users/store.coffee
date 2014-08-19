@@ -15,13 +15,13 @@ class app.user.Store extends este.labs.Store
     @setEmpty()
 
   # ###*
-  #   TODO(steida): If ok, move to este.labs.Store.
+  #   TODO: If ok, move to este.labs.Store.
   #   @type {?number}
   # ###
   # created: null
   #
   # ###*
-  #   TODO(steida): If ok, move to este.labs.Store.
+  #   TODO: If ok, move to este.labs.Store.
   #   @type {?number}
   # ###
   # updated: null
@@ -35,6 +35,11 @@ class app.user.Store extends este.labs.Store
     @type {app.songs.Song}
   ###
   newSong: null
+
+  ###*
+    @type {app.songs.Song}
+  ###
+  activeSong: null
 
   ###*
     @type {Object}
@@ -82,13 +87,6 @@ class app.user.Store extends este.labs.Store
     goog.array.find @songs, (song) -> song.id == id
 
   ###*
-    @param {este.Route} route
-    @return {app.songs.Song}
-  ###
-  songByRoute: (route) ->
-    @songById route.params.id
-
-  ###*
     @param {app.songs.Song} song
     @return {boolean}
   ###
@@ -123,13 +121,13 @@ class app.user.Store extends este.labs.Store
   fromJson: (json) ->
     # @created = json.created
     @newSong = @instanceFromJson app.songs.Song, json.newSong
-    # NOTE(steida): '|| []'' because JSON stringify and parse ignores empty array.
+    # Because JSON stringify and parse ignore empty array, so we need '|| []'.
     @songs = @asArray(json.songs || []).map @instanceFromJson app.songs.Song
     @user = @getJsonUser json.user
     # @updated = json.updated
 
-  # PATTERN(steida): Use only server unique props, because user is going to be
-  # saved into localStorage, which is shared across browser tabs/windows.
+  # PATTERN: Use only server unique props, because user is going to be synced
+  # with localStorage which is shared across browser windows.
   getJsonUser: (user) ->
     return null if !user
     displayName: user.displayName
@@ -178,9 +176,9 @@ class app.user.Store extends este.labs.Store
     localSong.lyrics = serverSong.lyrics
 
   ###*
-    PATTERN(steida): Logout deletes all user data in memory and in local storage,
-    but only if user was logged. We don't want to delete localStorage on page
-    reload for not yet logged user.
+    PATTERN: Logout deletes all user data in memory and localStorage, but only
+    if user was logged at least once. We don't want to delete localStorage of
+    not yet logged user aka new visitor.
     @param {boolean} userWasLoggedOnce
   ###
   onLogout: (userWasLoggedOnce) ->

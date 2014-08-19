@@ -13,13 +13,13 @@ class app.react.Layout
 
     {div} = React.DOM
 
-    @create = React.createClass
+    @component = React.createClass
 
       render: ->
         page = @props.page
         songPageIsShown = page == songPage
 
         div className: 'layout',
-          header.create() unless songPageIsShown
-          page.create()
-          footer.create() unless songPageIsShown
+          header.component() unless songPageIsShown
+          page.component()
+          footer.component() unless songPageIsShown
