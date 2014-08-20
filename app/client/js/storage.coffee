@@ -53,32 +53,38 @@ class app.Storage extends este.labs.Storage
       .Throttle @savePendingStores, Storage.THROTTLE_MS, @
 
   ###*
+    TODO: Handle error.
     @private
   ###
   savePendingStores: ->
     stores = @pendingStores.getValues()
     @pendingStores.clear()
-    @saveStore store for store in stores
+    for store in stores
+      json = @deepCopy store.toJson()
+      @saveStoreToClient store, json
+      @saveStoreToServer store, json
     return
 
   ###*
-    TODO: Handle errors.
     @param {este.labs.Store} store
-    @param {boolean=} fromServer
+    @param {Object} json
     @private
   ###
-  saveStore: (store, fromServer = false) ->
-    console.log 'storage.saveStore, from server: ', fromServer if goog.DEBUG
-    storeAsJson = @deepCopy store.toJson()
+  saveStoreToClient: (store, json) ->
+    console.log 'storage.saveStoreToClient' if goog.DEBUG
+    @localStorage.set store, json
 
-    # TODO: Do it smarter.
-    return if not @storeStateChanged store, storeAsJson
-
-    @localStorage.set store, storeAsJson
-    if not fromServer
-      isUserStoreWithUser = store instanceof app.user.Store && @userStore.user
-      if isUserStoreWithUser
-        @firebase.userRef.set storeAsJson
+  ###*
+    TODO: Try JSONPatch, https://github.com/facebook/immutable-js/issues/52.
+    @param {este.labs.Store} store
+    @param {Object} json
+    @private
+  ###
+  saveStoreToServer: (store, json) ->
+    console.log 'storage.saveStoreToServer' if goog.DEBUG
+    isUserStoreWithUser = store instanceof app.user.Store && store.user
+    if isUserStoreWithUser
+      @firebase.userRef.set json
 
   ###*
     @private
@@ -93,9 +99,9 @@ class app.Storage extends este.labs.Storage
     @private
   ###
   onStoreChange: (store, e) ->
-    # PATTERN: Server changes are applied immediately.
+    # Apply server changes immediately, on client only.
     if e.server
-      @saveStore store, true
+      @saveStoreToClient store, @deepCopy store.toJson()
       @notify()
       return
 
