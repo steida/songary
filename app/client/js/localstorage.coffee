@@ -125,8 +125,8 @@ class app.LocalStorage
 
   ###*
     @param {este.labs.Store} store
-    @param {Object} storeAsJson
+    @param {Object} json
   ###
-  set: (store, storeAsJson) ->
+  set: (store, json) ->
     return if !@localStorage
-    @localStorage.set store.name, storeAsJson
+    @localStorage.set store.name, json
