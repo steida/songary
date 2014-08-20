@@ -24,7 +24,7 @@ class app.Title
       when @routes.notFound then Title.MSG_NOT_FOUND
 
   getMySongTitle: ->
-    song = @userStore.activeSong
+    song = @userStore.songByRoute @routes.active
     Title.MSG_SONG = goog.getMsg '{$name} - {$artist} | Songary',
       name: song.getDisplayName()
       artist: song.getDisplayArtist()

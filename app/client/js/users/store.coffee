@@ -27,19 +27,14 @@ class app.user.Store extends este.labs.Store
   # updated: null
 
   ###*
-    @type {Array.<app.songs.Song>}
-  ###
-  songs: null
-
-  ###*
     @type {app.songs.Song}
   ###
   newSong: null
 
   ###*
-    @type {app.songs.Song}
+    @type {Array.<app.songs.Song>}
   ###
-  activeSong: null
+  songs: null
 
   ###*
     @type {Object}
@@ -85,6 +80,13 @@ class app.user.Store extends este.labs.Store
   ###
   songById: (id) ->
     goog.array.find @songs, (song) -> song.id == id
+
+  ###*
+    @param {este.Route} route
+    @return {app.songs.Song}
+  ###
+  songByRoute: (route) ->
+    @songById route.params.id
 
   ###*
     @param {app.songs.Song} song
@@ -141,12 +143,11 @@ class app.user.Store extends este.labs.Store
     @param {Object} serverUserStoreJson
   ###
   updateFromServer: (authUser, serverUserStoreJson) ->
+    console.log 'updateFromServer' if goog.DEBUG
     @user = authUser
     localUserStoreJson = @toJson()
     @mergeSongs localUserStoreJson, serverUserStoreJson
     @fromJson localUserStoreJson
-    if goog.DEBUG
-      console.log 'store serverNotify'
     @serverNotify()
 
   ###*

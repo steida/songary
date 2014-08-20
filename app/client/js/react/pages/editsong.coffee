@@ -22,7 +22,10 @@ class app.react.pages.EditSong
 
       render: ->
         editMode = routes.active == routes.editMySong
-        song = if editMode then userStore.activeSong else userStore.newSong
+        song = if editMode
+          userStore.songByRoute routes.active
+        else
+          userStore.newSong
 
         div className: 'edit-song',
           form onSubmit: @onFormSubmit, ref: 'form', role: 'form',

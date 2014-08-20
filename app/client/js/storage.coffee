@@ -38,8 +38,7 @@ class app.Storage extends este.labs.Storage
   load: (route, params, routes) ->
     switch route
       when routes.mySong, routes.editMySong
-        @userStore.activeSong = @userStore.songById params.id
-        return @notFound() if not @userStore.activeSong
+        return @notFound() if !@userStore.songById params.id
         @ok()
       else
         @ok()
@@ -99,6 +98,10 @@ class app.Storage extends este.labs.Storage
     @private
   ###
   onStoreChange: (store, e) ->
+    console.log 'onStoreChange e.server == ' + e.server if goog.DEBUG
+
+    # return if not @storeStateChanged store, @deepCopy store.toJson()
+
     # Apply server changes immediately, on client only.
     if e.server
       @saveStoreToClient store, @deepCopy store.toJson()
@@ -113,11 +116,11 @@ class app.Storage extends este.labs.Storage
   ###*
     Check if store state has changed.
     @param {este.labs.Store} store
-    @param {Object} storeAsJson
+    @param {Object} json
     @return {boolean}
   ###
-  storeStateChanged: (store, storeAsJson) ->
-    storeAsJsonString = JSON.stringify storeAsJson
-    return false if @storesStates.get(store) == storeAsJsonString
-    @storesStates.set store, storeAsJsonString
+  storeStateChanged: (store, json) ->
+    jsonString = JSON.stringify json
+    return false if @storesStates.get(store) == jsonString
+    @storesStates.set store, jsonString
     true

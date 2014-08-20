@@ -26,7 +26,7 @@ class app.react.pages.Song
       viewportMonitor: null
 
       render: ->
-        song = userStore.activeSong
+        song = userStore.songByRoute routes.active
 
         div className: 'song', onPointerUp: @onSongPointerUp,
           article
