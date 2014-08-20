@@ -1,7 +1,6 @@
 goog.provide 'server.main'
 
 goog.require 'server.DiContainer'
-goog.require 'server.Storage'
 
 ###*
   @param {Object} config
