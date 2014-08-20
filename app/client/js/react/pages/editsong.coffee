@@ -99,7 +99,7 @@ class app.react.pages.EditSong
         routes.home.redirect()
 
       onDeleteButtonClick: ->
-        return if not confirm EditSong.MSG_DELETE_QUESTION
+        return if !confirm EditSong.MSG_DELETE_QUESTION
         userStore.delete song
         routes.home.redirect()
 

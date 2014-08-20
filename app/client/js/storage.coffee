@@ -100,7 +100,7 @@ class app.Storage extends este.labs.Storage
   onStoreChange: (store, e) ->
     console.log 'onStoreChange e.server == ' + e.server if goog.DEBUG
 
-    # return if not @storeStateChanged store, @deepCopy store.toJson()
+    # return if !@storeStateChanged store, @deepCopy store.toJson()
 
     # Apply server changes immediately, on client only.
     if e.server

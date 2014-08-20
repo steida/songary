@@ -67,7 +67,7 @@ class app.react.pages.Song
         @toggleMenu null, new goog.math.Coordinate e.clientX, e.clientY
 
       onMenuMouseHover: (e) ->
-        return if not goog.labs.userAgent.device.isDesktop()
+        return if !goog.labs.userAgent.device.isDesktop()
         if e.type == 'mouseenter'
           clearTimeout @hideMenuTimer
         else
@@ -75,7 +75,7 @@ class app.react.pages.Song
 
       # TODO: Use polymer-gestures once pinch event will be supported.
       onFontResizeButtonPointerUp: (increase) ->
-        if not goog.labs.userAgent.device.isDesktop()
+        if !goog.labs.userAgent.device.isDesktop()
           clearTimeout @hideMenuTimer
           @hideMenuAfterWhile()
         fontSize = parseInt @ref('article').style.fontSize, 10
