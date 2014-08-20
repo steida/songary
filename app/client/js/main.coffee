@@ -2,6 +2,13 @@ goog.provide 'app.main'
 
 goog.require 'app.DiContainer'
 
+# Use compile defines also for dev mode.
+CLOSURE_UNCOMPILED_DEFINES =
+  'goog.array.ASSUME_NATIVE_FUNCTIONS': true
+  'goog.dom.ASSUME_STANDARDS_MODE': true
+  'goog.json.USE_NATIVE_JSON': true
+  'goog.style.GET_BOUNDING_CLIENT_RECT_ALWAYS_EXISTS': true
+
 ###*
   @param {Object} data Server side data. Useful for config, preload, whatever.
 ###
