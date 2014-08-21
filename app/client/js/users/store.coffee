@@ -146,28 +146,29 @@ class app.user.Store extends este.labs.Store
     console.log 'updateFromServer' if goog.DEBUG
     @user = authUser
     localUserStoreJson = @toJson()
-    @mergeSongs localUserStoreJson, serverUserStoreJson
+    # serverUserStoreJson can be null for new user.
+    if serverUserStoreJson
+      @mergeSongs localUserStoreJson.songs, serverUserStoreJson.songs
     @fromJson localUserStoreJson
     @serverNotify()
 
   ###*
-    @param {Object} localUserStoreJson
-    @param {Object} serverUserStoreJson
+    @param {Object} localSongs
+    @param {Object} serverSongs
   ###
-  mergeSongs: (localUserStoreJson, serverUserStoreJson) ->
-    # serverUserStoreJson can be null for new user.
-    return if !serverUserStoreJson
-    serverSongs = serverUserStoreJson.songs
+  mergeSongs: (localSongs, serverSongs) ->
+    # TODO: It is really needed?
     return if !serverSongs
     for serverSongId, serverSong of serverSongs
-      localSong = localUserStoreJson.songs[serverSongId]
+      localSong = localSongs[serverSongId]
       if !localSong
-        localUserStoreJson.songs[serverSongId] = serverSong
+        localSongs[serverSongId] = serverSong
         continue
       @mergeSong localSong, serverSong
     return
 
   ###*
+    For now, server song always override local one.
     @param {Object} localSong
     @param {Object} serverSong
   ###
