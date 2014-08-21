@@ -27,3 +27,4 @@ How? Just read code, there are plethora of comments.
   - statically typed code written in CoffeeScript
   - killer React.js syntax
   - Firebase
+  - super tunned [dev stack](https://github.com/steida/gulp-este)
