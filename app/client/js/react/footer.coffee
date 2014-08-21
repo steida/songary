@@ -7,9 +7,10 @@ class app.react.Footer
     @constructor
   ###
   constructor: (login) ->
-    {footer} = React.DOM
+    {footer,p} = React.DOM
 
     @component = React.createClass
       render: ->
         footer {},
           login.component {}
+          p className: 'text-warning', "Warning: Pre-alpha version, don't use it yet."
