@@ -62,8 +62,10 @@ class app.Storage extends este.labs.Storage
     isUserStoreWithUser = store instanceof app.user.Store && store.user
     if isUserStoreWithUser
       console.log '@firebase.userRef.set json' if goog.DEBUG
-      # TODO: Ensure updated will be updated with server time.
-      json.updated = Firebase.ServerValue.TIMESTAMP
+      # TODO: Firebase.ServerValue.TIMESTAMP replaces local time with server
+      # time. It's not used until I figure out how to inject my own time.
+      # Now it takes 3 localStorage updates for one change! Terrible.
+      # json.updated = Firebase.ServerValue.TIMESTAMP
       @firebase.userRef.set json
 
   ###*
