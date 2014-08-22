@@ -18,38 +18,16 @@ class app.Storage extends este.labs.Storage
   constructor: (@localStorage, @firebase, @userStore) ->
     super()
 
-    @stores = [
-      @userStore
-    ]
-
+    @stores = [@userStore]
     @storesStates = new goog.structs.Map
     @pendingStores = new goog.structs.Set
+    @save = new goog.async.Throttle @savePendingStores, Storage.THROTTLE_MS, @
 
-    @createThrottledSave()
     @localStorage.load @stores
     @listenStores()
     @firebase.simpleLogin()
 
   @THROTTLE_MS: 1000
-
-  ###*
-    @override
-  ###
-  load: (route, params, routes) ->
-    switch route
-      when routes.mySong, routes.editMySong
-        return @notFound() if !@userStore.songById params.id
-        @ok()
-      else
-        @ok()
-
-  ###*
-    Throttling for app state persistence. It saves traffic and localStorage.
-    @private
-  ###
-  createThrottledSave: ->
-    @savePendingStoresThrottled = new goog.async
-      .Throttle @savePendingStores, Storage.THROTTLE_MS, @
 
   ###*
     TODO: Handle error.
@@ -83,6 +61,9 @@ class app.Storage extends este.labs.Storage
     console.log 'storage.saveStoreToServer' if goog.DEBUG
     isUserStoreWithUser = store instanceof app.user.Store && store.user
     if isUserStoreWithUser
+      console.log '@firebase.userRef.set json' if goog.DEBUG
+      # TODO: Ensure updated will be updated with server time.
+      json.updated = Firebase.ServerValue.TIMESTAMP
       @firebase.userRef.set json
 
   ###*
@@ -100,27 +81,41 @@ class app.Storage extends este.labs.Storage
   onStoreChange: (store, e) ->
     console.log 'onStoreChange e.server == ' + e.server if goog.DEBUG
 
+    # NOTE: This is only for dev.
     # return if !@storeStateChanged store, @deepCopy store.toJson()
 
-    # Apply server changes immediately, on client only.
+    # Apply server changes immediately to client only.
     if e.server
       @saveStoreToClient store, @deepCopy store.toJson()
       @notify()
       return
 
-    # Postpone local changes to save server and localStorage traffic.
+    # Postpone local changes persistence. It saves traffic and cpu.
     @pendingStores.add store
-    @savePendingStoresThrottled.fire()
+    @save.fire()
+    # But update UI immediately.
     @notify()
 
   ###*
-    Check if store state has changed.
-    @param {este.labs.Store} store
-    @param {Object} json
-    @return {boolean}
+    @override
   ###
-  storeStateChanged: (store, json) ->
-    jsonString = JSON.stringify json
-    return false if @storesStates.get(store) == jsonString
-    @storesStates.set store, jsonString
-    true
+  load: (route, params, routes) ->
+    switch route
+      when routes.mySong, routes.editMySong
+        return @notFound() if !@userStore.songById params.id
+        @ok()
+      else
+        @ok()
+
+  # ###*
+  #   NOTE: This is only for dev.
+  #   Check if store state has changed.
+  #   @param {este.labs.Store} store
+  #   @param {Object} json
+  #   @return {boolean}
+  # ###
+  # storeStateChanged: (store, json) ->
+  #   jsonString = JSON.stringify json
+  #   return false if @storesStates.get(store) == jsonString
+  #   @storesStates.set store, jsonString
+  #   true

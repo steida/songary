@@ -62,7 +62,26 @@ class app.Firebase
   ###
   onUserLogin: (user) ->
     @userRef = @userRefOf user
-    @listenUserRefValue user
+    # Get server state and listen for changes. This method is dispatched also
+    # for local changes, which should
+    # jak to je?
+
+    @userRef.on 'value',
+      (snap) =>
+        # console.log snap
+        # Can be null.
+        val = snap.val()
+        # console.log val
+        # console.log @userStore.updated
+        # # if val && val.updated == @userStore.updated
+        # #   return
+        # console.log 'on value snap.val() updated: ' + val?.updated
+        @userStore.updateFromServer user, val
+
+    # , (error) ->
+    #   # TODO: Report to server.
+    #   if goog.DEBUG
+    #     console.log 'The read failed: ' + error.code
 
   ###*
     @param {Object} user
@@ -73,21 +92,6 @@ class app.Firebase
     @root
       .child 'users'
       .child user.uid
-
-  ###*
-    @param {Object} user Firebase user.
-    @protected
-  ###
-  listenUserRefValue: (user) ->
-    @userRef?.on 'value',
-      (snap) =>
-        if goog.DEBUG
-          console.log "on @userRef.on 'value',"
-        @userStore.updateFromServer user, snap.val()
-    , (error) ->
-      # TODO: Report to server.
-      if goog.DEBUG
-        console.log 'The read failed: ' + error.code
 
   onUserLogout: ->
     @userRef?.off 'value'

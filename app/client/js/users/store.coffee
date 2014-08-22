@@ -14,17 +14,15 @@ class app.user.Store extends este.labs.Store
     super 'user'
     @setEmpty()
 
-  # ###*
-  #   TODO: If ok, move to este.labs.Store.
-  #   @type {?number}
-  # ###
-  # created: null
-  #
-  # ###*
-  #   TODO: If ok, move to este.labs.Store.
-  #   @type {?number}
-  # ###
-  # updated: null
+  ###*
+    @type {number}
+  ###
+  created: 0
+
+  ###*
+    @type {number}
+  ###
+  updated: 0
 
   ###*
     @type {app.songs.Song}
@@ -37,13 +35,15 @@ class app.user.Store extends este.labs.Store
   songs: null
 
   ###*
-    @type {Object}
+    @type {Object} Firebase user.
   ###
   user: null
 
   setEmpty: ->
-    @songs = []
+    @created = Date.now()
+    @updated = Date.now()
     @newSong = new app.songs.Song
+    @songs = []
     @user = null
 
   ###*
@@ -111,7 +111,8 @@ class app.user.Store extends este.labs.Store
     @override
   ###
   toJson: ->
-    # created: @created
+    created: @created
+    updated: @updated
     newSong: @newSong
     songs: @asObject @songs
     # updated: @updated
@@ -121,12 +122,12 @@ class app.user.Store extends este.labs.Store
     @override
   ###
   fromJson: (json) ->
-    # @created = json.created
+    @created = json.created
+    @updated = json.updated
     @newSong = @instanceFromJson app.songs.Song, json.newSong
     # Because JSON stringify and parse ignore empty array, so we need '|| []'.
     @songs = @asArray(json.songs || []).map @instanceFromJson app.songs.Song
     @user = @getJsonUser json.user
-    # @updated = json.updated
 
   # PATTERN: Use only server unique props, because user is going to be synced
   # with localStorage which is shared across browser windows.
@@ -189,3 +190,10 @@ class app.user.Store extends este.labs.Store
     else
       @user = null
     @notify()
+
+  ###*
+    @override
+  ###
+  notify: ->
+    @updated = Date.now()
+    super()
