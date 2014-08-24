@@ -17,11 +17,6 @@ class app.Firebase
   userRef: null
 
   ###*
-    @type {boolean}
-  ###
-  userJustLogged: false
-
-  ###*
     @protected
   ###
   setRefs: ->
@@ -67,7 +62,7 @@ class app.Firebase
   ###
   onUserLogin: (user) ->
     @userRef = @userRefOf user
-    @userJustLogged = true
+    userJustLogged = true
     # The problem with Firebase on 'value' is, that this method is dispatched
     # two times when Firebase.ServerValue.TIMESTAMP is used.
     # 1. locally made change
@@ -79,11 +74,16 @@ class app.Firebase
         # This check is used to ignore local Firebase changes.
         # TODO: Consider splitting to localUpdated and serverUpdated.
         return if val && val.updated == @userStore.updated
+        # Merge server changes to local.
         @userStore.updateFromServer user, val
-        # When user is logged, sync local changes to server.
-        if @userJustLogged
-          @userJustLogged = false
+        if userJustLogged
+          userJustLogged = false
+          # Notify will rerun sync to server, so local changes made before login
+          # will be saved.
           @userStore.notify()
+        else
+          # User is already loged, to we need only to save server changes.
+          @userStore.serverNotify()
 
     , (error) ->
       # TODO: Report to server.
@@ -101,7 +101,6 @@ class app.Firebase
       .child user.uid
 
   onUserLogout: ->
-    @userJustLogged = false
     @userRef?.off 'value'
     @userStore.onLogout !!@userRef
 

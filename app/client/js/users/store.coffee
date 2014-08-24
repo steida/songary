@@ -115,7 +115,6 @@ class app.user.Store extends este.labs.Store
     updated: @updated
     newSong: @newSong
     songs: @asObject @songs
-    # updated: @updated
     user: @getJsonUser @user
 
   ###*
@@ -151,7 +150,6 @@ class app.user.Store extends este.labs.Store
     if serverUserStoreJson
       @mergeSongs localUserStoreJson.songs, serverUserStoreJson.songs
     @fromJson localUserStoreJson
-    @serverNotify()
 
   ###*
     @param {Object} localSongs
