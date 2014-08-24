@@ -17,6 +17,11 @@ class app.Firebase
   userRef: null
 
   ###*
+    @type {boolean}
+  ###
+  userJustLogged: false
+
+  ###*
     @protected
   ###
   setRefs: ->
@@ -62,12 +67,24 @@ class app.Firebase
   ###
   onUserLogin: (user) ->
     @userRef = @userRefOf user
+    @userJustLogged = true
+    # The problem with Firebase on 'value' is, that this method is dispatched
+    # two times when Firebase.ServerValue.TIMESTAMP is used.
+    # 1. locally made change
+    # 2. server with updated TIMESTAMP value.
     @userRef.on 'value',
       (snap) =>
         # Can be null for new users.
         val = snap.val()
+        # This check is used to ignore local Firebase changes.
+        # TODO: Consider splitting to localUpdated and serverUpdated.
         return if val && val.updated == @userStore.updated
         @userStore.updateFromServer user, val
+        # When user is logged, sync local changes to server.
+        if @userJustLogged
+          @userJustLogged = false
+          @userStore.notify()
+
     , (error) ->
       # TODO: Report to server.
       if goog.DEBUG
@@ -84,6 +101,7 @@ class app.Firebase
       .child user.uid
 
   onUserLogout: ->
+    @userJustLogged = false
     @userRef?.off 'value'
     @userStore.onLogout !!@userRef
 
