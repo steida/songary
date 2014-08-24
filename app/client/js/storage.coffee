@@ -62,10 +62,14 @@ class app.Storage extends este.labs.Storage
     isUserStoreWithUser = store instanceof app.user.Store && store.user
     if isUserStoreWithUser
       console.log '@firebase.userRef.set json' if goog.DEBUG
-      # TODO: Firebase.ServerValue.TIMESTAMP replaces local time with server
-      # time. It's not used until I figure out how to inject my own time.
-      # Now it takes 3 localStorage updates for one change! Terrible.
-      # json.updated = Firebase.ServerValue.TIMESTAMP
+      # Firebase.ServerValue.TIMESTAMP replaces local time with server time. But
+      # it seems to be suboptimal for now. By own updated time, I can filter
+      # local changes that Firebase on 'value' unfortunatelly dispatches too.
+      # When json.updated = Firebase.ServerValue.TIMESTAMP is used, I can't
+      # filter and server updated time is also propagated back to client, so
+      # instead of one serialization, any local changes is synced three times.
+      # Because we are using throttling, it's really not an issue. Still, it's
+      # neither ideal.
       @firebase.userRef.set json
 
   ###*
