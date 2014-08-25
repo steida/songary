@@ -63,7 +63,7 @@ class app.Storage extends este.labs.Storage
     if isUserStoreWithUser
       if @firebase.userRef
         console.log '@firebase.userRef.set json' if goog.DEBUG
-        # json.updated = Firebase.ServerValue.TIMESTAMP
+        json.updated = Firebase.ServerValue.TIMESTAMP
         @firebase.sync -> @userRef.set json
 
   ###*
@@ -79,14 +79,17 @@ class app.Storage extends este.labs.Storage
     @private
   ###
   onStoreChange: (store, e) ->
-    console.log 'onStoreChange e.server == ' + e.server if goog.DEBUG
+    console.log 'onStoreChange e.target: ', e.target if goog.DEBUG
 
     # NOTE: This is only for dev.
     # return if !@storeStateChanged store, @deepCopy store.toJson()
 
-    # Apply server changes immediately to client only.
-    if e.server
+    if e.target instanceof app.Firebase
       @saveStoreToClient store, @deepCopy store.toJson()
+      @notify()
+      return
+
+    if e.target instanceof app.LocalStorage
       @notify()
       return
 

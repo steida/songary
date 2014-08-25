@@ -71,19 +71,17 @@ class app.Firebase
     userJustLogged = true
     @userRef.on 'value',
       (snap) =>
-        # Ignore local changes, workaround for Firebase behavior.
+        # Ignore local changes. Workaround for nasty Firebase behavior.
         return if @isLocalChange_
-        # Can be null for new users.
-        val = snap.val()
         # Merge server changes to client.
-        @userStore.updateFromServer user, val
+        console.log snap.val()
+        @userStore.updateFromServer user, snap.val()
         if userJustLogged
           userJustLogged = false
-          # Sync with saving to server to preserve local changes.
+          # Plain notify to sync local changes to server after user login.
           @userStore.notify()
         else
-          # Only local sync.
-          @userStore.serverNotify()
+          @userStore.notify @
     , (error) ->
       # TODO: Report to server.
       if goog.DEBUG
@@ -109,7 +107,7 @@ class app.Firebase
       registered/logged user.
     ###
     @userStore.clearOnLogout userWasLogged
-    @userStore.serverNotify()
+    @userStore.notify @
 
   loginViaFacebook: ->
     @authClient.login 'facebook',

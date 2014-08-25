@@ -90,7 +90,7 @@ class app.LocalStorage
       store.fromJson json
 
   ###*
-    Sync app state across tabs/windows.
+    Sync app state across browser tabs/windows with the same domain origin.
     @param {Array.<este.labs.Store>} stores
     @protected
   ###
@@ -115,7 +115,7 @@ class app.LocalStorage
       # TODO: Try/Catch in case of error. Report error to server.
       json = (`/** @type {Object} */`) JSON.parse browserEvent.newValue
       store.fromJson json
-      store.serverNotify()
+      store.notify @
 
       # Reload browser on user login state change.
       if store instanceof app.user.Store
