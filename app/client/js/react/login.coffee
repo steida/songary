@@ -3,12 +3,13 @@ goog.provide 'app.react.Login'
 class app.react.Login
 
   ###*
+    @param {app.Routes} routes
     @param {app.react.Touch} touch
     @param {app.user.Store} userStore
     @param {app.Firebase} firebase
     @constructor
   ###
-  constructor: (touch, userStore, firebase) ->
+  constructor: (routes, touch, userStore, firebase) ->
     {button} = touch.none 'button'
 
     @component = React.createClass
@@ -19,6 +20,7 @@ class app.react.Login
 
       onButtonPointUp: (e) ->
         if userStore.user
+          routes.home.redirect()
           firebase.logout()
         else
           firebase.loginViaFacebook()
