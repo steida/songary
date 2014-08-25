@@ -148,6 +148,8 @@ class app.user.Store extends este.labs.Store
     localUserStoreJson = @toJson()
     # serverUserStoreJson can be null for new user.
     if serverUserStoreJson
+      # TODO: Merge newSong and user.
+      localUserStoreJson.updated = serverUserStoreJson.updated
       @mergeSongs localUserStoreJson.songs, serverUserStoreJson.songs
     @fromJson localUserStoreJson
 
