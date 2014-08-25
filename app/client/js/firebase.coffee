@@ -17,6 +17,12 @@ class app.Firebase
   userRef: null
 
   ###*
+    @type {boolean}
+    @private
+  ###
+  isLocalChange_: false
+
+  ###*
     @protected
   ###
   setRefs: ->
@@ -63,28 +69,21 @@ class app.Firebase
   onUserLogin: (user) ->
     @userRef = @userRefOf user
     userJustLogged = true
-    # The problem with Firebase on 'value' is, that this method is dispatched
-    # two times when Firebase.ServerValue.TIMESTAMP is used.
-    # 1. locally made change
-    # 2. server with updated TIMESTAMP value.
     @userRef.on 'value',
       (snap) =>
+        # Ignore local changes, workaround for Firebase behavior.
+        return if @isLocalChange_
         # Can be null for new users.
         val = snap.val()
-        # This check is used to ignore local Firebase changes.
-        # TODO: Consider splitting to localUpdated and serverUpdated.
-        return if val && val.updated == @userStore.updated
-        # Merge server changes to local.
+        # Merge server changes to client.
         @userStore.updateFromServer user, val
         if userJustLogged
           userJustLogged = false
-          # Notify will rerun sync to server, so local changes made before login
-          # will be saved.
+          # Sync with saving to server to preserve local changes.
           @userStore.notify()
         else
-          # User is already loged, to we need only to save server changes.
+          # Only local sync.
           @userStore.serverNotify()
-
     , (error) ->
       # TODO: Report to server.
       if goog.DEBUG
@@ -101,8 +100,16 @@ class app.Firebase
       .child user.uid
 
   onUserLogout: ->
-    @userRef?.off 'value'
-    @userStore.onLogout !!@userRef
+    userWasLogged = !!@userRef
+    @userRef.off 'value' if userWasLogged
+    @userRef = null
+    ###*
+      PATTERN: Logout has to delete all data in memory and in localStorage, but
+      only if user was logged before. We don't want to delete data for not yet
+      registered/logged user.
+    ###
+    @userStore.clearOnLogout userWasLogged
+    @userStore.serverNotify()
 
   loginViaFacebook: ->
     @authClient.login 'facebook',
@@ -112,3 +119,21 @@ class app.Firebase
 
   logout: ->
     @authClient.logout()
+
+  ###*
+    Use this method for any Firebase state changing method. It temporally
+    disables local change propagation. Firebase by default calls listeners
+    immediatelly after any set/update. This hack allows us to bypass this IMHO
+    wrong behavior.
+    As result, Firebase.ServerValue.TIMESTAMP isn't immediatelly propagated to
+    local state. If you need immediate propagation, use your own local time
+    implementation in store.
+    @param {function(this:app.Firebase)} callback
+  ###
+  sync: (callback) ->
+    @isLocalChange_ = true
+    try
+      # Callback immediately invokes @userRef.on handler.
+      callback.call @
+    finally
+      @isLocalChange_ = false
