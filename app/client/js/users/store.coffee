@@ -177,21 +177,10 @@ class app.user.Store extends este.labs.Store
     localSong.lyrics = serverSong.lyrics
 
   ###*
-    PATTERN: Logout deletes all user data in memory and localStorage, but only
-    if user was logged at least once. We don't want to delete localStorage of
-    not yet logged user aka new visitor.
-    @param {boolean} userWasLoggedOnce
+    @param {boolean} userWasLogged
   ###
-  onLogout: (userWasLoggedOnce) ->
-    if userWasLoggedOnce
+  clearOnLogout: (userWasLogged) ->
+    if userWasLogged
       @setEmpty()
     else
       @user = null
-    @notify()
-
-  ###*
-    @override
-  ###
-  notify: ->
-    @updated = Date.now()
-    super()
