@@ -15,16 +15,20 @@ class app.Title
   @MSG_MY_NEW_SONG: goog.getMsg 'New Song | Songary'
   @MSG_NOT_FOUND: goog.getMsg 'Page Not Found'
 
+  ###*
+    @return {!string}
+  ###
   get: ->
     switch @routes.active
       when @routes.home then Title.MSG_HOME
       when @routes.myNewSong then Title.MSG_MY_NEW_SONG
       when @routes.mySong then @getMySongTitle()
       when @routes.editMySong then @getEditMySongTitle()
-      when @routes.notFound then Title.MSG_NOT_FOUND
+      else Title.MSG_NOT_FOUND
 
   getMySongTitle: ->
     song = @userStore.songByRoute @routes.active
+    return Title.MSG_NOT_FOUND if !song
     Title.MSG_SONG = goog.getMsg '{$name} - {$artist} | Songary',
       name: song.getDisplayName()
       artist: song.getDisplayArtist()

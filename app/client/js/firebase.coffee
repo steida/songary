@@ -5,6 +5,8 @@ goog.require 'goog.asserts'
 class app.Firebase
 
   ###*
+    Firebase wrapper for app. Remember, app has to always work without Firebase
+    and be able to switch Firebase for something else anytime.
     @param {app.user.Store} userStore
     @constructor
   ###

@@ -24,15 +24,39 @@ class app.react.App
     @component = React.createClass
 
       render: ->
-        div className: 'app',
-          layout.component page: @getActiveRoutePage()
+        page = @page()
 
-      getActiveRoutePage: ->
+        div className: 'app',
+          layout.component
+            component: @component page
+            isSongPage: page == songPage
+
+      page: ->
         switch routes.active
           when routes.home then homePage
           when routes.myNewSong, routes.editMySong then editSongPage
           when routes.mySong then songPage
-          when routes.notFound then notFoundPage
+          else notFoundPage
+
+      component: (page) ->
+        switch page
+          when songPage then @songPageComponent()
+          when editSongPage then @editSongPageComponent()
+          else page.component()
+
+      songPageComponent: ->
+        song = userStore.songByRoute routes.active
+        return notFoundPage.component() if !song
+        songPage.component song: song
+
+      editSongPageComponent: ->
+        editMode = routes.active == routes.editMySong
+        if editMode
+          song = userStore.songByRoute routes.active
+          return notFoundPage.component() if !song
+        else
+          song = userStore.newSong
+        editSongPage.component editMode: editMode, song: song
 
       componentDidMount: ->
         goog.events.listen window, 'orientationchange', @onOrientationChange

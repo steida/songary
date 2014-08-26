@@ -15,35 +15,26 @@ class app.react.pages.EditSong
     {p,div,form,input,textarea,button} = React.DOM
     {a} = touch.none 'a'
 
-    editMode = false
-    song = null
-
     @component = React.createClass
 
       render: ->
-        editMode = routes.active == routes.editMySong
-        song = if editMode
-          userStore.songByRoute routes.active
-        else
-          userStore.newSong
-
         div className: 'edit-song',
           form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
             div className: 'form-group',
               input
-                autoFocus: !editMode
+                autoFocus: !@props.editMode
                 className: 'form-control'
                 name: 'name'
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_NAME
-                value: song.name
+                value: @props.song.name
             div className: 'form-group',
               input
                 className: 'form-control'
                 name: 'artist'
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_ARTIST
-                value: song.artist
+                value: @props.song.artist
             div className: 'form-group',
               textarea
                 className: 'form-control'
@@ -51,7 +42,7 @@ class app.react.pages.EditSong
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
-                value: song.lyrics
+                value: @props.song.lyrics
               p className: 'help-block',
                 a
                   href: 'http://linkesoft.com/songbook/chordproformat.html'
@@ -60,11 +51,11 @@ class app.react.pages.EditSong
             div className: 'form-group horizontal',
               button
                 className: 'btn btn-default'
-              , if editMode
+              , if @props.editMode
                   EditSong.MSG_BACK_TO_SONGS
                 else
                   EditSong.MSG_CREATE_NEW_SONG
-              editMode && button
+              @props.editMode && button
                 className: 'btn btn-danger'
                 onClick: @onDeleteButtonClick
                 type: 'button'
@@ -82,14 +73,14 @@ class app.react.pages.EditSong
         @chordproTextarea_.dispose()
 
       onFieldChange: (e) ->
-        userStore.updateSong song, e.target.name, e.target.value
+        userStore.updateSong @props.song, e.target.name, e.target.value
 
       onFormSubmit: (e) ->
         e.preventDefault()
         @saveSong()
 
       saveSong: ->
-        errors = if editMode then song.validate() else userStore.addNewSong()
+        errors = if @props.editMode then @props.song.validate() else userStore.addNewSong()
         # TODO: Reusable helper/mixin/whatever.
         if errors.length
           alert errors[0].message
@@ -100,7 +91,7 @@ class app.react.pages.EditSong
 
       onDeleteButtonClick: ->
         return if !confirm EditSong.MSG_DELETE_QUESTION
-        userStore.delete song
+        userStore.delete @props.song
         routes.home.redirect()
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
