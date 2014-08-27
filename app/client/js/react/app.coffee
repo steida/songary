@@ -9,14 +9,16 @@ class app.react.App
   ###*
     @param {app.user.Store} userStore
     @param {app.Routes} routes
-    @param {app.react.Layout} layout
+    @param {app.react.Header} header
+    @param {app.react.Footer} footer
     @param {app.react.pages.Home} homePage
     @param {app.react.pages.EditSong} editSongPage
     @param {app.react.pages.Song} songPage
     @param {app.react.pages.NotFound} notFoundPage
     @constructor
   ###
-  constructor: (userStore, routes, layout,
+  constructor: (userStore, routes,
+      header, footer,
       homePage, editSongPage, songPage, notFoundPage) ->
 
     {div} = React.DOM
@@ -24,39 +26,26 @@ class app.react.App
     @component = React.createClass
 
       render: ->
-        page = @page()
+        pageProps = @pageProps()
+        page = pageProps && @page() || notFoundPage
 
         div className: 'app',
-          layout.component
-            component: @component page
-            isSongPage: page == songPage
+          header.component() if page != songPage
+          page.component pageProps
+          footer.component() if page != songPage
 
       page: ->
         switch routes.active
           when routes.home then homePage
           when routes.myNewSong, routes.editMySong then editSongPage
           when routes.mySong then songPage
-          else notFoundPage
 
-      component: (page) ->
-        switch page
-          when songPage then @songPageComponent()
-          when editSongPage then @editSongPageComponent()
-          else page.component()
-
-      songPageComponent: ->
-        song = userStore.songByRoute routes.active
-        return notFoundPage.component() if !song
-        songPage.component song: song
-
-      editSongPageComponent: ->
-        editMode = routes.active == routes.editMySong
-        if editMode
-          song = userStore.songByRoute routes.active
-          return notFoundPage.component() if !song
-        else
-          song = userStore.newSong
-        editSongPage.component editMode: editMode, song: song
+      pageProps: ->
+        switch routes.active
+          when routes.mySong, routes.editMySong
+            song = userStore.songByRoute routes.active
+            if song then song: song else null
+          else {}
 
       componentDidMount: ->
         goog.events.listen window, 'orientationchange', @onOrientationChange

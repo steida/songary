@@ -13,13 +13,12 @@ class app.react.pages.Song
   ###*
     @param {app.Routes} routes
     @param {app.react.Touch} touch
-    @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (routes, touch, userStore) ->
+  constructor: (routes, touch) ->
     {div} = touch.scroll 'div'
-    {article, menu} = React.DOM
-    {a, menuitem} = touch.none 'a', 'menuitem'
+    {article,menu} = React.DOM
+    {a,menuitem} = touch.none 'a', 'menuitem'
 
     @component = React.createClass
 
