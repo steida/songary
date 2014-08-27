@@ -26,26 +26,26 @@ class app.react.App
     @component = React.createClass
 
       render: ->
-        pageProps = @pageProps()
-        page = pageProps && @page() || notFoundPage
+        pageProps = {}
+        page = @page pageProps
 
         div className: 'app',
           header.component() if page != songPage
           page.component pageProps
           footer.component() if page != songPage
 
-      pageProps: ->
-        switch routes.active
-          when routes.mySong, routes.editMySong
-            song = userStore.songByRoute routes.active
-            song && song: song
-          else {}
-
-      page: ->
+      page: (props) ->
         switch routes.active
           when routes.home then homePage
-          when routes.myNewSong, routes.editMySong then editSongPage
-          when routes.mySong then songPage
+          when routes.myNewSong then editSongPage
+          when routes.mySong, routes.editMySong
+            song = userStore.songByRoute routes.active
+            return notFoundPage if !song
+            props.song = song
+            switch routes.active
+              when routes.mySong then songPage
+              when routes.editMySong then editSongPage
+          else notFoundPage
 
       componentDidMount: ->
         goog.events.listen window, 'orientationchange', @onOrientationChange
