@@ -10,12 +10,13 @@ class app.Storage extends este.labs.Storage
   ###*
     @param {app.LocalStorage} localStorage
     @param {app.Firebase} firebase
+    @param {app.Routes} routes
     @param {app.user.Store} userStore
     @constructor
     @extends {este.labs.Storage}
     @final
   ###
-  constructor: (@localStorage, @firebase, @userStore) ->
+  constructor: (@localStorage, @firebase, @routes, @userStore) ->
     super()
 
     @stores = [@userStore]
@@ -79,32 +80,28 @@ class app.Storage extends este.labs.Storage
     @private
   ###
   onStoreChange: (store, e) ->
-    console.log 'onStoreChange e.target: ', e.target if goog.DEBUG
-
-    # NOTE: This is only for dev.
+    # NOTE: This is for dev.
     # return if !@storeStateChanged store, @deepCopy store.toJson()
 
+    # Store was changed by LocalStorage change from another browser tab/window.
+    # No need to do anything.
+    return if e.target instanceof app.LocalStorage
+
+    # Store was changed by Firebase, save new changes to LocalStorage.
     if e.target instanceof app.Firebase
       @saveStoreToClient store, @deepCopy store.toJson()
-      @notify()
       return
 
-    if e.target instanceof app.LocalStorage
-      @notify()
-      return
-
-    # Postpone local changes persistence. It saves traffic and cpu.
+    # Store was changed locally. Postpone saving to save net traffic and CPU.
     @pendingStores.add store
     @save.fire()
-    # But update UI immediately.
-    @notify()
 
   ###*
     @override
   ###
-  load: (route, params, routes) ->
+  load: (route, params) ->
     switch route
-      when routes.mySong, routes.editMySong
+      when @routes.mySong, @routes.editMySong
         return @notFound() if !@userStore.songById params.id
         @ok()
       else

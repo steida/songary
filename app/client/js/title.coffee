@@ -15,9 +15,6 @@ class app.Title
   @MSG_MY_NEW_SONG: goog.getMsg 'New Song | Songary'
   @MSG_NOT_FOUND: goog.getMsg 'Page Not Found'
 
-  ###*
-    @return {!string}
-  ###
   get: ->
     switch @routes.active
       when @routes.home then Title.MSG_HOME

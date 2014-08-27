@@ -8,34 +8,28 @@ class App
     @param {app.Routes} routes
     @param {este.Router} router
     @param {app.Storage} storage
-    @param {app.Title} appTitle
     @param {app.react.App} reactApp
     @param {Element} element
     @constructor
   ###
-  constructor: (routes, router, storage, appTitle, reactApp, element) ->
-
-    syncUI = ->
-      if routes.active
-        document.title = appTitle.get()
-        React.renderComponent reactApp.component(), element
+  constructor: (routes, router, storage, reactApp, element) ->
 
     routes.addToEste router, (route, params) ->
-      storage.load route, params, routes
-        .then ->
-          routes.setActive route, params
-        .thenCatch (reason) ->
-          routes.trySetErrorRoute reason
-        .then ->
-          syncUI()
+      storage.load route, params
+        # Successful load, set we can set active route.
+        .then -> routes.setActive route, params
+        # Load failed for 404, 500, or whatever reason. Try set error route.
+        .thenCatch (reason) -> routes.trySetErrorRoute reason
+        # Update UI.
+        .then -> React.renderComponent reactApp.component(), element
+        # Handle severe error.
         .thenCatch (reason) ->
           # TODO: Report error to server.
           # TODO: Show something more beautiful.
-          alert 'Something is wrong, please reload browser.'
-          # Ensure error is shown correctly in dev console.
+          alert 'App error, sorry for that. Please reload browser.'
+          # Propagate error to dev console.
           goog.async.throwException reason if goog.DEBUG
-          # Rethrow to ensure este.Router will not change url.
+          # Rethrow to prevent este.Router url change.
           throw reason
 
     router.start()
-    storage.listen 'change', syncUI

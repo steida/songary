@@ -2,13 +2,13 @@ goog.provide 'app.react.App'
 
 goog.require 'goog.dom'
 goog.require 'goog.events'
-goog.require 'goog.net.HttpStatus'
 
 class app.react.App
 
   ###*
     @param {app.user.Store} userStore
     @param {app.Routes} routes
+    @param {app.Title} appTitle
     @param {app.react.Header} header
     @param {app.react.Footer} footer
     @param {app.react.pages.Home} homePage
@@ -17,7 +17,7 @@ class app.react.App
     @param {app.react.pages.NotFound} notFoundPage
     @constructor
   ###
-  constructor: (userStore, routes,
+  constructor: (userStore, routes, appTitle,
       header, footer,
       homePage, editSongPage, songPage, notFoundPage) ->
 
@@ -34,24 +34,28 @@ class app.react.App
           page.component pageProps
           footer.component() if page != songPage
 
+      pageProps: ->
+        switch routes.active
+          when routes.mySong, routes.editMySong
+            song = userStore.songByRoute routes.active
+            song && song: song
+          else {}
+
       page: ->
         switch routes.active
           when routes.home then homePage
           when routes.myNewSong, routes.editMySong then editSongPage
           when routes.mySong then songPage
 
-      pageProps: ->
-        switch routes.active
-          when routes.mySong, routes.editMySong
-            song = userStore.songByRoute routes.active
-            if song then song: song else null
-          else {}
-
       componentDidMount: ->
         goog.events.listen window, 'orientationchange', @onOrientationChange
+        userStore.listen 'change', @onStoreChange
 
-      onOrientationChange: (e) ->
-        @scrollWindowTop()
-
-      scrollWindowTop: ->
+      onOrientationChange: ->
         goog.dom.getDocumentScrollElement().scrollTop = 0
+
+      onStoreChange: ->
+        @forceUpdate()
+
+      componentDidUpdate: ->
+        document.title = appTitle.get()
