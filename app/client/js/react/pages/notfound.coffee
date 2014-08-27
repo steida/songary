@@ -14,9 +14,6 @@ class app.react.pages.NotFound
     @component = React.createClass
 
       render: ->
-        # throw 'fok'
-        # a+
-
         div className: 'notfound',
           h1 {}, "This page isn't available"
           p {}, 'The link may be broken, or the page may have been removed.'

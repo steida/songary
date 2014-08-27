@@ -9,7 +9,7 @@ class app.react.pages.Home
     @constructor
   ###
   constructor: (routes, userStore, touch) ->
-    {div,h1,ul,li,br} = React.DOM
+    {div,h1,ul,li} = React.DOM
     {a} = touch.scroll 'a'
 
     @component = React.createClass
@@ -25,10 +25,6 @@ class app.react.pages.Home
             className: 'btn btn-default'
             href: routes.myNewSong.url()
           , Home.MSG_ADD_NEW_SONG
-          # a
-          #   className: 'btn btn-default'
-          #   href: routes.myNewSong.url()
-          # , Home.MSG_SONGS
 
   @MSG_ADD_NEW_SONG: goog.getMsg 'add new song'
   @MSG_MY_SONGS: goog.getMsg 'my songs'

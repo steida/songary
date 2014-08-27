@@ -12,7 +12,7 @@ class app.react.pages.EditSong
     @constructor
   ###
   constructor: (routes, userStore, touch) ->
-    {p,div,form,input,textarea,button} = React.DOM
+    {div,form,input,textarea,p,button} = React.DOM
     {a} = touch.none 'a'
 
     song = null
