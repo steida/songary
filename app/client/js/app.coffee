@@ -16,20 +16,16 @@ class App
 
     routes.addToEste router, (route, params) ->
       storage.load route, params
-        # Successful load, set we can set active route.
         .then -> routes.setActive route, params
-        # Load failed for 404, 500, or whatever reason. Try set error route.
         .thenCatch (reason) -> routes.trySetErrorRoute reason
-        # Update UI.
         .then -> React.renderComponent reactApp.component(), element
-        # Handle severe error.
         .thenCatch (reason) ->
-          # TODO: Report error to server.
           # TODO: Show something more beautiful.
           alert 'App error, sorry for that. Please reload browser.'
-          # Propagate error to dev console.
+          # TODO: Report error to server.
+          # Ensure error is shown in console.
           goog.async.throwException reason if goog.DEBUG
-          # Rethrow to prevent este.Router url change.
+          # Prevent este.Router url change.
           throw reason
 
     router.start()
