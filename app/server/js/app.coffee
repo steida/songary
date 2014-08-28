@@ -22,13 +22,13 @@ class server.App
 
     app = express()
 
-    # Middleware first.
+    # Middleware must be first.
     app['use'] compression()
     app['use'] favicon 'app/client/img/favicon.ico'
     app['use'] bodyParser['json']()
     app['use'] methodOverride()
 
-    # Static assets.
+    # Then static assets.
     if isDev
       app['use'] '/bower_components', express['static'] 'bower_components'
       app['use'] '/app', express['static'] 'app'
@@ -38,11 +38,11 @@ class server.App
       # TODO: Use CDN.
       app['use'] '/app', express['static'] 'app', 'maxAge': 31557600000
 
-    # Routes.
+    # Routes last.
     routes.addToExpress app, (route, req, res) ->
       params = req['params']
 
-      storage.load route, params, routes
+      storage.load route, params
         .then ->
           routes.setActive route, params
         .thenCatch (reason) ->
@@ -54,7 +54,7 @@ class server.App
         .then (html) ->
           res['send'] html
         .thenCatch (reason) ->
-          # The stack property contains the message as well as the stack. 
+          # The stack property contains the message as well as the stack.
           console.log reason.stack
           # TODO: Show something more beautiful, with static content only.
           res['status'](500)['send'] 'Something is wrong, please reload browser.'
