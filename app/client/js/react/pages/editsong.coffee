@@ -29,6 +29,7 @@ class app.react.pages.EditSong
             div className: 'form-group',
               input
                 autoFocus: !editMode
+                autoComplete: false
                 className: 'form-control'
                 name: 'name'
                 onChange: @onFieldChange
@@ -36,6 +37,7 @@ class app.react.pages.EditSong
                 value: song.name
             div className: 'form-group',
               input
+                autoComplete: false
                 className: 'form-control'
                 name: 'artist'
                 onChange: @onFieldChange
