@@ -26,5 +26,5 @@ How? Just read code, there are plethora of comments.
   - DI container
   - statically typed code written in CoffeeScript
   - killer React.js syntax
-  - Firebase
+  - Firebase and realtime collaboration
   - super tunned [dev stack](https://github.com/steida/gulp-este)
