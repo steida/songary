@@ -15,7 +15,7 @@ class app.react.pages.Home
     @component = React.createClass
 
       render: ->
-        div className: 'home',
+        div className: 'page',
           h1 {}, Home.MSG_MY_SONGS
           ul {}, userStore.allSongs().map (song) ->
             li key: song.id,

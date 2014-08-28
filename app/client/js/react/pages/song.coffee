@@ -25,7 +25,7 @@ class app.react.pages.Song
       viewportMonitor: null
 
       render: ->
-        div className: 'song', onPointerUp: @onSongPointerUp,
+        div className: 'page', onPointerUp: @onSongPointerUp,
           article
             dangerouslySetInnerHTML: '__html': @lyricsHtml()
             ref: 'article'

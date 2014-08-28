@@ -29,10 +29,10 @@ class app.react.App
         pageProps = {}
         page = @page pageProps
 
-        div className: 'app',
-          header.component() if page != songPage
+        div className: 'app active-page-' + @pageClassName(page),
+          header.component()
           page.component pageProps
-          footer.component() if page != songPage
+          footer.component()
 
       page: (props) ->
         switch routes.active
@@ -46,6 +46,13 @@ class app.react.App
               when routes.mySong then songPage
               when routes.editMySong then editSongPage
           else notFoundPage
+
+      pageClassName: (page) ->
+        switch page
+          when homePage then 'home'
+          when editSongPage then 'edit-song'
+          when songPage then 'song'
+          when notFoundPage then 'notfound'
 
       componentDidMount: ->
         goog.events.listen window, 'orientationchange', @onOrientationChange

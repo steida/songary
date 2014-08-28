@@ -24,7 +24,7 @@ class app.react.pages.EditSong
         song = @props.song ? userStore.newSong
         editMode = !!@props.song
 
-        div className: 'edit-song',
+        div className: 'page',
           form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
             div className: 'form-group',
               input

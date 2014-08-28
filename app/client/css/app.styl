@@ -10,10 +10,14 @@ body
 
   .app
     padding 0 1em
-    @import 'pages/editsong'
-    @import 'pages/home'
-    @import 'pages/notfound'
-    @import 'pages/song'
+    &.active-page-edit-song
+      @import 'pages/editsong'
+    &.active-page-home
+      @import 'pages/home'
+    &.active-page-notfound
+      @import 'pages/notfound'
+    &.active-page-song
+      @import 'pages/song'
 
   .btn
     margin-right .625em
