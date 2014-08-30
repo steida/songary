@@ -15,8 +15,6 @@ class app.react.pages.Home
     @component = React.createClass
 
       render: ->
-        # slice(0);
-
         div className: 'page',
           h1 {}, Home.MSG_MY_SONGS
           ul {}, userStore.songsSortedByName().map (song) ->
