@@ -2,7 +2,7 @@ goog.provide 'app.main'
 
 goog.require 'app.DiContainer'
 
-# Use compile defines also for dev mode.
+# Remember to use the same defines for dev and production (defined in gulpfile).
 CLOSURE_UNCOMPILED_DEFINES =
   'goog.array.ASSUME_NATIVE_FUNCTIONS': true
   'goog.dom.ASSUME_STANDARDS_MODE': true
