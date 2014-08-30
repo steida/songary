@@ -114,10 +114,12 @@ class app.user.Store extends este.labs.Store
 
   ###*
     @param {Object} serverJson
+    @param {Object} user Firebase auth user.
   ###
-  mergeServerChanges: (serverJson) ->
-    console.log 'updateFromServer' if goog.DEBUG
-    @user = @userFromJson serverJson.user
+  mergeServerChanges: (serverJson, user) ->
+    console.log 'mergeServerChanges' if goog.DEBUG
+    @mergeUser serverJson, user
+    # TODO: Rethink.
     localJson = @toJson()
     # TODO: Merge newSong.
     if serverJson.songs
@@ -125,11 +127,20 @@ class app.user.Store extends este.labs.Store
     @fromJson localJson
 
   ###*
-    @param {Object} user Firebase auth user.
-    @return {Object}
+    @param {Object} serverJson
+    @param {Object} user Thirdparty auth user.
   ###
-  userFromJson: (user) ->
-    createdAt: user.createdAt
+  mergeUser: (serverJson, user) ->
+    # Always prefer thirdparty auth user data.
+    @user = @authUserToAppUser user
+    # Except createdAt.
+    @user.createdAt = serverJson.user.createdAt
+
+  ###*
+    @param {Object} user Firebase auth user.
+    @return {Object} user App user.
+  ###
+  authUserToAppUser: (user) ->
     displayName: user.displayName
     id: user.id
     provider: user.provider

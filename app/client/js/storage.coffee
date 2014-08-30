@@ -62,7 +62,7 @@ class app.Storage extends este.labs.Storage
     console.log 'storage.saveStoreToServer' if goog.DEBUG
     if store instanceof app.user.Store
       if @firebase.userRef
-        console.log '@firebase.userRef.set json' if goog.DEBUG
+        console.log '@userRef.set json' if goog.DEBUG
         # TODO: Try jsonpatch or something like React for JSON, but before
         # check net to see what is wired.
         @firebase.sync -> @userRef.set json

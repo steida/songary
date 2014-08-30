@@ -91,17 +91,22 @@ class app.Firebase
     @userRef.on 'value', (snap) =>
       return if @isLocalChange_
       val = snap.val()
-      serverUserExists = val && val.user
+
+      serverUserExists = val?.user?.uid
       if !serverUserExists
         @saveNewUser user
         return
-      @userStore.mergeServerChanges val
+
+      # return
+      @userStore.mergeServerChanges val, user
+
       if userJustLogged
         userJustLogged = false
         # Plain notify to sync local changes to server after user login.
         @userStore.notify()
       else
         @userStore.notify @
+
     , (error) ->
       # TODO: Report to server.
       if goog.DEBUG
@@ -112,7 +117,7 @@ class app.Firebase
     @private
   ###
   saveNewUser: (user) ->
-    user = @userStore.userFromJson user
+    user = @userStore.authUserToAppUser user
     # This will invoke server response as TIMESTAMP will be replaced.
     user.createdAt = window.Firebase.ServerValue.TIMESTAMP
     @userRef.set user: user
