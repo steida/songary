@@ -15,16 +15,6 @@ class app.user.Store extends este.labs.Store
     @setEmpty()
 
   ###*
-    @type {number}
-  ###
-  created: 0
-
-  ###*
-    @type {number}
-  ###
-  updated: 0
-
-  ###*
     @type {app.songs.Song}
   ###
   newSong: null
@@ -35,13 +25,11 @@ class app.user.Store extends este.labs.Store
   songs: null
 
   ###*
-    @type {Object} Firebase user.
+    @type {Object} Firebase auth user.
   ###
   user: null
 
   setEmpty: ->
-    @created = Date.now()
-    @updated = Date.now()
     @newSong = new app.songs.Song
     @songs = []
     @user = null
@@ -111,27 +99,37 @@ class app.user.Store extends este.labs.Store
     @override
   ###
   toJson: ->
-    created: @created
-    updated: @updated
     newSong: @newSong
     songs: @asObject @songs
-    user: @getJsonUser @user
+    user: @user
 
   ###*
     @override
   ###
   fromJson: (json) ->
-    @created = json.created
-    @updated = json.updated
     @newSong = @instanceFromJson app.songs.Song, json.newSong
     # Because JSON stringify and parse ignore empty array, so we need '|| []'.
     @songs = @asArray(json.songs || []).map @instanceFromJson app.songs.Song
-    @user = @getJsonUser json.user
+    @user = json.user
 
-  # PATTERN: Use only server unique props, because user is going to be synced
-  # with localStorage which is shared across browser windows.
-  getJsonUser: (user) ->
-    return null if !user
+  ###*
+    @param {Object} serverJson
+  ###
+  mergeServerChanges: (serverJson) ->
+    console.log 'updateFromServer' if goog.DEBUG
+    @user = @userFromJson serverJson.user
+    localJson = @toJson()
+    # TODO: Merge newSong.
+    if serverJson.songs
+      @mergeSongs localJson.songs, serverJson.songs
+    @fromJson localJson
+
+  ###*
+    @param {Object} user Firebase auth user.
+    @return {Object}
+  ###
+  userFromJson: (user) ->
+    createdAt: user.createdAt
     displayName: user.displayName
     id: user.id
     provider: user.provider
@@ -139,27 +137,10 @@ class app.user.Store extends este.labs.Store
     uid: user.uid
 
   ###*
-    @param {Object} authUser
-    @param {Object} serverUserStoreJson
-  ###
-  updateFromServer: (authUser, serverUserStoreJson) ->
-    console.log 'updateFromServer' if goog.DEBUG
-    @user = authUser
-    localUserStoreJson = @toJson()
-    # serverUserStoreJson can be null for new user.
-    if serverUserStoreJson
-      # TODO: Merge newSong and user.
-      localUserStoreJson.updated = serverUserStoreJson.updated
-      @mergeSongs localUserStoreJson.songs, serverUserStoreJson.songs
-    @fromJson localUserStoreJson
-
-  ###*
     @param {Object} localSongs
     @param {Object} serverSongs
   ###
   mergeSongs: (localSongs, serverSongs) ->
-    # TODO: It is really needed?
-    return if !serverSongs
     for serverSongId, serverSong of serverSongs
       localSong = localSongs[serverSongId]
       if !localSong

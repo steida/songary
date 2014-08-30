@@ -23,12 +23,12 @@ class appUserStore
   appUserStore::provider
   appUserStore::thirdPartyUserData
   appUserStore::uid
+  appSongsSong::createdAt
+  appSongsSong::updatedAt
 
 # For app.songs.Song create appSongsSong.
 class appSongsSong
   appSongsSong::id
-  appSongsSong::created
-  appSongsSong::updated
   appSongsSong::name
   appSongsSong::urlName
   appSongsSong::artist

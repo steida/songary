@@ -69,15 +69,21 @@ class app.Firebase
     @protected
   ###
   onUserLogin: (user) ->
-    @userRef = @userRefOf user
     userJustLogged = true
+
+    @userRef = @userRefOf user
     @userRef.on 'value',
       (snap) =>
-        # Ignore local changes. Workaround for nasty Firebase behavior.
         return if @isLocalChange_
-        # Merge server changes to client.
-        console.log snap.val()
-        @userStore.updateFromServer user, snap.val()
+        val = snap.val()
+        isNewUser = !val
+        if isNewUser
+          user = @userStore.userFromJson user
+          user.createdAt = window.Firebase.ServerValue.TIMESTAMP
+          # This will invoke server response because createAt update.
+          @userRef.set user: user
+          return
+        @userStore.mergeServerChanges val
         if userJustLogged
           userJustLogged = false
           # Plain notify to sync local changes to server after user login.
@@ -128,6 +134,7 @@ class app.Firebase
     As result, Firebase.ServerValue.TIMESTAMP isn't immediatelly propagated to
     local state. If you need immediate propagation, use your own local time
     implementation in store.
+    In near time, Firebase will be moved to server and this issue disappear.
     @param {function(this:app.Firebase)} callback
   ###
   sync: (callback) ->
