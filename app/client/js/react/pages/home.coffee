@@ -15,9 +15,11 @@ class app.react.pages.Home
     @component = React.createClass
 
       render: ->
+        # slice(0);
+
         div className: 'page',
           h1 {}, Home.MSG_MY_SONGS
-          ul {}, userStore.allSongs().map (song) ->
+          ul {}, userStore.songsSortedByName().map (song) ->
             li key: song.id,
               a href: routes.mySong.url(song),
                 "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"

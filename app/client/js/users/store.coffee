@@ -37,9 +37,10 @@ class app.user.Store extends este.labs.Store
   ###*
     @return {Array.<app.songs.Song>}
   ###
-  allSongs: ->
-    goog.array.sortObjectsByKey @songs, 'name'
-    @songs
+  songsSortedByName: ->
+    songs = @songs.slice 0
+    goog.array.sortObjectsByKey songs, 'name'
+    songs
 
   ###*
     @return {Array.<app.ValidationError>}

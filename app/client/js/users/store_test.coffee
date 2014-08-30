@@ -6,15 +6,17 @@ suite 'app.user.Store', ->
   setup ->
     store = new Store
 
-  validSong = ->
-    validate: -> []
+  validSong = (props) ->
+    song = validate: -> []
+    goog.mixin song, props if props
+    song
 
   invalidSong = ->
     validate: -> ['error']
 
-  suite 'allSongs', ->
+  suite 'songs', ->
     test 'should return empty array', ->
-      songs = store.allSongs()
+      songs = store.songs
       assert.deepEqual songs, []
 
   suite 'newSong', ->
@@ -25,7 +27,7 @@ suite 'app.user.Store', ->
     test 'should add valid new song', (done) ->
       song = validSong()
       store.listen 'change', ->
-        assert.equal store.allSongs()[0], song
+        assert.equal store.songs[0], song
         assert.isFalse store.newSong == song
         done()
       store.newSong = song
@@ -38,7 +40,7 @@ suite 'app.user.Store', ->
       store.listen 'change', -> changeDispatched = true
       store.newSong = song
       errors = store.addNewSong()
-      assert.equal store.allSongs().length, 0
+      assert.equal store.songs.length, 0
       assert.isTrue store.newSong == song
       assert.deepEqual errors, ['error']
       assert.isFalse changeDispatched
@@ -48,7 +50,7 @@ suite 'app.user.Store', ->
       song = store.newSong = validSong()
       store.addNewSong()
       store.listen 'change', ->
-        assert.deepEqual store.allSongs(), []
+        assert.deepEqual store.songs, []
         done()
       store.delete song
 
@@ -79,3 +81,13 @@ suite 'app.user.Store', ->
       assert.isFalse store.contains song
       store.addNewSong()
       assert.isTrue store.contains song
+
+  suite 'songsSortedByName', ->
+    test 'should return songs sorted by name', ->
+      store.newSong = validSong name: 'b'
+      store.addNewSong()
+      store.newSong = validSong name: 'a'
+      store.addNewSong()
+      sorted = store.songsSortedByName()
+      assert.equal sorted[0].name, 'a'
+      assert.equal sorted[1].name, 'b'
