@@ -18,6 +18,9 @@ paths =
     'bower_components/este-library/este/**/*.coffee'
     'app/**/*.coffee'
   ]
+  jsx: [
+    'app/**/*.jsx'
+  ]
   js: [
     'bower_components/closure-library/**/*.js'
     'bower_components/este-library/este/**/*.js'
@@ -59,8 +62,11 @@ gulp.task 'stylus', ->
 gulp.task 'coffee', ->
   este.coffee paths.coffee
 
+gulp.task 'jsx', ->
+  este.jsx paths.jsx
+
 gulp.task 'transpile', (done) ->
-  runSequence 'stylus', 'coffee', done
+  runSequence 'stylus', 'coffee', 'jsx', done
 
 gulp.task 'deps', ->
   este.deps paths.js
