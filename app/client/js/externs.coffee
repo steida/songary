@@ -175,6 +175,12 @@ class Firebase
   ###
   ref: ->
 
+  ###*
+    Get a Firebase reference to the Query's location.
+    @return {Firebase}
+  ###
+  onDisconnect: ->
+
 class FirebaseSimpleLogin
 
   ###*

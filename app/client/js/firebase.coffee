@@ -9,9 +9,10 @@ class app.Firebase
     and be able to switch Firebase for something else anytime.
     @param {app.user.Store} userStore
     @constructor
+    @final
   ###
   constructor: (@userStore) ->
-    @setRefs()
+    @setRefs_()
 
   ###*
     @type {Firebase}
@@ -25,15 +26,15 @@ class app.Firebase
   isLocalChange_: false
 
   ###*
-    @protected
+    @private
   ###
-  setRefs: ->
+  setRefs_: ->
     # TODO: Use server data for path, make it isomorphic.
     return if !window.Firebase
     @root = new window.Firebase 'https://shining-fire-6810.firebaseio.com/'
 
   ###*
-    # TODO: Do it on server side. It takes seconds on client.
+    TODO: Do it on server side.
   ###
   simpleLogin: ->
     # TODO: Make it isomorphic.
@@ -46,7 +47,7 @@ class app.Firebase
     it does not report change across browser tabs/windows.
     @param {Object} error
     @param {Object} user
-    @protected
+    @private
   ###
   onSimpleLogin: (error, user) ->
     if error
@@ -58,7 +59,7 @@ class app.Firebase
 
   ###*
     @param {Object} error Firebase error.
-    @protected
+    @private
   ###
   onUserError: (error) ->
     # TODO: Report to server.
@@ -66,39 +67,60 @@ class app.Firebase
 
   ###*
     @param {Object} user Firebase user.
-    @protected
+    @private
   ###
   onUserLogin: (user) ->
-    userJustLogged = true
-
     @userRef = @userRefOf user
-    @userRef.on 'value',
-      (snap) =>
-        return if @isLocalChange_
-        val = snap.val()
-        isNewUser = !val
-        if isNewUser
-          user = @userStore.userFromJson user
-          user.createdAt = window.Firebase.ServerValue.TIMESTAMP
-          # This will invoke server response because createAt update.
-          @userRef.set user: user
-          return
-        @userStore.mergeServerChanges val
-        if userJustLogged
-          userJustLogged = false
-          # Plain notify to sync local changes to server after user login.
-          @userStore.notify()
-        else
-          @userStore.notify @
+    @setUserLastOnlineOnDisconnect_()
+    @listenServerChanges_ user
+
+  ###*
+    @private
+  ###
+  setUserLastOnlineOnDisconnect_: ->
+    @userRef.child('user/lastOnline')
+      .onDisconnect()
+      .set window.Firebase.ServerValue.TIMESTAMP
+
+  ###*
+    @param {Object} user Firebase user.
+    @private
+  ###
+  listenServerChanges_: (user) ->
+    userJustLogged = true
+    @userRef.on 'value', (snap) =>
+      return if @isLocalChange_
+      val = snap.val()
+      serverUserExists = val && val.user
+      if !serverUserExists
+        @saveNewUser user
+        return
+      @userStore.mergeServerChanges val
+      if userJustLogged
+        userJustLogged = false
+        # Plain notify to sync local changes to server after user login.
+        @userStore.notify()
+      else
+        @userStore.notify @
     , (error) ->
       # TODO: Report to server.
       if goog.DEBUG
         console.log 'The read failed: ' + error.code
 
   ###*
+    @param {Object} user Firebase user.
+    @private
+  ###
+  saveNewUser: (user) ->
+    user = @userStore.userFromJson user
+    # This will invoke server response as TIMESTAMP will be replaced.
+    user.createdAt = window.Firebase.ServerValue.TIMESTAMP
+    @userRef.set user: user
+
+  ###*
     @param {Object} user
     @return {Firebase}
-    @protected
+    @private
   ###
   userRefOf: (user) ->
     @root
