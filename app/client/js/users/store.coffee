@@ -25,7 +25,7 @@ class app.user.Store extends este.labs.Store
   songs: null
 
   ###*
-    @type {Object} Firebase auth user.
+    @type {Object} Auth user.
   ###
   user: null
 
@@ -109,44 +109,41 @@ class app.user.Store extends este.labs.Store
   ###
   fromJson: (json) ->
     @newSong = @instanceFromJson app.songs.Song, json.newSong
-    # Because JSON stringify and parse ignore empty array, so we need '|| []'.
     @songs = @asArray(json.songs || []).map @instanceFromJson app.songs.Song
     @user = json.user
 
   ###*
     @param {Object} serverJson
-    @param {Object} user Firebase auth user.
+    @param {Object} user Auth user.
   ###
   mergeServerChanges: (serverJson, user) ->
     console.log 'mergeServerChanges' if goog.DEBUG
-    @mergeUser serverJson, user
-    # TODO: Rethink.
+    @mergeUser serverJson.user, user
     localJson = @toJson()
-    # TODO: Merge newSong.
     if serverJson.songs
       @mergeSongs localJson.songs, serverJson.songs
     @fromJson localJson
 
   ###*
-    @param {Object} serverJson
-    @param {Object} user Thirdparty auth user.
+    @param {Object} appUser
+    @param {Object} authUser
   ###
-  mergeUser: (serverJson, user) ->
-    # Always prefer thirdparty auth user data.
-    @user = @authUserToAppUser user
+  mergeUser: (appUser, authUser) ->
+    # Always prefer thirdparty auth user.
+    @user = @authUserToAppUser authUser
     # Except createdAt.
-    @user.createdAt = serverJson.user.createdAt
+    @user.createdAt = appUser.createdAt
 
   ###*
-    @param {Object} user Firebase auth user.
+    @param {Object} authUser Auth user.
     @return {Object} user App user.
   ###
-  authUserToAppUser: (user) ->
-    displayName: user.displayName
-    id: user.id
-    provider: user.provider
-    thirdPartyUserData: user.thirdPartyUserData
-    uid: user.uid
+  authUserToAppUser: (authUser) ->
+    displayName: authUser.displayName
+    id: authUser.id
+    provider: authUser.provider
+    thirdPartyUserData: authUser.thirdPartyUserData
+    uid: authUser.uid
 
   ###*
     @param {Object} localSongs
