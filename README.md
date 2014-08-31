@@ -21,7 +21,8 @@ How? Just read code, there are plethora of comments.
   - one way data flow
   - clean architecture
   - promises everywhere
-  - app state immediately saved into localStorage
+  - app state stored in stores instead of React props and state
+  - app state immediately persisted in LocalStorage
   - pending navigation
   - DI container
   - statically typed code written in CoffeeScript
