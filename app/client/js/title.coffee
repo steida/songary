@@ -28,7 +28,7 @@ class app.Title
   getMySongTitle: ->
     song = @userStore.songByRoute @routes.active
     return Title.MSG_NOT_FOUND if !song
-    Title.MSG_SONG = goog.getMsg '{$name} - {$artist} | Songary',
+    Title.MSG_SONG = goog.getMsg '{$name} - {$artist}',
       name: song.getDisplayName()
       artist: song.getDisplayArtist()
 
