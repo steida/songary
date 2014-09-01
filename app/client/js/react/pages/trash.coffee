@@ -9,7 +9,7 @@ class app.react.pages.Trash
     @constructor
   ###
   constructor: (routes, userStore, touch) ->
-    {div,h1,ul,li} = React.DOM
+    {div,h1,ul,li,button} = React.DOM
     {a} = touch.scroll 'a'
 
     @component = React.createClass
@@ -28,6 +28,19 @@ class app.react.pages.Trash
             className: 'btn btn-link'
             href: routes.home.url()
           , Trash.MSG_HOME_LINK_LABEL
+          button
+            className: 'btn btn-danger'
+            onClick: @onEmptyTrashClick
+          , Trash.MSG_EMPTY_TRASH
+
+      onEmptyTrashClick: ->
+        if confirm Trash.MSG_ARE_YOU_SURE
+          userStore.deleteSongsInTrash()
+          routes.home.redirect()
+          return
+
 
   @MSG_TITLE: goog.getMsg 'Trash'
   @MSG_HOME_LINK_LABEL: goog.getMsg 'Back to songs'
+  @MSG_EMPTY_TRASH: goog.getMsg 'Empty trash'
+  @MSG_ARE_YOU_SURE: goog.getMsg 'Are you sure you want to permanently erase all songs in trash?'

@@ -98,6 +98,10 @@ class app.user.Store extends este.labs.Store
     song.update()
     @notify()
 
+  deleteSongsInTrash: ->
+    goog.array.removeAllIf @songs, (song) -> song.inTrash
+    @notify()
+
   ###*
     @override
   ###
@@ -158,6 +162,11 @@ class app.user.Store extends este.labs.Store
         localSongs[serverSongId] = serverSong
         continue
       @mergeSong localSong, serverSong
+
+    deletedSongsIds = for localSongId, localSong of localSongs
+      continue if serverSongs[localSongId]
+      localSongId
+    deletedSongsIds.forEach (id) -> delete localSongs[id]
     return
 
   ###*
