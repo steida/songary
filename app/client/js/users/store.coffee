@@ -166,9 +166,10 @@ class app.user.Store extends este.labs.Store
     @param {Object} serverSong
   ###
   mergeSong: (localSong, serverSong) ->
-    localSong.name = serverSong.name
     localSong.artist = serverSong.artist
+    localSong.inTrash = serverSong.inTrash
     localSong.lyrics = serverSong.lyrics
+    localSong.name = serverSong.name
 
   ###*
     @param {boolean} userWasLogged
