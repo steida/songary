@@ -35,6 +35,7 @@ class appSongsSong
   appSongsSong::urlArtist
   appSongsSong::creator
   appSongsSong::lyrics
+  appSongsSong::inTrash
 
 class appRoutesParams
   appRoutesParams::id

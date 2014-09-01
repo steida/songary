@@ -15,11 +15,12 @@ class app.react.App
     @param {app.react.pages.EditSong} editSongPage
     @param {app.react.pages.Song} songPage
     @param {app.react.pages.NotFound} notFoundPage
+    @param {app.react.pages.Trash} trashPage
     @constructor
   ###
   constructor: (userStore, routes, appTitle,
       header, footer,
-      homePage, editSongPage, songPage, notFoundPage) ->
+      homePage, editSongPage, songPage, notFoundPage, trashPage) ->
 
     {div} = React.DOM
 
@@ -45,6 +46,7 @@ class app.react.App
             switch routes.active
               when routes.mySong then songPage
               when routes.editSong then editSongPage
+          when routes.trash then trashPage
           else notFoundPage
 
       pageClassName: (page) ->
@@ -52,6 +54,7 @@ class app.react.App
           when homePage then 'home'
           when editSongPage then 'edit-song'
           when songPage then 'song'
+          when trashPage then 'trash'
           when notFoundPage then 'notfound'
 
       componentDidMount: ->

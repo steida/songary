@@ -45,14 +45,14 @@ suite 'app.user.Store', ->
       assert.deepEqual errors, ['error']
       assert.isFalse changeDispatched
 
-  suite 'delete', ->
-    test 'should delete song', (done) ->
-      song = store.newSong = validSong()
+  suite 'trashSong', ->
+    test 'should set song inTrash to true', (done) ->
+      store.newSong = validSong()
       store.addNewSong()
       store.listen 'change', ->
-        assert.deepEqual store.songs, []
+        assert.isTrue store.songs[0].inTrash
         done()
-      store.delete song
+      store.trashSong store.songs[0], true
 
   suite 'songById', ->
     test 'should return added song looked up with params', ->

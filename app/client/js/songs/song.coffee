@@ -15,9 +15,6 @@ class app.songs.Song
     ###
     @id = goog.string.getRandomString()
 
-    # set created and updated
-    # a po update, novej updated
-
   @MSG_MISSING_LYRICS: goog.getMsg 'missing lyrics'
   @MSG_UNKNOWN_ARTIST: goog.getMsg 'unknown artist'
   @MSG_UNKNOWN_NAME: goog.getMsg 'unknown name'
@@ -43,16 +40,15 @@ class app.songs.Song
   urlArtist: ''
 
   ###*
-    User id.
-    @type {string}
-  ###
-  creator: ''
-
-  ###*
     http://linkesoft.com/songbook/chordproformat.html
     @type {string}
   ###
   lyrics: ''
+
+  ###*
+    @type {boolean}
+  ###
+  inTrash: false
 
   ###*
     @return {Array.<app.ValidationError>}
@@ -66,12 +62,13 @@ class app.songs.Song
         new app.ValidationError prop, Song.MSG_FILL_OUT
 
   update: ->
-    # PATTERN: No, we don't need HTML5 form validations. It's anti-pattern.
     @name = @name.slice 0, 100
     @artist = @artist.slice 0, 100
     @lyrics = @lyrics.slice 0, 32000
+
     @urlName = este.string.toFancyUrl @name
     @name = '' if !@urlName
+
     @urlArtist = este.string.toFancyUrl @artist
     @artist = '' if !@urlArtist
 

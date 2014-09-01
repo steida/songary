@@ -1,6 +1,6 @@
-goog.provide 'app.react.pages.Home'
+goog.provide 'app.react.pages.Trash'
 
-class app.react.pages.Home
+class app.react.pages.Trash
 
   ###*
     @param {app.Routes} routes
@@ -16,23 +16,18 @@ class app.react.pages.Home
 
       render: ->
         allSongs = userStore.songsSortedByName()
-        songs = allSongs.filter (song) -> !song.inTrash
         deletedSongs = allSongs.filter (song) -> song.inTrash
 
         div className: 'page',
-          h1 {}, Home.MSG_TITLE
-          ul {}, songs.map (song) ->
+          h1 {}, Trash.MSG_TITLE
+          ul className: 'deleted-songs', deletedSongs.map (song) ->
             li key: song.id,
-              a href: routes.mySong.url(song),
+              a href: routes.editSong.url(song),
                 "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
           a
             className: 'btn btn-default'
-            href: routes.newSong.url()
-          , Home.MSG_ADD_NEW_SONG
-          deletedSongs.length > 0 && a
-            className: 'btn btn-link'
-            href: routes.trash.url()
-          , "Trash (#{deletedSongs.length})"
+            href: routes.home.url()
+          , Trash.MSG_HOME_LINK_LABEL
 
-  @MSG_ADD_NEW_SONG: goog.getMsg 'add new song'
-  @MSG_TITLE: goog.getMsg 'my songs'
+  @MSG_TITLE: goog.getMsg 'Trash'
+  @MSG_HOME_LINK_LABEL: goog.getMsg 'Back to songs.'

@@ -58,9 +58,10 @@ class app.user.Store extends este.labs.Store
 
   ###*
     @param {app.songs.Song} song
+    @param {boolean} inTrash
   ###
-  delete: (song) ->
-    goog.array.remove @songs, song
+  trashSong: (song, inTrash) ->
+    song.inTrash = inTrash
     @notify()
 
   ###*
@@ -82,9 +83,10 @@ class app.user.Store extends este.labs.Store
     @return {boolean}
   ###
   contains: (song) ->
-    goog.array.some @songs, (s) ->
-      s.name == song.name &&
-      s.artist == song.artist
+    goog.array.some @songs, (item) ->
+      return false if item.inTrash
+      item.name == song.name &&
+      item.artist == song.artist
 
   ###*
     @param {app.songs.Song} song

@@ -28,9 +28,10 @@ class app.react.pages.EditSong
           form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
             div className: 'form-group',
               input
-                autoFocus: !editMode
                 autoComplete: false
+                autoFocus: !editMode
                 className: 'form-control'
+                disabled: song.inTrash
                 name: 'name'
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_NAME
@@ -39,6 +40,7 @@ class app.react.pages.EditSong
               input
                 autoComplete: false
                 className: 'form-control'
+                disabled: song.inTrash
                 name: 'artist'
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_SONG_ARTIST
@@ -46,6 +48,7 @@ class app.react.pages.EditSong
             div className: 'form-group',
               textarea
                 className: 'form-control'
+                disabled: song.inTrash
                 name: 'lyrics'
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
@@ -65,9 +68,9 @@ class app.react.pages.EditSong
                   EditSong.MSG_CREATE_NEW_SONG
               editMode && button
                 className: 'btn btn-danger'
-                onClick: @onDeleteButtonClick
+                onClick: @onToggleDeleteButtonClick
                 type: 'button'
-              , EditSong.MSG_DELETE
+              , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
 
       componentDidMount: ->
         @chordproTextarea_ = new goog.ui.Textarea ''
@@ -100,9 +103,8 @@ class app.react.pages.EditSong
           return
         routes.home.redirect()
 
-      onDeleteButtonClick: ->
-        return if !confirm EditSong.MSG_DELETE_QUESTION
-        userStore.delete song
+      onToggleDeleteButtonClick: ->
+        userStore.trashSong song, !song.inTrash
         routes.home.redirect()
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
@@ -110,7 +112,7 @@ class app.react.pages.EditSong
   @MSG_BACK_TO_SONGS: goog.getMsg 'Back to Songs'
   @MSG_CREATE_NEW_SONG: goog.getMsg 'Add new song'
   @MSG_DELETE: goog.getMsg 'Delete'
-  @MSG_DELETE_QUESTION: goog.getMsg 'Are you sure?'
+  @MSG_RESTORE: goog.getMsg 'Restore'
   @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to write lyrics'
   @MSG_SONG_ARTIST: goog.getMsg 'Artist (or band)'
   @MSG_SONG_NAME: goog.getMsg 'Song name'

@@ -18,7 +18,7 @@ class server.Storage extends este.labs.Storage
   ###
   load: (route, params) ->
     switch route
-      when @routes.mySong, @routes.editSong
+      when @routes.editSong, @routes.mySong, @routes.trash
         @notFound()
       else
         @ok()
