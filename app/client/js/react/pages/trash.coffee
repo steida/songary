@@ -9,7 +9,7 @@ class app.react.pages.Trash
     @constructor
   ###
   constructor: (routes, userStore, touch) ->
-    {div,h1,ul,li,button} = React.DOM
+    {div,ul,li,button} = React.DOM
     {a} = touch.scroll 'a'
 
     @component = React.createClass
@@ -19,7 +19,6 @@ class app.react.pages.Trash
         deletedSongs = allSongs.filter (song) -> song.inTrash
 
         div className: 'page',
-          h1 {}, Trash.MSG_TITLE
           ul className: 'deleted-songs', deletedSongs.map (song) ->
             li key: song.id,
               a href: routes.editSong.url(song),
@@ -39,8 +38,6 @@ class app.react.pages.Trash
           routes.home.redirect()
           return
 
-
-  @MSG_TITLE: goog.getMsg 'Trash'
-  @MSG_HOME_LINK_LABEL: goog.getMsg 'Back to songs'
-  @MSG_EMPTY_TRASH: goog.getMsg 'Empty trash'
+  @MSG_HOME_LINK_LABEL: goog.getMsg 'Back To Songs'
+  @MSG_EMPTY_TRASH: goog.getMsg 'Empty Trash'
   @MSG_ARE_YOU_SURE: goog.getMsg 'Are you sure you want to permanently erase all songs in trash?'

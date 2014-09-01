@@ -15,4 +15,6 @@ class app.react.Header
       render: ->
         header {},
           h1 {},
-            a href: routes.home.url(), 'Songary'
+            a href: routes.home.url(), Header.MSG_MY_SONGS
+
+  @MSG_MY_SONGS: goog.getMsg 'My Songs'

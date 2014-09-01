@@ -173,5 +173,5 @@ class app.react.pages.Song
   @MIN_READABLE_FONT_SIZE: 8
   @LEFT_THUMB_AVERAGE_X_OFFSET: 16
 
-  @MSG_BACK: goog.getMsg 'back'
-  @MSG_EDIT: goog.getMsg 'edit'
+  @MSG_BACK: goog.getMsg 'Back'
+  @MSG_EDIT: goog.getMsg 'Edit'

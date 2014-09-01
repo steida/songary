@@ -13,4 +13,6 @@ class app.react.Footer
       render: ->
         footer {},
           login.component {}
-          p className: 'text-warning', "Warning: Pre-alpha version, don't use it yet."
+          p className: 'text-warning', Footer.MSG_WARNING
+
+  @MSG_WARNING: goog.getMsg "Warning: Pre-alpha version, don't use it yet."

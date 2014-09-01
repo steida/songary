@@ -107,11 +107,11 @@ class app.react.pages.EditSong
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method.
-  @MSG_BACK_TO_SONGS: goog.getMsg 'Back to songs'
-  @MSG_CREATE_NEW_SONG: goog.getMsg 'Add new song'
+  @MSG_BACK_TO_SONGS: goog.getMsg 'Back To Songs'
+  @MSG_CREATE_NEW_SONG: goog.getMsg 'Add New Song'
   @MSG_DELETE: goog.getMsg 'Delete'
   @MSG_RESTORE: goog.getMsg 'Restore'
-  @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to write lyrics'
+  @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to Write Lyrics'
   @MSG_SONG_ARTIST: goog.getMsg 'Artist (or band)'
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'

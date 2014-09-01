@@ -11,7 +11,7 @@ class app.react.App
     @param {app.Title} appTitle
     @param {app.react.Header} header
     @param {app.react.Footer} footer
-    @param {app.react.pages.Home} homePage
+    @param {app.react.pages.MySongs} mySongs
     @param {app.react.pages.EditSong} editSongPage
     @param {app.react.pages.Song} songPage
     @param {app.react.pages.NotFound} notFoundPage
@@ -20,7 +20,7 @@ class app.react.App
   ###
   constructor: (userStore, routes, appTitle,
       header, footer,
-      homePage, editSongPage, songPage, notFoundPage, trashPage) ->
+      mySongs, editSongPage, songPage, notFoundPage, trashPage) ->
 
     {div} = React.DOM
 
@@ -37,7 +37,7 @@ class app.react.App
 
       page: (props) ->
         switch routes.active
-          when routes.home then homePage
+          when routes.home then mySongs
           when routes.newSong then editSongPage
           when routes.mySong, routes.editSong
             song = userStore.songByRoute routes.active
@@ -51,7 +51,7 @@ class app.react.App
 
       pageClassName: (page) ->
         switch page
-          when homePage then 'home'
+          when mySongs then 'home'
           when editSongPage then 'edit-song'
           when songPage then 'song'
           when trashPage then 'trash'

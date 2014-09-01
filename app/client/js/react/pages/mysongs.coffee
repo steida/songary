@@ -1,6 +1,6 @@
-goog.provide 'app.react.pages.Home'
+goog.provide 'app.react.pages.MySongs'
 
-class app.react.pages.Home
+class app.react.pages.MySongs
 
   ###*
     @param {app.Routes} routes
@@ -20,7 +20,6 @@ class app.react.pages.Home
         deletedSongs = allSongs.filter (song) -> song.inTrash
 
         div className: 'page',
-          h1 {}, Home.MSG_TITLE
           ul {}, songs.map (song) ->
             li key: song.id,
               a href: routes.mySong.url(song),
@@ -28,11 +27,10 @@ class app.react.pages.Home
           a
             className: 'btn btn-link'
             href: routes.newSong.url()
-          , Home.MSG_ADD_NEW_SONG
+          , MySongs.MSG_ADD_NEW_SONG
           deletedSongs.length > 0 && a
             className: 'btn btn-link'
             href: routes.trash.url()
           , "Trash (#{deletedSongs.length})"
 
-  @MSG_ADD_NEW_SONG: goog.getMsg 'Add new song'
-  @MSG_TITLE: goog.getMsg 'My songs'
+  @MSG_ADD_NEW_SONG: goog.getMsg 'Add New Song'
