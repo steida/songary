@@ -46,7 +46,7 @@ class app.react.pages.Song
               onPointerUp: @onFontResizeButtonPointerUp.bind @, false
             , '-'
             a
-              href: routes.editMySong.url @props.song
+              href: routes.editSong.url @props.song
             , Song.MSG_EDIT
 
       ref: (name) ->

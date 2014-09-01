@@ -12,15 +12,15 @@ class app.Title
 
   @MSG_EDIT: goog.getMsg 'edit: '
   @MSG_HOME: goog.getMsg 'Songary | Your personal songbook'
-  @MSG_MY_NEW_SONG: goog.getMsg 'New Song | Songary'
+  @MSG_NEW_SONG: goog.getMsg 'New Song | Songary'
   @MSG_NOT_FOUND: goog.getMsg 'Page Not Found'
 
   get: ->
     switch @routes.active
       when @routes.home then Title.MSG_HOME
-      when @routes.myNewSong then Title.MSG_MY_NEW_SONG
+      when @routes.newSong then Title.MSG_NEW_SONG
+      when @routes.editSong then @getEditSongTitle()
       when @routes.mySong then @getMySongTitle()
-      when @routes.editMySong then @getEditMySongTitle()
       else Title.MSG_NOT_FOUND
 
   getMySongTitle: ->
@@ -30,5 +30,5 @@ class app.Title
       name: song.getDisplayName()
       artist: song.getDisplayArtist()
 
-  getEditMySongTitle: ->
+  getEditSongTitle: ->
     Title.MSG_EDIT + @getMySongTitle()

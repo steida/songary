@@ -15,15 +15,17 @@ class app.react.pages.Home
     @component = React.createClass
 
       render: ->
+        songs = userStore.songsSortedByName()
+
         div className: 'page',
           h1 {}, Home.MSG_MY_SONGS
-          ul {}, userStore.songsSortedByName().map (song) ->
+          ul {}, songs.map (song) ->
             li key: song.id,
               a href: routes.mySong.url(song),
                 "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
           a
             className: 'btn btn-default'
-            href: routes.myNewSong.url()
+            href: routes.newSong.url()
           , Home.MSG_ADD_NEW_SONG
 
   @MSG_ADD_NEW_SONG: goog.getMsg 'add new song'

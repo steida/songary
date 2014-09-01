@@ -37,14 +37,14 @@ class app.react.App
       page: (props) ->
         switch routes.active
           when routes.home then homePage
-          when routes.myNewSong then editSongPage
-          when routes.mySong, routes.editMySong
+          when routes.newSong then editSongPage
+          when routes.mySong, routes.editSong
             song = userStore.songByRoute routes.active
             return notFoundPage if !song
             props.song = song
             switch routes.active
               when routes.mySong then songPage
-              when routes.editMySong then editSongPage
+              when routes.editSong then editSongPage
           else notFoundPage
 
       pageClassName: (page) ->
