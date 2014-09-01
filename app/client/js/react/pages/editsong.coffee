@@ -60,12 +60,10 @@ class app.react.pages.EditSong
                   target: '_blank'
                 , EditSong.MSG_HOW_TO_WRITE_LYRICS
             div className: 'form-group horizontal',
-              button
-                className: 'btn btn-default'
-              , if editMode
-                  EditSong.MSG_BACK_TO_SONGS
-                else
-                  EditSong.MSG_CREATE_NEW_SONG
+              if editMode
+                button className: 'btn btn-link', EditSong.MSG_BACK_TO_SONGS
+              else
+                button className: 'btn btn-default', EditSong.MSG_CREATE_NEW_SONG
               editMode && button
                 className: 'btn btn-danger'
                 onClick: @onToggleDeleteButtonClick
@@ -109,7 +107,7 @@ class app.react.pages.EditSong
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method.
-  @MSG_BACK_TO_SONGS: goog.getMsg 'Back to Songs'
+  @MSG_BACK_TO_SONGS: goog.getMsg 'Back to songs'
   @MSG_CREATE_NEW_SONG: goog.getMsg 'Add new song'
   @MSG_DELETE: goog.getMsg 'Delete'
   @MSG_RESTORE: goog.getMsg 'Restore'

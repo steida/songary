@@ -25,9 +25,9 @@ class app.react.pages.Trash
               a href: routes.editSong.url(song),
                 "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
           a
-            className: 'btn btn-default'
+            className: 'btn btn-link'
             href: routes.home.url()
           , Trash.MSG_HOME_LINK_LABEL
 
   @MSG_TITLE: goog.getMsg 'Trash'
-  @MSG_HOME_LINK_LABEL: goog.getMsg 'Back to songs.'
+  @MSG_HOME_LINK_LABEL: goog.getMsg 'Back to songs'
