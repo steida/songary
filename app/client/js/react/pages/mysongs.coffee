@@ -9,7 +9,7 @@ class app.react.pages.MySongs
     @constructor
   ###
   constructor: (routes, userStore, touch) ->
-    {div,h1,ul,li} = React.DOM
+    {div,h1,ul,li,nav} = React.DOM
     {a} = touch.scroll 'a'
 
     @component = React.createClass
@@ -20,17 +20,19 @@ class app.react.pages.MySongs
         deletedSongs = allSongs.filter (song) -> song.inTrash
 
         div className: 'page',
-          ul {}, songs.map (song) ->
+          ul className: 'songs', songs.map (song) ->
             li key: song.id,
               a href: routes.mySong.url(song),
                 "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
-          a
-            className: 'btn btn-link'
-            href: routes.newSong.url()
-          , MySongs.MSG_ADD_NEW_SONG
-          deletedSongs.length > 0 && a
-            className: 'btn btn-link'
-            href: routes.trash.url()
-          , "Trash (#{deletedSongs.length})"
+          nav {},
+            a
+              className: 'btn btn-link'
+              href: routes.newSong.url()
+            , MySongs.MSG_ADD_NEW_SONG
+            deletedSongs.length > 0 &&
+              a
+                className: 'btn btn-link'
+                href: routes.trash.url()
+              , "Trash (#{deletedSongs.length})"
 
-  @MSG_ADD_NEW_SONG: goog.getMsg 'Add New Song'
+  @MSG_ADD_NEW_SONG: goog.getMsg 'New Song'

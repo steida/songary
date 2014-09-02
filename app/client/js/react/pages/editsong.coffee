@@ -12,7 +12,7 @@ class app.react.pages.EditSong
     @constructor
   ###
   constructor: (routes, userStore, touch) ->
-    {div,form,input,textarea,p,button} = React.DOM
+    {div,form,input,textarea,p,nav,button} = React.DOM
     {a} = touch.none 'a'
 
     song = null
@@ -59,16 +59,18 @@ class app.react.pages.EditSong
                   href: 'http://linkesoft.com/songbook/chordproformat.html'
                   target: '_blank'
                 , EditSong.MSG_HOW_TO_WRITE_LYRICS
-            div className: 'form-group horizontal',
+            nav {},
               if editMode
-                button className: 'btn btn-link', EditSong.MSG_BACK_TO_SONGS
+                button
+                  className: "btn btn-#{song.inTrash && 'default' || 'danger'}"
+                  onClick: @onToggleDeleteButtonClick
+                  type: 'button'
+                , if song.inTrash
+                    EditSong.MSG_RESTORE
+                  else
+                    EditSong.MSG_DELETE
               else
                 button className: 'btn btn-default', EditSong.MSG_CREATE_NEW_SONG
-              editMode && button
-                className: 'btn btn-danger'
-                onClick: @onToggleDeleteButtonClick
-                type: 'button'
-              , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
 
       componentDidMount: ->
         @chordproTextarea_ = new goog.ui.Textarea ''
@@ -89,10 +91,7 @@ class app.react.pages.EditSong
         @saveSong()
 
       saveSong: ->
-        errors = if editMode
-          song.validate()
-        else
-          userStore.addNewSong()
+        errors = userStore.addNewSong()
         # TODO: Reusable helper/mixin/whatever.
         if errors.length
           alert errors[0].message
@@ -107,7 +106,6 @@ class app.react.pages.EditSong
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method.
-  @MSG_BACK_TO_SONGS: goog.getMsg 'Back To Songs'
   @MSG_CREATE_NEW_SONG: goog.getMsg 'Add New Song'
   @MSG_DELETE: goog.getMsg 'Delete'
   @MSG_RESTORE: goog.getMsg 'Restore'

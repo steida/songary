@@ -8,13 +8,13 @@ class app.react.Header
     @constructor
   ###
   constructor: (routes, touch) ->
-    {header,h1} = React.DOM
+    {header,nav,ul} = React.DOM
     {a} = touch.none 'a'
 
     @component = React.createClass
       render: ->
         header {},
-          h1 {},
+          nav {},
             a href: routes.home.url(), Header.MSG_MY_SONGS
 
   @MSG_MY_SONGS: goog.getMsg 'My Songs'

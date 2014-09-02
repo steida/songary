@@ -1,7 +1,18 @@
-@import '../../../bower_components/bootstrap/dist/css/bootstrap.min.css'
+@import '../../../bower_components/normalize-css/normalize.css'
 @import '../../../bower_components/este-library/este/css'
 @import '../../../bower_components/stylus-nib'
+@import 'variables.styl'
+@import 'type.styl'
 @import 'device.styl'
+
+// So here's my idea: you still keep px size adjustments at the document level
+// so you can make easy/efficient sweeping size changes. But then each module on
+// the page has a font-size set in rem. Actual text elements (h1, h2, p, li,
+// whatever), if you size them at all, are sized in em, and thus become relative
+// to the module. From: http://css-tricks.com/rems-ems.
+
+*, ::after, ::before
+  box-sizing: border-box
 
 body
   font-family: 'PT Sans', sans-serif;
@@ -9,7 +20,6 @@ body
   line-height 1.4
 
   .app
-    padding 0 1em
     &.active-page-edit-song
       @import 'pages/editsong'
     &.active-page-home
@@ -21,5 +31,9 @@ body
     &.active-page-trash
       @import 'pages/trash'
 
-  .btn
-    margin-right .625em
+    >
+      @import 'header'
+    >
+      @import 'footer'
+
+    padding 0 1.5em
