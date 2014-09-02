@@ -55,10 +55,12 @@ class app.react.pages.EditSong
                 ref: 'lyrics'
                 value: song.lyrics
               p className: 'help-block',
+                editMode && 'Just edit song, no need to save it. '
                 a
                   href: 'http://linkesoft.com/songbook/chordproformat.html'
                   target: '_blank'
                 , EditSong.MSG_HOW_TO_WRITE_LYRICS
+                '.'
             nav {},
               if editMode
                 button
@@ -109,7 +111,7 @@ class app.react.pages.EditSong
   @MSG_CREATE_NEW_SONG: goog.getMsg 'Add New Song'
   @MSG_DELETE: goog.getMsg 'Delete'
   @MSG_RESTORE: goog.getMsg 'Restore'
-  @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to Write Lyrics'
+  @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to write lyrics'
   @MSG_SONG_ARTIST: goog.getMsg 'Artist (or band)'
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'
