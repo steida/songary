@@ -17,6 +17,11 @@ class app.Firebase
   ###*
     @type {Firebase}
   ###
+  rootRef: null
+
+  ###*
+    @type {Firebase}
+  ###
   userRef: null
 
   ###*
@@ -31,7 +36,7 @@ class app.Firebase
   setRefs_: ->
     # TODO: Use server data for path, make it isomorphic.
     return if !window.Firebase
-    @root = new window.Firebase 'https://shining-fire-6810.firebaseio.com/'
+    @rootRef = new window.Firebase 'https://shining-fire-6810.firebaseio.com/'
 
   ###*
     TODO: Do it on server side.
@@ -40,7 +45,7 @@ class app.Firebase
     # TODO: Make it isomorphic.
     return if !window.FirebaseSimpleLogin
     goog.asserts.assert !@authClient
-    @authClient = new window.FirebaseSimpleLogin @root, @onSimpleLogin.bind @
+    @authClient = new window.FirebaseSimpleLogin @rootRef, @onSimpleLogin.bind @
 
   ###*
     This method is called whenever user login status has changed. Unfortunatelly
@@ -97,7 +102,6 @@ class app.Firebase
         @saveNewUser user
         return
 
-      # return
       @userStore.mergeServerChanges val, user
 
       if userJustLogged
@@ -128,7 +132,7 @@ class app.Firebase
     @private
   ###
   userRefOf: (user) ->
-    @root
+    @rootRef
       .child 'users'
       .child user.uid
 
@@ -171,3 +175,16 @@ class app.Firebase
       callback.call @
     finally
       @isLocalChange_ = false
+
+  ###*
+    @param {string} uid
+    @param {string} displayName
+    @param {string} message
+  ###
+  sendContactFormMessage: (uid, displayName, message) ->
+    @rootRef
+      .child 'contactFormMessages'
+      .push
+        uid: uid
+        displayName: displayName
+        message: message

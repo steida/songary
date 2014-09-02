@@ -188,3 +188,9 @@ class app.user.Store extends este.labs.Store
       @setEmpty()
     else
       @user = null
+
+  ###*
+    @return {boolean}
+  ###
+  isLoggedIn: ->
+    return !!@user

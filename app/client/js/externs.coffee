@@ -12,6 +12,7 @@
   across whole app.
 ###
 
+# Note these classes are for externs and does not have to match real classes.
 class appUserStore
   appUserStore::songs
   appUserStore::newSong
@@ -26,7 +27,9 @@ class appUserStore
   appSongsSong::createdAt
   appSongsSong::updatedAt
 
-# For app.songs.Song create appSongsSong.
+class appContactFormMessage
+  appContactFormMessage::message
+
 class appSongsSong
   appSongsSong::id
   appSongsSong::name
