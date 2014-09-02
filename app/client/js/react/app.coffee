@@ -16,11 +16,12 @@ class app.react.App
     @param {app.react.pages.Song} songPage
     @param {app.react.pages.NotFound} notFoundPage
     @param {app.react.pages.Trash} trashPage
+    @param {app.react.pages.About} aboutPage
     @constructor
   ###
   constructor: (userStore, routes, appTitle,
       header, footer,
-      mySongs, editSongPage, songPage, notFoundPage, trashPage) ->
+      mySongs, editSongPage, songPage, notFoundPage, trashPage, aboutPage) ->
 
     {div} = React.DOM
 
@@ -47,15 +48,17 @@ class app.react.App
               when routes.mySong then songPage
               when routes.editSong then editSongPage
           when routes.trash then trashPage
+          when routes.about then aboutPage
           else notFoundPage
 
       pageClassName: (page) ->
         switch page
-          when mySongs then 'home'
+          when aboutPage then 'about'
           when editSongPage then 'edit-song'
+          when mySongs then 'home'
+          when notFoundPage then 'notfound'
           when songPage then 'song'
           when trashPage then 'trash'
-          when notFoundPage then 'notfound'
 
       componentDidMount: ->
         goog.events.listen window, 'orientationchange', @onOrientationChange

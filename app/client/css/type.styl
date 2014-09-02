@@ -1,9 +1,14 @@
 a
   color linkColor
   text-decoration none
+  transition color .3s ease
   &:focus, &:hover
     color linkHoverColor
     text-decoration underline
+  &.active
+    color linkHoverColor
+    text-decoration none
+    cursor default
   &:focus
     // Default
     outline thin dotted
