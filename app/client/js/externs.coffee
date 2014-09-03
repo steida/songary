@@ -23,6 +23,9 @@ class appUserStore
   appUserStore::id
   appUserStore::provider
   appUserStore::thirdPartyUserData
+  appUserStore::picture
+  appUserStore::data
+  appUserStore::url
   appUserStore::uid
   appSongsSong::createdAt
   appSongsSong::updatedAt

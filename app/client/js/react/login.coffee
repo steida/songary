@@ -13,21 +13,20 @@ class app.react.Login
     {button} = touch.none 'button'
 
     @component = React.createClass
+
       render: ->
-        button
-          onPointerUp: @onButtonPointUp
-        , @getButtonLabel()
-
-      onButtonPointUp: (e) ->
-        if userStore.user
-          routes.home.redirect()
-          firebase.logout()
+        if userStore.isLogged()
+          button onPointerUp: @logout, Login.MSG_LOGOUT
         else
-          firebase.loginViaFacebook()
+          button onPointerUp: @login, Login.MSG_LOGIN
 
-      getButtonLabel: ->
-        if userStore.user
-          Login.MSG_LOGOUT = goog.getMsg 'Logout {$displayName}',
-            'displayName': userStore.user.displayName
-        else
-          Login.MSG_LOGIN_WITH_FACEBOOK = goog.getMsg 'Log in with Facebook'
+      logout: ->
+        routes.home.redirect()
+        firebase.logout()
+
+      login: ->
+        # TODO: Add more options.
+        firebase.loginViaFacebook()
+
+  @MSG_LOGOUT: goog.getMsg 'Log Out'
+  @MSG_LOGIN: goog.getMsg 'Log In'

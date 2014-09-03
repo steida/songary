@@ -19,7 +19,7 @@ class app.react.pages.About
       render: ->
         div className: 'page',
           p {}, About.MSG_P
-          userStore.isLoggedIn() &&
+          userStore.isLogged() &&
             form className: 'contact-form',
               div className: 'form-group',
                 textarea

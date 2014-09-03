@@ -192,5 +192,5 @@ class app.user.Store extends este.labs.Store
   ###*
     @return {boolean}
   ###
-  isLoggedIn: ->
+  isLogged: ->
     return !!@user

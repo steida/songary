@@ -17,11 +17,13 @@ class app.react.App
     @param {app.react.pages.NotFound} notFoundPage
     @param {app.react.pages.Trash} trashPage
     @param {app.react.pages.About} aboutPage
+    @param {app.react.pages.Me} mePage
     @constructor
   ###
   constructor: (userStore, routes, appTitle,
       header, footer,
-      mySongs, editSongPage, songPage, notFoundPage, trashPage, aboutPage) ->
+      mySongs, editSongPage, songPage, notFoundPage, trashPage, aboutPage,
+      mePage) ->
 
     {div} = React.DOM
 
@@ -49,12 +51,16 @@ class app.react.App
               when routes.editSong then editSongPage
           when routes.trash then trashPage
           when routes.about then aboutPage
+          when routes.me
+            return notFoundPage if !userStore.isLogged()
+            mePage
           else notFoundPage
 
       pageClassName: (page) ->
         switch page
           when aboutPage then 'about'
           when editSongPage then 'edit-song'
+          when mePage then 'me'
           when mySongs then 'home'
           when notFoundPage then 'notfound'
           when songPage then 'song'
