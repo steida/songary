@@ -55,7 +55,6 @@ class app.react.pages.EditSong
                 ref: 'lyrics'
                 value: song.lyrics
               p className: 'help-block',
-                editMode && 'Just edit song, no need to save it. '
                 a
                   href: 'http://linkesoft.com/songbook/chordproformat.html'
                   target: '_blank'
