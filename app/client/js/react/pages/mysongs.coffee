@@ -9,7 +9,7 @@ class app.react.pages.MySongs
     @constructor
   ###
   constructor: (routes, userStore, touch) ->
-    {div,h1,ul,li,nav} = React.DOM
+    {div,h1,ul,li,p,nav} = React.DOM
     {a} = touch.scroll 'a'
 
     @component = React.createClass
@@ -20,10 +20,14 @@ class app.react.pages.MySongs
         deletedSongs = allSongs.filter (song) -> song.inTrash
 
         div className: 'page',
-          ul className: 'songs', songs.map (song) ->
-            li key: song.id,
-              a href: routes.mySong.url(song),
-                "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
+          if songs.length
+            ul className: 'songs',
+              songs.map (song) ->
+                li key: song.id,
+                  a href: routes.mySong.url(song),
+                    "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
+          else
+            p {}, MySongs.MSG_NO_SONGS
           nav {},
             a
               className: 'btn btn-link'
@@ -36,3 +40,4 @@ class app.react.pages.MySongs
               , "Trash (#{deletedSongs.length})"
 
   @MSG_ADD_NEW_SONG: goog.getMsg 'New Song'
+  @MSG_NO_SONGS: goog.getMsg 'No songs.'
