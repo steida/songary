@@ -35,19 +35,14 @@ class app.react.pages.Song
             onMouseLeave: @onMenuMouseHover
             ref: 'menu'
           ,
-            a
-              href: routes.home.url()
-              ref: 'back'
-            , Song.MSG_BACK
+            a href: routes.home.url(), ref: 'back', Song.MSG_BACK
             menuitem
               onPointerUp: @onFontResizeButtonPointerUp.bind @, true
             , '+'
             menuitem
               onPointerUp: @onFontResizeButtonPointerUp.bind @, false
             , '-'
-            a
-              href: routes.editSong.url @props.song
-            , Song.MSG_EDIT
+            a href: routes.editSong.url(@props.song), Song.MSG_EDIT
 
       ref: (name) ->
         @refs[name].getDOMNode()
