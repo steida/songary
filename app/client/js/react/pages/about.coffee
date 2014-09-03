@@ -18,7 +18,7 @@ class app.react.pages.About
 
       render: ->
         div className: 'page',
-          p {}, About.MSG_P
+          p {}, About.MSG_ABOUT
           userStore.isLogged() &&
             form className: 'contact-form',
               div className: 'form-group',
@@ -62,7 +62,7 @@ class app.react.pages.About
       componentWillUnmount: ->
         @messageTextarea.dispose()
 
-  @MSG_P: goog.getMsg 'Songary. Your songbook.'
+  @MSG_ABOUT: goog.getMsg 'Songary. Your songbook.'
   @MSG_SEND_PLACEHOLDER: goog.getMsg 'Compliments, complaints, or suggestions.'
   @MSG_SEND_BUTTON_LABEL: goog.getMsg 'Let us know '
   @MSG_THANK_YOU: goog.getMsg 'Thank you.'

@@ -48,6 +48,10 @@ class appRoutesParams
   appRoutesParams::artist
   appRoutesParams::song
 
+class serverClientData
+  serverClientData::app
+  serverClientData::version
+
 # TODO: Move to separate externs repo. Use typedef.
 
 class Firebase

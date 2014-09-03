@@ -24,7 +24,9 @@ server.main = (config) ->
     with:
       isDev: config['env']['development']
       version: config['version']
-      clientData: {}
+      clientData:
+        app:
+          version: config['version']
 
   container.resolveServerApp()
 
