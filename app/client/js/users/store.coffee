@@ -126,7 +126,8 @@ class app.user.Store extends este.labs.Store
     console.log 'mergeServerChanges' if goog.DEBUG
     @mergeUser serverJson.user, user
     localJson = @toJson()
-    @mergeSong localJson.newSong, serverJson.newSong
+    if serverJson.newSong
+      @mergeSong localJson.newSong, serverJson.newSong
     if serverJson.songs
       @mergeSongs localJson.songs, serverJson.songs
     @fromJson localJson
