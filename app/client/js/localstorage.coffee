@@ -37,7 +37,7 @@ class app.LocalStorage
   ensureVersion: ->
     version = @localStorage.get '@version'
     return if version
-    # Forse update to version 1.
+    # Force update to version 1.
     @localStorage.remove 'songs'
     @localStorage.set '@version', @localStorageVersion
 
