@@ -119,30 +119,6 @@ class app.user.Store extends este.labs.Store
     @user = json.user
 
   ###*
-    @param {Object} serverJson
-    @param {Object} user Auth user.
-  ###
-  mergeServerChanges: (serverJson, user) ->
-    console.log 'mergeServerChanges' if goog.DEBUG
-    @mergeUser serverJson.user, user
-    localJson = @toJson()
-    if serverJson.newSong
-      @mergeSong localJson.newSong, serverJson.newSong
-    if serverJson.songs
-      @mergeSongs localJson.songs, serverJson.songs
-    @fromJson localJson
-
-  ###*
-    @param {Object} appUser
-    @param {Object} authUser
-  ###
-  mergeUser: (appUser, authUser) ->
-    # Always prefer thirdparty auth user.
-    @user = @authUserToAppUser authUser
-    # Except createdAt.
-    @user.createdAt = appUser.createdAt
-
-  ###*
     @param {Object} authUser Auth user.
     @return {Object} user App user.
   ###
@@ -152,35 +128,6 @@ class app.user.Store extends este.labs.Store
     provider: authUser.provider
     thirdPartyUserData: authUser.thirdPartyUserData
     uid: authUser.uid
-
-  ###*
-    @param {Object} localSongs
-    @param {Object} serverSongs
-  ###
-  mergeSongs: (localSongs, serverSongs) ->
-    for serverSongId, serverSong of serverSongs
-      localSong = localSongs[serverSongId]
-      if !localSong
-        localSongs[serverSongId] = serverSong
-        continue
-      @mergeSong localSong, serverSong
-
-    deletedSongsIds = for localSongId, localSong of localSongs
-      continue if serverSongs[localSongId]
-      localSongId
-    deletedSongsIds.forEach (id) -> delete localSongs[id]
-    return
-
-  ###*
-    For now, server song always override local one.
-    @param {Object} localSong
-    @param {Object} serverSong
-  ###
-  mergeSong: (localSong, serverSong) ->
-    localSong.artist = serverSong.artist
-    localSong.inTrash = serverSong.inTrash
-    localSong.lyrics = serverSong.lyrics
-    localSong.name = serverSong.name
 
   ###*
     @param {boolean} userWasLogged

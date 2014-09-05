@@ -95,6 +95,7 @@ class app.Firebase
     userJustLogged = true
     @userRef.on 'value', (snap) =>
       return if @isLocalChange_
+      console.log 'onServerValue'
       val = snap.val()
 
       serverUserExists = val?.user?.uid
@@ -102,7 +103,7 @@ class app.Firebase
         @saveNewUser user
         return
 
-      @userStore.mergeServerChanges val, user
+      @userStore.fromJson val
 
       if userJustLogged
         userJustLogged = false
