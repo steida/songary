@@ -8,10 +8,11 @@ class app.Firebase
     Firebase wrapper for app. Remember, app has to always work without Firebase
     and be able to switch Firebase for something else anytime.
     @param {app.user.Store} userStore
+    @param {app.LocalHistory} localHistory
     @constructor
     @final
   ###
-  constructor: (@userStore) ->
+  constructor: (@userStore, @localHistory) ->
     @setRefs_()
 
   ###*
@@ -103,7 +104,7 @@ class app.Firebase
         @saveNewUser user
         return
 
-      @userStore.fromJson val
+      @localHistory.update @userStore, val
 
       if userJustLogged
         userJustLogged = false
