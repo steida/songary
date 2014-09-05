@@ -18,9 +18,9 @@ class app.LocalStorage
     @enum {string}
   ###
   @Keys:
-    VERSION: 'version'
-    USER: 'user'
     STORE_PREFIX: 'store:'
+    USER: 'user'
+    VERSION: 'version'
 
   ###*
     @private
@@ -99,7 +99,7 @@ class app.LocalStorage
   ###
   loadFromJson_: (stores) ->
     stores.forEach (store) =>
-      json = @localStorage_.get @getPrefixedStoreKey store
+      json = @localStorage_.get @getPrefixedStoreKey_ store
       return if !json
       # TODO: Try/Catch in case of error. Report error to server.
       store.fromJson json
@@ -153,11 +153,12 @@ class app.LocalStorage
   ###
   set: (store, json) ->
     return if !@localStorage_
-    @localStorage_.set @getPrefixedStoreKey(store), json
+    @localStorage_.set @getPrefixedStoreKey_(store), json
 
   ###*
     @param {este.labs.Store} store
     @return {string}
+    @private
   ###
-  getPrefixedStoreKey: (store) ->
+  getPrefixedStoreKey_: (store) ->
     LocalStorage.Keys.STORE_PREFIX + store.name
