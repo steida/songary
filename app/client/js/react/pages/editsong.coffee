@@ -25,10 +25,9 @@ class app.react.pages.EditSong
         editMode = !!@props.song
 
         div className: 'page',
-          form onSubmit: @onFormSubmit, ref: 'form', role: 'form',
+          form autoComplete: 'off', onSubmit: @onFormSubmit, ref: 'form', role: 'form',
             div className: 'form-group',
               input
-                autoComplete: false
                 autoFocus: !editMode
                 className: 'form-control'
                 disabled: song.inTrash
@@ -38,7 +37,6 @@ class app.react.pages.EditSong
                 value: song.name
             div className: 'form-group',
               input
-                autoComplete: false
                 className: 'form-control'
                 disabled: song.inTrash
                 name: 'artist'
