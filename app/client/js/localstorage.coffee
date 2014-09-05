@@ -11,80 +11,95 @@ class app.LocalStorage
     @constructor
   ###
   constructor: ->
-    @tryCreate()
-    @migrate()
-
-  localStorageKey: 'songary'
-  localStorageVersion: 1
+    @tryCreate_()
+    @migrate_()
 
   ###*
-    Can be null, Safari in private mode does not allow localStorage.
+    @enum {string}
+  ###
+  @Keys:
+    VERSION: 'version'
+    USER: 'user'
+    STORE_PREFIX: 'store:'
+
+  ###*
+    @private
+  ###
+  localStorageKey_: 'songary'
+
+  ###*
+    @private
+  ###
+  localStorageVersion_: 1
+
+  ###*
+    Can be null, Safari in private mode does not allow localStorage object.
     @type {goog.storage.Storage}
-    @protected
+    @private
   ###
-  localStorage: null
+  localStorage_: null
 
   ###*
-    @protected
+    @private
   ###
-  tryCreate: ->
+  tryCreate_: ->
     mechanism = goog.storage.mechanism.mechanismfactory
-      .createHTML5LocalStorage @localStorageKey
+      .createHTML5LocalStorage @localStorageKey_
     return if !mechanism
-    @localStorage = new goog.storage.Storage mechanism
-    @ensureVersion()
-
-  ensureVersion: ->
-    version = @localStorage.get '@version'
-    return if version
-    # Force update to version 1.
-    @localStorage.remove 'songs'
-    @localStorage.set '@version', @localStorageVersion
+    @localStorage_ = new goog.storage.Storage mechanism
+    @ensureVersion_()
 
   ###*
-    @protected
+    @private
   ###
-  migrate: ->
-    return if !@localStorage
-    storageVersion = Number @localStorage.get '@version'
-    scriptVersion = @localStorageVersion
-    userOrig = @localStorage.get 'user'
+  ensureVersion_: ->
+    version = @localStorage_.get LocalStorage.Keys.VERSION
+    return if version
+    @localStorage_.set LocalStorage.Keys.VERSION, @localStorageVersion_
+
+  ###*
+    @private
+  ###
+  migrate_: ->
+    return if !@localStorage_
+    storageVersion = Number @localStorage_.get LocalStorage.Keys.VERSION
+    scriptVersion = @localStorageVersion_
+    userOrig = @localStorage_.get LocalStorage.Keys.USER
     try
       migrateVersion() for migrateVersion in [
         =>
           # Example:
-          # user = @localStorage.get 'user'
+          # user = @localStorage_.get LocalStorage.Keys.USER
           # user.songs = user.songs.map (song) ->
           #   lyrics = song.lyrics
           #   delete song.lyrics
           #   song.llyrics = lyrics
           #   song
-          # @localStorage.set 'user', user
+          # @localStorage_.set LocalStorage.Keys.USER, user
         =>
           # console.log 'from 2 to 3'
       ].slice storageVersion - 1, scriptVersion - 1
     catch e
       # TODO: Report error to server.
-      @localStorage.set 'user', userOrig
+      @localStorage_.set LocalStorage.Keys.USER, userOrig
       return
-    @localStorage.set '@version', scriptVersion
-    return
+    @localStorage_.set LocalStorage.Keys.VERSION, scriptVersion
 
   ###*
     @param {Array.<este.labs.Store>} stores
   ###
   load: (stores) ->
-    return if !@localStorage
-    @loadFromJson stores
-    @listenWindowStorage stores
+    return if !@localStorage_
+    @loadFromJson_ stores
+    @listenWindowStorage_ stores
 
   ###*
     @param {Array.<este.labs.Store>} stores
-    @protected
+    @private
   ###
-  loadFromJson: (stores) ->
+  loadFromJson_: (stores) ->
     stores.forEach (store) =>
-      json = @localStorage.get store.name
+      json = @localStorage_.get @getPrefixedStoreKey store
       return if !json
       # TODO: Try/Catch in case of error. Report error to server.
       store.fromJson json
@@ -92,19 +107,17 @@ class app.LocalStorage
   ###*
     Sync app state across browser tabs/windows with the same domain origin.
     @param {Array.<este.labs.Store>} stores
-    @protected
+    @private
   ###
-  listenWindowStorage: (stores) ->
+  listenWindowStorage_: (stores) ->
     # IE 9/10/11 implementation of window storage event is broken. Check:
     # http://stackoverflow.com/a/4679754
     return if goog.labs.userAgent.browser.isIE()
 
     goog.events.listen window, 'storage', (e) =>
-      # TODO: Reload if localStorageVersion changed.
+      # TODO: Reload if localStorageVersion_ changed.
       browserEvent = e.getBrowserEvent()
-      storeName = browserEvent.key.split('::')[1]
-      return if !storeName
-      store = goog.array.find stores, (store) -> store.name == storeName
+      store = @tryGetStore browserEvent.key, stores
       return if !store
 
       # Because FirebaseSimpleLogin does not propagate login state across
@@ -124,9 +137,27 @@ class app.LocalStorage
         location.reload() if userLogged || userLogout
 
   ###*
+    @param {string} key
+    @param {Array.<este.labs.Store>} stores
+  ###
+  tryGetStore: (key, stores) ->
+    prefix = @localStorageKey_ + '::' + LocalStorage.Keys.STORE_PREFIX
+    storeName = key.slice prefix.length
+    return null if !storeName
+    goog.array.find stores, (store) ->
+      store.name == storeName
+
+  ###*
     @param {este.labs.Store} store
     @param {Object} json
   ###
   set: (store, json) ->
-    return if !@localStorage
-    @localStorage.set store.name, json
+    return if !@localStorage_
+    @localStorage_.set @getPrefixedStoreKey(store), json
+
+  ###*
+    @param {este.labs.Store} store
+    @return {string}
+  ###
+  getPrefixedStoreKey: (store) ->
+    LocalStorage.Keys.STORE_PREFIX + store.name
