@@ -78,9 +78,6 @@ class app.Storage extends este.labs.Storage
     @private
   ###
   onStoreChange: (store, e) ->
-    # NOTE: This is for dev.
-    # return if !@storeStateChanged store, @deepCopy store.toJson()
-
     # Store was changed by LocalStorage change from another browser tab/window.
     # No need to do anything.
     return if e.target instanceof app.LocalStorage
@@ -104,16 +101,3 @@ class app.Storage extends este.labs.Storage
       when @routes.mySong, @routes.editSong
         return @notFound() if !@userStore.songById params.id
     @ok()
-
-  # ###*
-  #   NOTE: This is only for dev.
-  #   Check if store state has changed.
-  #   @param {este.labs.Store} store
-  #   @param {Object} json
-  #   @return {boolean}
-  # ###
-  # storeStateChanged: (store, json) ->
-  #   jsonString = JSON.stringify json
-  #   return false if @storesStates.get(store) == jsonString
-  #   @storesStates.set store, jsonString
-  #   true

@@ -106,17 +106,20 @@ class app.user.Store extends este.labs.Store
     @override
   ###
   toJson: ->
-    newSong: @newSong
-    songs: @asObject @songs
-    user: @user
+    json =
+      newSong: @newSong
+      user: @user
+    if @songs.length
+      json.songs = @asObject @songs
+    json
 
   ###*
     @override
   ###
   fromJson: (json) ->
     @newSong = @instanceFromJson app.songs.Song, json.newSong
-    @songs = @asArray(json.songs || []).map @instanceFromJson app.songs.Song
-    @user = @authUserToAppUser json.user
+    @songs = @asArray(json.songs || {}).map @instanceFromJson app.songs.Song
+    @user = @authUserToAppUser json.user if json.user
 
   ###*
     @param {Object} authUser Auth user.

@@ -20,7 +20,7 @@ class app.LocalHistory
     ###
     @history = {}
 
-  @MAX_ITEMS_IN_ARRAY: 10
+  @MAX_ITEMS_IN_ARRAY: 200
 
   ###*
     @param {este.labs.Store} store
@@ -37,8 +37,6 @@ class app.LocalHistory
   ###
   storePreviousState_: (store) ->
     array = @history[store.name] ?= []
-    previous = array[array.length - 1]
-    next = store.toJson()
-    deepCopy = JSON.parse JSON.stringify next
+    deepCopy = JSON.parse JSON.stringify store.toJson()
     array.push deepCopy
     array.shift() if array.length > LocalHistory.MAX_ITEMS_IN_ARRAY
