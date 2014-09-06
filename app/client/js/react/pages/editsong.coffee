@@ -12,8 +12,8 @@ class app.react.pages.EditSong
     @constructor
   ###
   constructor: (routes, userStore, touch) ->
-    {div,form,input,textarea,p,nav,button} = React.DOM
-    {a} = touch.none 'a'
+    {div,form,input,textarea,p,nav} = React.DOM
+    {a,button} = touch.none 'a', 'button'
 
     song = null
     editMode = false
@@ -62,7 +62,7 @@ class app.react.pages.EditSong
               if editMode
                 button
                   className: "btn btn-#{song.inTrash && 'default' || 'danger'}"
-                  onClick: @onToggleDeleteButtonClick
+                  onPointerUp: @onToggleDeleteButtonPointerUp
                   type: 'button'
                 , if song.inTrash
                     EditSong.MSG_RESTORE
@@ -99,7 +99,7 @@ class app.react.pages.EditSong
           return
         routes.home.redirect()
 
-      onToggleDeleteButtonClick: ->
+      onToggleDeleteButtonPointerUp: ->
         userStore.trashSong song, !song.inTrash
         routes.home.redirect()
 
