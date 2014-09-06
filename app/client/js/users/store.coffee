@@ -7,10 +7,12 @@ goog.require 'goog.array'
 class app.user.Store extends este.labs.Store
 
   ###*
+    TODO: Split to more stores.
+    @param {app.LocalHistory} localHistory
     @constructor
     @extends {este.labs.Store}
   ###
-  constructor: ->
+  constructor: (@localHistory) ->
     super 'user'
     @setEmpty()
 
@@ -147,3 +149,23 @@ class app.user.Store extends este.labs.Store
   ###
   isLogged: ->
     return !!@user
+
+  ###*
+    @param {app.songs.Song} song
+    @return {Array.<string>}
+  ###
+  getSongLyricsLocalHistory: (song) ->
+    seen = {}
+
+    @localHistory
+      .of @
+      .map (store) ->
+        if store.newSong.id == song.id
+          return store.newSong.lyrics.trim()
+        store.songs?[song.id]?.lyrics.trim()
+      .filter (lyrics) ->
+        # Exists and has more than one word.
+        lyrics && lyrics.split(/\s+/).length > 1
+      .filter (lyrics) ->
+        return false if seen[lyrics]
+        seen[lyrics] = true

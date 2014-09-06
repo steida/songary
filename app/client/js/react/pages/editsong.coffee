@@ -1,6 +1,7 @@
 goog.provide 'app.react.pages.EditSong'
 
 goog.require 'app.songs.Song'
+goog.require 'goog.dom.classlist'
 goog.require 'goog.ui.Textarea'
 
 class app.react.pages.EditSong
@@ -12,11 +13,15 @@ class app.react.pages.EditSong
     @constructor
   ###
   constructor: (routes, userStore, touch) ->
-    {div,form,input,textarea,p,nav} = React.DOM
-    {a,button} = touch.none 'a', 'button'
+    {div,form,input,textarea,p,nav,ol,li} = React.DOM
+    {a,span,button} = touch.none 'a', 'span', 'button'
 
-    song = null
+    # Why not React state? Because it's not preserved over component life cycle.
     editMode = false
+    lyricsHistoryChanged = false
+    lyricsHistoryShown = false
+    previousLyricsHistory = null
+    song = null
 
     @component = React.createClass
 
@@ -52,6 +57,7 @@ class app.react.pages.EditSong
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
                 value: song.lyrics
+              @renderLocalHistory song
               p className: 'help-block',
                 a
                   href: 'http://linkesoft.com/songbook/chordproformat.html'
@@ -71,6 +77,35 @@ class app.react.pages.EditSong
               else
                 button className: 'btn btn-default', EditSong.MSG_CREATE_NEW_SONG
 
+      renderLocalHistory: (song) ->
+        lyricsHistory = @getLyricsHistory song
+        if previousLyricsHistory && lyricsHistory
+          lyricsHistoryChanged = previousLyricsHistory.join() != lyricsHistory.join()
+        previousLyricsHistory = lyricsHistory
+
+        return null if !lyricsHistory.length
+
+        lyrics = lyricsHistory.map (lyrics) ->
+          li key: lyrics, lyrics
+
+        span className: 'lyrics-history',
+          button
+            ref: 'lyrics-history-button'
+            className: 'btn btn-default'
+            onPointerUp: @onLyricsHistoryBtnPointerUp
+            type: 'button'
+          ,
+            if lyricsHistoryShown
+              EditSong.MSG_HIDE_LYRICS_HISTORY
+            else
+              EditSong.MSG_SHOW_LYRICS_HISTORY
+          lyricsHistoryShown && ol {}, lyrics
+          lyricsHistoryShown && p {}, EditSong.MSG_LYRICS_HISTORY_P
+
+      onLyricsHistoryBtnPointerUp: ->
+        lyricsHistoryShown = !lyricsHistoryShown
+        @forceUpdate()
+
       componentDidMount: ->
         @chordproTextarea_ = new goog.ui.Textarea ''
         @chordproTextarea_.decorate @refs['lyrics'].getDOMNode()
@@ -78,6 +113,16 @@ class app.react.pages.EditSong
       componentDidUpdate: ->
         # For update from other devices. Locally it's not needed.
         @chordproTextarea_.resize()
+        @doYellowFadeIfHistoryChanged()
+
+      doYellowFadeIfHistoryChanged: ->
+        if lyricsHistoryChanged
+          el = @refs['lyrics-history-button'].getDOMNode()
+          return if !el
+          goog.dom.classlist.remove el, 'yellow-fade'
+          setTimeout ->
+            goog.dom.classlist.add el, 'yellow-fade'
+          , 0
 
       componentWillUnmount: ->
         @chordproTextarea_.dispose()
@@ -103,12 +148,19 @@ class app.react.pages.EditSong
         userStore.trashSong song, !song.inTrash
         routes.home.redirect()
 
+      getLyricsHistory: (song) ->
+        userStore.getSongLyricsLocalHistory(song).filter (lyrics) ->
+          lyrics != song.lyrics
+
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method.
   @MSG_CREATE_NEW_SONG: goog.getMsg 'Add New Song'
   @MSG_DELETE: goog.getMsg 'Delete'
-  @MSG_RESTORE: goog.getMsg 'Restore'
+  @MSG_HIDE_LYRICS_HISTORY: goog.getMsg 'hide'
   @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to write lyrics'
+  @MSG_LYRICS_HISTORY_P: goog.getMsg 'This is just MVP version. Formatting, cleaning, merging etc. will be implemented later. For now, you can merge with copy&paste :-P'
+  @MSG_RESTORE: goog.getMsg 'Restore'
+  @MSG_SHOW_LYRICS_HISTORY: goog.getMsg 'show lyrics history'
   @MSG_SONG_ARTIST: goog.getMsg 'Artist (or band)'
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'

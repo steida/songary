@@ -40,3 +40,10 @@ class app.LocalHistory
     deepCopy = JSON.parse JSON.stringify store.toJson()
     array.push deepCopy
     array.shift() if array.length > LocalHistory.MAX_ITEMS_IN_ARRAY
+
+  ###*
+    @param {este.labs.Store} store
+    @return {Array.<Object>}
+  ###
+  of: (store) ->
+    @history[store.name] || []
