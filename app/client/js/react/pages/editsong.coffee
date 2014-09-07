@@ -91,16 +91,13 @@ class app.react.pages.EditSong
         span className: 'lyrics-history',
           button
             ref: 'lyrics-history-button'
-            className: 'btn btn-default'
+            className: 'btn btn-default ' + if lyricsHistoryShown then 'active' else ''
             onPointerUp: @onLyricsHistoryBtnPointerUp
             type: 'button'
-          ,
-            if lyricsHistoryShown
-              EditSong.MSG_HIDE_LYRICS_HISTORY
-            else
-              EditSong.MSG_SHOW_LYRICS_HISTORY
-          lyricsHistoryShown && ol {}, lyrics
-          lyricsHistoryShown && p {}, EditSong.MSG_LYRICS_HISTORY_P
+          , EditSong.MSG_LYRICS_HISTORY
+          lyricsHistoryShown && div {},
+            ol {}, lyrics
+            p {}, EditSong.MSG_LYRICS_HISTORY_P
 
       onLyricsHistoryBtnPointerUp: ->
         lyricsHistoryShown = !lyricsHistoryShown
@@ -116,7 +113,7 @@ class app.react.pages.EditSong
         @doYellowFadeIfHistoryChanged()
 
       doYellowFadeIfHistoryChanged: ->
-        if lyricsHistoryChanged
+        if !lyricsHistoryShown && lyricsHistoryChanged
           el = @refs['lyrics-history-button'].getDOMNode()
           return if !el
           goog.dom.classlist.remove el, 'yellow-fade'
@@ -149,18 +146,17 @@ class app.react.pages.EditSong
         routes.home.redirect()
 
       getLyricsHistory: (song) ->
-        userStore.getSongLyricsLocalHistory(song).filter (lyrics) ->
-          lyrics != song.lyrics
+        userStore.getSongLyricsLocalHistory song
+          .filter (lyrics) -> lyrics != song.lyrics
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method.
   @MSG_CREATE_NEW_SONG: goog.getMsg 'Add New Song'
   @MSG_DELETE: goog.getMsg 'Delete'
-  @MSG_HIDE_LYRICS_HISTORY: goog.getMsg 'hide'
   @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to write lyrics'
   @MSG_LYRICS_HISTORY_P: goog.getMsg 'This is just MVP version. Formatting, cleaning, merging etc. will be implemented later. For now, you can merge with copy&paste :-P'
   @MSG_RESTORE: goog.getMsg 'Restore'
-  @MSG_SHOW_LYRICS_HISTORY: goog.getMsg 'show lyrics history'
+  @MSG_LYRICS_HISTORY: goog.getMsg 'Lyrics History'
   @MSG_SONG_ARTIST: goog.getMsg 'Artist (or band)'
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'
