@@ -94,20 +94,23 @@ class app.Firebase
   ###
   fetchAndListenServerChanges_: (user) ->
     userJustLogged = true
+
     @userRef.on 'value', (snap) =>
       return if @isLocalChange_
-      val = snap.val()
 
+      val = snap.val()
       serverUserExists = val?.user?.uid
+
       if !serverUserExists
-        @saveNewUser user
-        return
+        val = @preserveChangesMadeBeforeSignUp user
+      else if userJustLogged
+        @moveChangesMadeBeforeLoginIntoTrash val
 
       @localHistory.update @userStore, val
 
       if userJustLogged
         userJustLogged = false
-        # Plain notify to sync local changes to server after user login.
+        # To save local changes to server after login.
         @userStore.notify()
       else
         @userStore.notify @
@@ -118,13 +121,38 @@ class app.Firebase
 
   ###*
     @param {Object} user Firebase user.
+    @return {Object}
     @private
   ###
-  saveNewUser: (user) ->
+  preserveChangesMadeBeforeSignUp: (user) ->
+    val = @userStore.toJson()
+    val.user = @getNewUser user
+    val
+
+  ###*
+    @param {Object} user Firebase user.
+    @return {Object} New app user.
+    @private
+  ###
+  getNewUser: (user) ->
     user = @userStore.authUserToAppUser user
-    # This will invoke server response as TIMESTAMP will be replaced.
     user.createdAt = window.Firebase.ServerValue.TIMESTAMP
-    @userRef.set user: user
+    user
+
+  ###*
+    @param {Object} val
+    @private
+  ###
+  moveChangesMadeBeforeLoginIntoTrash: (val) ->
+    songs = []
+    json = @userStore.toJson()
+    for id, song of json.songs
+      continue if !song.lyrics.trim()
+      song.inTrash = true
+      val.songs[id] = song
+    if json.newSong.lyrics.trim()
+      json.newSong.inTrash = true
+      val.songs[json.newSong.id] = json.newSong
 
   ###*
     @param {Object} user
