@@ -78,13 +78,13 @@ class app.Firebase
   onUserLogin: (user) ->
     @userRef = @userRefOf user
     @setUserLastOnlineOnDisconnect_()
-    @listenServerChanges_ user
+    @fetchAndListenServerChanges_ user
 
   ###*
     @private
   ###
   setUserLastOnlineOnDisconnect_: ->
-    @userRef.child('user/lastOnline')
+    @userRef.child 'user/lastOnline'
       .onDisconnect()
       .set window.Firebase.ServerValue.TIMESTAMP
 
@@ -92,11 +92,10 @@ class app.Firebase
     @param {Object} user Firebase user.
     @private
   ###
-  listenServerChanges_: (user) ->
+  fetchAndListenServerChanges_: (user) ->
     userJustLogged = true
     @userRef.on 'value', (snap) =>
       return if @isLocalChange_
-      console.log 'onServerValue'
       val = snap.val()
 
       serverUserExists = val?.user?.uid
@@ -115,8 +114,7 @@ class app.Firebase
 
     , (error) ->
       # TODO: Report to server.
-      if goog.DEBUG
-        console.log 'The read failed: ' + error.code
+      console.log 'The read failed: ' + error.code if goog.DEBUG
 
   ###*
     @param {Object} user Firebase user.
