@@ -11,7 +11,7 @@ class app.Title
   constructor: (@routes, @userStore) ->
 
   @MSG_ABOUT: goog.getMsg 'About'
-  @MSG_EDIT: goog.getMsg 'edit: '
+  @MSG_EDIT: goog.getMsg 'Edit: '
   @MSG_HOME: goog.getMsg 'Songary | Your Songbook'
   @MSG_ME: goog.getMsg 'Me'
   @MSG_NEW_SONG: goog.getMsg 'New Song'
