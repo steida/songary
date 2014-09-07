@@ -29,4 +29,4 @@ class app.react.Login
         firebase.loginViaFacebook()
 
   @MSG_LOGOUT: goog.getMsg 'Log Out'
-  @MSG_LOGIN: goog.getMsg 'Log In'
+  @MSG_LOGIN: goog.getMsg 'Login with Facebook'
