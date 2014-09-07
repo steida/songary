@@ -85,8 +85,8 @@ class app.react.pages.EditSong
 
         return null if !lyricsHistory.length
 
-        lyrics = lyricsHistory.map (lyrics) ->
-          li key: lyrics, lyrics
+        lyrics = lyricsHistory.map (lyrics) -> li key: lyrics, lyrics
+        lyrics.reverse()
 
         span className: 'lyrics-history',
           button
