@@ -16,9 +16,12 @@ class app.react.Login
 
       render: ->
         if userStore.isLogged()
-          button onPointerUp: @logout, Login.MSG_LOGOUT
+          @renderButton @logout, Login.MSG_LOGOUT
         else
-          button onPointerUp: @login, Login.MSG_LOGIN
+          @renderButton @login, Login.MSG_LOGIN
+
+      renderButton: (onPointerUp, label) ->
+        button className: 'btn btn-default', onPointerUp: onPointerUp, label
 
       logout: ->
         routes.home.redirect()
