@@ -71,12 +71,15 @@ class app.react.pages.EditSong
                   className: "btn btn-#{song.inTrash && 'default' || 'danger'}"
                   onPointerUp: @onToggleDeleteButtonPointerUp
                   type: 'button'
-                , if song.inTrash
-                    EditSong.MSG_RESTORE
-                  else
-                    EditSong.MSG_DELETE
+                , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
               else
                 button className: 'btn btn-default', EditSong.MSG_CREATE_NEW_SONG
+              if editMode
+                button
+                  className: 'btn btn-default'
+                  onPointerUp: @onPublishPointerUp
+                  type: 'button'
+                , EditSong.MSG_PUBLISH
 
       renderLocalHistory: (song) ->
         lyricsHistory = @getLyricsHistory song
@@ -152,8 +155,17 @@ class app.react.pages.EditSong
         userStore.getSongLyricsLocalHistory song
           .filter (lyrics) -> lyrics != song.lyrics
 
+      onPublishPointerUp: ->
+        if !userStore.isLogged()
+          alert EditSong.MSG_LOGIN_TO_PUBLISH
+          return
+        if !navigator.onLine
+          alert EditSong.MSG_MUST_BE_ONLINE
+          return
+        # console.log 'publish'
+
   # PATTERN: String localization. Remember, every string has to be wrapped with
-  # goog.getMsg method.
+  # goog.getMsg method for later string localization.
   @MSG_CREATE_NEW_SONG: goog.getMsg 'Add New Song'
   @MSG_DELETE: goog.getMsg 'Delete'
   @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to write lyrics'
@@ -163,3 +175,6 @@ class app.react.pages.EditSong
   @MSG_SONG_ARTIST: goog.getMsg 'Artist (or band)'
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'
+  @MSG_PUBLISH: goog.getMsg 'Publish'
+  @MSG_LOGIN_TO_PUBLISH: goog.getMsg 'You must be logged to publish song.'
+  @MSG_MUST_BE_ONLINE: goog.getMsg 'You must be online to publish song. Check your internet connection please.'
