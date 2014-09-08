@@ -161,8 +161,8 @@ class app.user.Store extends este.labs.Store
       .of @
       .map (store) ->
         if store.newSong.id == song.id
-          return store.newSong.lyrics.trim()
-        store.songs?[song.id]?.lyrics.trim()
+          return store.newSong?.lyrics?.trim()
+        store.songs?[song.id]?.lyrics?.trim()
       .filter (lyrics) ->
         # Exists and has more than one word.
         lyrics && lyrics.split(/\s+/).length > 1
