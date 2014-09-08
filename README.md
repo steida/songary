@@ -36,13 +36,13 @@ Flux is nice pattern. You can read long articles about it, or read distilled hap
 
 Instead of traditional [Ember computed properties](http://emberjs.com/guides/object-model/computed-properties/) or [Backbone model events](http://backbonejs.org/#Events), or [Angular scope hierarchies and scope events](https://docs.angularjs.org/guide/scope), there is just one Dispatcher.
 
-Why? Because with Angular/Ember/Backbone declarative approach, you are mixing two concerns: Model definition and data flow. Such approach is very hard to maintain for larger applications. Yes, it works great for for simple demos, but it does not scale. Flux embraces actions as independent app first class citizens. 
+Why? Because with Angular/Ember/Backbone declarative approach, you are mixing two concerns: Model definition and data flow. Such approach is very hard to maintain for larger applications. Yes, it works great for simple demos, but it does not scale. Flux embraces actions as independent app first class citizens. 
 
-Imagine you have two models, A and B. And you would like to change B whenever A is updated. Events and computed properties works well, unless you need to update A without B be also changed. Got it? Flux uses waitFor method to explicitly describe what should be changed in which order.
+Imagine you have two models, A and B. And you would like to change B whenever A is changed. Events and computed properties works well, unless you need to change A without B be also changed. Got it? Flux uses waitFor method to explicitly describe what should be changed in which order.
 
-And Songary? Songary is an isomorphic offline first app. Stores holds the app state, but persistence must be handled out of them, because the same store must works both on client(browser) and server(Node.js). 
+And Songary? Songary is an isomorphic offline first app. Stores holds the app state, but persistence must be handled out of them, because the same store must work both on client(browser) and server(Node.js) side.
 
-In Flux there is a strict rule, every user action must be encapsuled into action. Then responsible store has to register itself to handle change somehow. Songary almost always prefers to call method on store. Method can change store state immediately, and it's ok, but it can also dispatch change event for Storage, and Storage can orchestrate cascading changes between various stores.
+In Flux there is a rule, every user action must be encapsuled into action. Then responsible store has to register itself to handle change somehow. Songary almost always prefer to call store method. Method can change store state immediately and it's ok, but it can also dispatch change event for Storage, and Storage can orchestrate cascading changes between various stores in a similar manner like Flux Dispatcher.
 
 
 
