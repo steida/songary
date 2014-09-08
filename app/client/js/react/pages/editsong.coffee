@@ -57,7 +57,8 @@ class app.react.pages.EditSong
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
                 value: song.lyrics
-              @renderLocalHistory song
+              userStore.isLogged() &&
+                @renderLocalHistory song
               p className: 'help-block',
                 a
                   href: 'http://linkesoft.com/songbook/chordproformat.html'
@@ -79,7 +80,8 @@ class app.react.pages.EditSong
 
       renderLocalHistory: (song) ->
         lyricsHistory = @getLyricsHistory song
-        if previousLyricsHistory && lyricsHistory
+
+        if previousLyricsHistory
           lyricsHistoryChanged = previousLyricsHistory.join() != lyricsHistory.join()
         previousLyricsHistory = lyricsHistory
 
@@ -95,9 +97,10 @@ class app.react.pages.EditSong
             onPointerUp: @onLyricsHistoryBtnPointerUp
             type: 'button'
           , EditSong.MSG_LYRICS_HISTORY
-          lyricsHistoryShown && div {},
-            ol {}, lyrics
-            p {}, EditSong.MSG_LYRICS_HISTORY_P
+          lyricsHistoryShown &&
+            div {},
+              ol {}, lyrics
+              p {}, EditSong.MSG_LYRICS_HISTORY_P
 
       onLyricsHistoryBtnPointerUp: ->
         lyricsHistoryShown = !lyricsHistoryShown
