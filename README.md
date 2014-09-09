@@ -10,9 +10,9 @@ Read [Este.js](https://github.com/steida/este).
 
 ## Learn
 
-How? Just read code, there are plethora of comments. 
+Just read source code, there are plethora of comments. 
 
-### Illustrated Techniques
+### Used Techniques
   - frontend/mobile/offline first
   - isomorphic web apps
   - Closure Tools
@@ -20,7 +20,7 @@ How? Just read code, there are plethora of comments.
   - Polymer PointerEvents
   - one way data flow
   - clean architecture
-  - promises everywhere
+  - Promises
   - app state stored in stores instead of React props and state
   - app state immediately persisted in LocalStorage
   - pending navigation
