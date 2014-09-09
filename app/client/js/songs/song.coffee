@@ -8,7 +8,7 @@ class app.songs.Song
   ###*
     @constructor
   ###
-  constructor: () ->
+  constructor: ->
     ###*
       @type {string}
       @const

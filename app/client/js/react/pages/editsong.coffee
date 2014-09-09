@@ -74,7 +74,7 @@ class app.react.pages.EditSong
                 , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
               else
                 button className: 'btn btn-default', EditSong.MSG_CREATE_NEW_SONG
-              if editMode
+              if editMode && !song.inTrash
                 button
                   className: 'btn btn-default'
                   onPointerUp: @onPublishPointerUp
@@ -156,12 +156,15 @@ class app.react.pages.EditSong
           .filter (lyrics) -> lyrics != song.lyrics
 
       onPublishPointerUp: ->
+        # TODO: Extract to something and use Promises.
         if !userStore.isLogged()
           alert EditSong.MSG_LOGIN_TO_PUBLISH
           return
         if !navigator.onLine
           alert EditSong.MSG_MUST_BE_ONLINE
           return
+        # actions.publishSong song, userStore.user.uid
+        # fok.publishSong
         # console.log 'publish'
 
   # PATTERN: String localization. Remember, every string has to be wrapped with

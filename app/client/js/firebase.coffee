@@ -102,9 +102,9 @@ class app.Firebase
       serverUserExists = val?.user?.uid
 
       if !serverUserExists
-        val = @preserveChangesMadeBeforeSignUp user
+        val = @migrateLocalChangesToServer user
       else if userJustLogged
-        @moveChangesMadeBeforeLoginIntoTrash val
+        @mergeLocalChangesToServer val
 
       @localHistory.update @userStore, val
 
@@ -124,7 +124,7 @@ class app.Firebase
     @return {Object}
     @private
   ###
-  preserveChangesMadeBeforeSignUp: (user) ->
+  migrateLocalChangesToServer: (user) ->
     val = @userStore.toJson()
     val.user = @getNewUser user
     val
@@ -143,15 +143,13 @@ class app.Firebase
     @param {Object} val
     @private
   ###
-  moveChangesMadeBeforeLoginIntoTrash: (val) ->
+  mergeLocalChangesToServer: (val) ->
     songs = []
     json = @userStore.toJson()
     for id, song of json.songs
       continue if !song.lyrics.trim()
-      song.inTrash = true
       val.songs[id] = song
     if json.newSong.lyrics.trim()
-      json.newSong.inTrash = true
       val.songs[json.newSong.id] = json.newSong
 
   ###*

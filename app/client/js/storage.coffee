@@ -78,16 +78,16 @@ class app.Storage extends este.labs.Storage
     @private
   ###
   onStoreChange: (store, e) ->
-    # Store was changed by LocalStorage change from another browser tab/window.
-    # No need to do anything.
-    return if e.target instanceof app.LocalStorage
+    # Ignore changes from the same origin browser window or tab.
+    if e.target instanceof app.LocalStorage
+      return
 
-    # Store was changed by Firebase, save new changes to LocalStorage.
+    # Save changes from Firebase to LocalStorage.
     if e.target instanceof app.Firebase
       @saveStoreToClient store, @deepCopy store.toJson()
       return
 
-    # Store was changed locally. Postpone saving to save net traffic and CPU.
+    # Save all changes throttled.
     @pendingStores.add store
     @save.fire()
 

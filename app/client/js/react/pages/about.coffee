@@ -64,5 +64,5 @@ class app.react.pages.About
 
   @MSG_ABOUT: goog.getMsg 'Songary. Your songbook.'
   @MSG_SEND_PLACEHOLDER: goog.getMsg 'Compliments, complaints, or suggestions.'
-  @MSG_SEND_BUTTON_LABEL: goog.getMsg 'Let us know '
+  @MSG_SEND_BUTTON_LABEL: goog.getMsg 'Let Us Know'
   @MSG_THANK_YOU: goog.getMsg 'Thank you.'
