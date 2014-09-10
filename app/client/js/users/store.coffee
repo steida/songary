@@ -27,6 +27,11 @@ class app.user.Store extends este.labs.Store
   songs: null
 
   ###*
+    @type {Object.<string,string>}
+  ###
+  publishedSongs: null
+
+  ###*
     @type {Object} Auth user.
   ###
   user: null
@@ -34,6 +39,7 @@ class app.user.Store extends este.labs.Store
   setEmpty: ->
     @newSong = new app.songs.Song
     @songs = []
+    @publishedSongs = {}
     @user = null
 
   ###*
@@ -111,6 +117,7 @@ class app.user.Store extends este.labs.Store
     json =
       newSong: @newSong
       user: @user
+      publishedSongs: @publishedSongs
     if @songs.length
       json.songs = @asObject @songs
     json
@@ -122,6 +129,7 @@ class app.user.Store extends este.labs.Store
     @newSong = @instanceFromJson app.songs.Song, json.newSong
     @songs = @asArray(json.songs || {}).map @instanceFromJson app.songs.Song
     @user = @authUserToAppUser json.user if json.user
+    @publishedSongs = json.publishedSongs || {}
 
   ###*
     @param {Object} authUser Auth user.
@@ -169,3 +177,18 @@ class app.user.Store extends este.labs.Store
       .filter (lyrics) ->
         return false if seen[lyrics]
         seen[lyrics] = true
+
+  ###*
+    @param {string} id
+    @param {string} url
+  ###
+  addPublishedSong: (id, url) ->
+    @publishedSongs[id] = url
+    @notify()
+
+  ###*
+    @param {string} id
+  ###
+  removePublishedSong: (id) ->
+    delete @publishedSongs[id]
+    @notify()

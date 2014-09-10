@@ -1,5 +1,6 @@
 goog.provide 'app.Firebase'
 
+goog.require 'este.string'
 goog.require 'goog.asserts'
 
 class app.Firebase
@@ -23,6 +24,11 @@ class app.Firebase
   ###*
     @type {Firebase}
   ###
+  songsRef: null
+
+  ###*
+    @type {Firebase}
+  ###
   userRef: null
 
   ###*
@@ -38,6 +44,7 @@ class app.Firebase
     # TODO: Use server data for path, make it isomorphic.
     return if !window.Firebase
     @rootRef = new window.Firebase 'https://shining-fire-6810.firebaseio.com/'
+    @songsRef = @rootRef.child 'songs'
 
   ###*
     TODO: Do it on server side.
@@ -78,7 +85,7 @@ class app.Firebase
   onUserLogin: (user) ->
     @userRef = @userRefOf user
     @setUserLastOnlineOnDisconnect_()
-    @fetchAndListenServerChanges_ user
+    @fetchAndListenServerUserChanges_ user
 
   ###*
     @private
@@ -92,7 +99,7 @@ class app.Firebase
     @param {Object} user Firebase user.
     @private
   ###
-  fetchAndListenServerChanges_: (user) ->
+  fetchAndListenServerUserChanges_: (user) ->
     userJustLogged = true
 
     @userRef.on 'value', (snap) =>
@@ -126,7 +133,7 @@ class app.Firebase
   ###
   migrateLocalChangesToServer: (user) ->
     val = @userStore.toJson()
-    val.user = @getNewUser user
+    val.user = @createNewUser user
     val
 
   ###*
@@ -134,7 +141,7 @@ class app.Firebase
     @return {Object} New app user.
     @private
   ###
-  getNewUser: (user) ->
+  createNewUser: (user) ->
     user = @userStore.authUserToAppUser user
     user.createdAt = window.Firebase.ServerValue.TIMESTAMP
     user
@@ -214,3 +221,52 @@ class app.Firebase
         uid: uid
         displayName: displayName
         message: message
+
+  ###*
+    @param {app.songs.Song} song
+  ###
+  publishSong: (song) ->
+    json = song.toJson()
+    json.publisher = @userStore.user.uid
+    url = "#{json.urlArtist}/#{json.urlName}"
+
+    payload =
+      'byUpdated': window.Firebase.ServerValue.TIMESTAMP
+      'byUrl': url
+      'byName': este.string.removeDiacritics json.name.toLowerCase()
+      'byArtist': este.string.removeDiacritics json.artist.toLowerCase()
+
+    promises = for path, priority of payload
+      new goog.Promise (resolve, reject) =>
+        @songsRef
+          .child path
+          .child json.id
+          .setWithPriority json, priority, (e) ->
+            if e then reject e else resolve()
+
+    goog.Promise.all promises
+      .then (value) =>
+        @userStore.addPublishedSong json.id, url
+      .thenCatch (reason) =>
+        alert reason
+
+  ###*
+    @param {app.songs.Song} song
+  ###
+  unpublishSong: (song) ->
+    json = song.toJson()
+    paths = ['byUpdated', 'byUrl', 'byName', 'byArtist']
+
+    promises = for path in paths
+      new goog.Promise (resolve, reject) =>
+        @songsRef
+          .child path
+          .child json.id
+          .remove (e) ->
+            if e then reject e else resolve()
+
+    goog.Promise.all promises
+      .then (value) =>
+        @userStore.removePublishedSong json.id
+      .thenCatch (reason) =>
+        alert reason

@@ -16,6 +16,7 @@
 class appUserStore
   appUserStore::songs
   appUserStore::newSong
+  appUserStore::publishedSongs
   # User.
   appUserStore::user
   # User props and nested props.
@@ -42,6 +43,7 @@ class appSongsSong
   appSongsSong::creator
   appSongsSong::lyrics
   appSongsSong::inTrash
+  appSongsSong::publisher
 
 class appRoutesParams
   appRoutesParams::id
@@ -116,13 +118,13 @@ class Firebase
 
   ###*
     @param {(Object|string|number|boolean)} value
-    @param {(string|number)} priority
+    @param {(string|number|Object)} priority
     @param {Function=} onComplete
   ###
   setWithPriority: (value, priority, onComplete) ->
 
   ###*
-    @param {(string|number)} priority
+    @param {(string|number|Object)} priority
     @param {Function=} onComplete
   ###
   setPriority: (priority, onComplete) ->

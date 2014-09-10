@@ -10,9 +10,10 @@ class app.react.pages.EditSong
     @param {app.Routes} routes
     @param {app.user.Store} userStore
     @param {app.react.Touch} touch
+    @param {app.Firebase} firebase
     @constructor
   ###
-  constructor: (routes, userStore, touch) ->
+  constructor: (routes, userStore, touch, firebase) ->
     {div,form,input,textarea,p,nav,ol,li} = React.DOM
     {a,span,button} = touch.none 'a', 'span', 'button'
 
@@ -28,6 +29,7 @@ class app.react.pages.EditSong
       render: ->
         song = @props.song ? userStore.newSong
         editMode = !!@props.song
+        publishedSong = song.id of userStore.publishedSongs
 
         div className: 'page',
           form autoComplete: 'off', onSubmit: @onFormSubmit, ref: 'form', role: 'form',
@@ -59,12 +61,12 @@ class app.react.pages.EditSong
                 value: song.lyrics
               userStore.isLogged() &&
                 @renderLocalHistory song
-              p className: 'help-block',
-                a
-                  href: 'http://linkesoft.com/songbook/chordproformat.html'
-                  target: '_blank'
-                , EditSong.MSG_HOW_TO_WRITE_LYRICS
-                '.'
+              !song.inTrash &&
+                p className: 'help-block',
+                  a
+                    href: 'http://linkesoft.com/songbook/chordproformat.html'
+                    target: '_blank'
+                  , EditSong.MSG_HOW_TO_WRITE_LYRICS
             nav {},
               if editMode
                 button
@@ -80,6 +82,19 @@ class app.react.pages.EditSong
                   onPointerUp: @onPublishPointerUp
                   type: 'button'
                 , EditSong.MSG_PUBLISH
+              if editMode && publishedSong
+                button
+                  className: 'btn btn-default'
+                  onPointerUp: @onUnpublishPointerUp
+                  type: 'button'
+                , EditSong.MSG_UNPUBLISH
+            if editMode && publishedSong
+              p {},
+                a
+                  href: '/' + userStore.publishedSongs[song.id]
+                  ref: 'published-song-link'
+                  target: '_blank'
+                , location.host + '/' + userStore.publishedSongs[song.id]
 
       renderLocalHistory: (song) ->
         lyricsHistory = @getLyricsHistory song
@@ -156,16 +171,25 @@ class app.react.pages.EditSong
           .filter (lyrics) -> lyrics != song.lyrics
 
       onPublishPointerUp: ->
-        # TODO: Extract to something and use Promises.
         if !userStore.isLogged()
           alert EditSong.MSG_LOGIN_TO_PUBLISH
           return
         if !navigator.onLine
           alert EditSong.MSG_MUST_BE_ONLINE
           return
-        # actions.publishSong song, userStore.user.uid
-        # fok.publishSong
-        # console.log 'publish'
+        firebase.publishSong song
+          .then =>
+            link = @refs['published-song-link'].getDOMNode()
+            goog.dom.classlist.remove link, 'yellow-fade'
+            setTimeout ->
+              goog.dom.classlist.add link, 'yellow-fade'
+            , 0
+
+      onUnpublishPointerUp: ->
+        if !navigator.onLine
+          alert EditSong.MSG_MUST_BE_ONLINE
+          return
+        firebase.unpublishSong song
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method for later string localization.
@@ -179,5 +203,6 @@ class app.react.pages.EditSong
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'
   @MSG_PUBLISH: goog.getMsg 'Publish'
+  @MSG_UNPUBLISH: goog.getMsg 'Unpublish'
   @MSG_LOGIN_TO_PUBLISH: goog.getMsg 'You must be logged to publish song.'
   @MSG_MUST_BE_ONLINE: goog.getMsg 'You must be online to publish song. Check your internet connection please.'

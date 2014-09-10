@@ -51,6 +51,12 @@ class app.songs.Song
   inTrash: false
 
   ###*
+    User uid.
+    @type {?string}
+  ###
+  publisher: null
+
+  ###*
     @return {Array.<app.ValidationError>}
   ###
   validate: ->
@@ -80,3 +86,6 @@ class app.songs.Song
 
   getDisplayLyrics: ->
     @lyrics || Song.MSG_MISSING_LYRICS
+
+  toJson: ->
+    JSON.parse JSON.stringify @
