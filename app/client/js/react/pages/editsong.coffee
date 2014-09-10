@@ -94,7 +94,7 @@ class app.react.pages.EditSong
                 a
                   href: '/' + userStore.publishedSongs[song.id]
                   ref: 'published-song-link'
-                  target: '_blank'
+                  # target: '_blank'
                 , location.host + '/' + userStore.publishedSongs[song.id]
 
       renderLocalHistory: (song) ->

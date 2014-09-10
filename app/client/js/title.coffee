@@ -6,9 +6,10 @@ class app.Title
     Isomorphic app title.
     @param {app.Routes} routes
     @param {app.user.Store} userStore
+    @param {app.songs.Store} songsStore
     @constructor
   ###
-  constructor: (@routes, @userStore) ->
+  constructor: (@routes, @userStore, @songsStore) ->
 
   @MSG_ABOUT: goog.getMsg 'About'
   @MSG_EDIT: goog.getMsg 'Edit: '
@@ -21,20 +22,21 @@ class app.Title
   get: ->
     switch @routes.active
       when @routes.about then Title.MSG_ABOUT
-      when @routes.editSong then @getEditSongTitle()
       when @routes.home then Title.MSG_HOME
       when @routes.me then Title.MSG_ME
-      when @routes.mySong then @getMySongTitle()
+      when @routes.song then @getSongTitle @songsStore.songByUrl()
+      when @routes.mySong, @routes.editSong
+        song = @userStore.songByRoute @routes.active
+        return Title.MSG_NOT_FOUND if !song
+        title = @getSongTitle song
+        switch @routes.active
+          when @routes.mySong then title
+          when @routes.editSong then Title.MSG_EDIT + title
       when @routes.newSong then Title.MSG_NEW_SONG
       when @routes.trash then Title.MSG_TRASH
       else Title.MSG_NOT_FOUND
 
-  getMySongTitle: ->
-    song = @userStore.songByRoute @routes.active
-    return Title.MSG_NOT_FOUND if !song
+  getSongTitle: (song) ->
     Title.MSG_SONG = goog.getMsg '{$name} - {$artist}',
       name: song.getDisplayName()
       artist: song.getDisplayArtist()
-
-  getEditSongTitle: ->
-    Title.MSG_EDIT + @getMySongTitle()

@@ -25,9 +25,11 @@ class app.react.pages.Song
       viewportMonitor: null
 
       render: ->
+        song = @props.song
+
         div className: 'page', onPointerUp: @onSongPointerUp,
           article
-            dangerouslySetInnerHTML: '__html': @lyricsHtml()
+            dangerouslySetInnerHTML: '__html': @lyricsHtml song
             ref: 'article'
           menu
             className: 'hidden'
@@ -42,14 +44,14 @@ class app.react.pages.Song
             menuitem
               onPointerUp: @onFontResizeButtonPointerUp.bind @, false
             , '-'
-            a href: routes.editSong.url(@props.song), Song.MSG_EDIT
+            a href: routes.editSong.url(song), Song.MSG_EDIT
 
       ref: (name) ->
         @refs[name].getDOMNode()
 
-      lyricsHtml: ->
+      lyricsHtml: (song) ->
         goog.string
-          .htmlEscape @props.song.getDisplayLyrics()
+          .htmlEscape song.getDisplayLyrics()
           .replace /\[([^\]]+)\]/g, (str, chord) ->
             "<sup>#{chord}</sup>"
 

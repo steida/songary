@@ -270,3 +270,17 @@ class app.Firebase
         @userStore.removePublishedSong json.id
       .thenCatch (reason) =>
         alert reason
+
+  ###*
+    @param {string} url
+    @return {goog.Promise}
+  ###
+  getSongByUrl: (url) ->
+    new goog.Promise (resolve, reject) =>
+      @songsRef
+        .child 'byUrl'
+        .equalTo url
+        .once 'value', (snapshot) ->
+          resolve snapshot.val()
+        , (err) ->
+          reject err

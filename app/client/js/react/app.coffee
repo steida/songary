@@ -6,9 +6,10 @@ goog.require 'goog.events'
 class app.react.App
 
   ###*
-    @param {app.user.Store} userStore
     @param {app.Routes} routes
     @param {app.Title} appTitle
+    @param {app.user.Store} userStore
+    @param {app.songs.Store} songsStore
     @param {app.react.Header} header
     @param {app.react.Footer} footer
     @param {app.react.pages.MySongs} mySongs
@@ -20,7 +21,8 @@ class app.react.App
     @param {app.react.pages.Me} mePage
     @constructor
   ###
-  constructor: (userStore, routes, appTitle,
+  constructor: (routes, appTitle,
+      userStore, songsStore,
       header, footer,
       mySongs, editSongPage, songPage, notFoundPage, trashPage, aboutPage,
       mePage) ->
@@ -42,6 +44,9 @@ class app.react.App
         switch routes.active
           when routes.home then mySongs
           when routes.newSong then editSongPage
+          when routes.song
+            props.song = songsStore.songByUrl()
+            songPage
           when routes.mySong, routes.editSong
             @getLocalSongPage props
           when routes.trash then trashPage
@@ -53,6 +58,7 @@ class app.react.App
 
       getLocalSongPage: (props) ->
         song = userStore.songByRoute routes.active
+        # Local song can be removed any time, for instance in different tab.
         return notFoundPage if !song
         props.song = song
         switch routes.active

@@ -11,6 +11,7 @@ class app.Routes extends este.Routes
   constructor: ->
     @home = @route '/'
     @about = @route '/about'
+    @song = @route '/:name/:artist'
     @me = @route '/@me'
     @newSong = @route '/@me/songs/new'
     @trash = @route '/@me/songs/trash'

@@ -13,11 +13,12 @@ class app.Storage extends este.labs.Storage
     @param {app.Firebase} firebase
     @param {app.Routes} routes
     @param {app.user.Store} userStore
+    @param {app.songs.Store} songsStore
     @constructor
     @extends {este.labs.Storage}
     @final
   ###
-  constructor: (@localStorage, @firebase, @routes, @userStore) ->
+  constructor: (@localStorage, @firebase, @routes, @userStore, @songsStore) ->
     super()
 
     @stores = [@userStore]
@@ -103,10 +104,10 @@ class app.Storage extends este.labs.Storage
         if !@userStore.songById params.id
           return @notFound()
       when @routes.song
-        @firebase
+        return @firebase
           .getSongByUrl params.name + '/' + params.artist
-          .then (value) ->
-            # měl bych to nastavit na store
-            console.log value
-
+          .then (value) =>
+            if !value
+              throw goog.net.HttpStatus.NOT_FOUND
+            @songsStore.songsByUrl = value
     @ok()
