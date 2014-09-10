@@ -128,7 +128,7 @@ class app.user.Store extends este.labs.Store
   fromJson: (json) ->
     @newSong = @instanceFromJson app.songs.Song, json.newSong
     @songs = @asArray(json.songs || {}).map @instanceFromJson app.songs.Song
-    @user = @authUserToAppUser json.user if json.user
+    @user = if json.user then @authUserToAppUser json.user else null
     @publishedSongs = json.publishedSongs || {}
 
   ###*

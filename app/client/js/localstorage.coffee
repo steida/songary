@@ -121,19 +121,19 @@ class app.LocalStorage
       return if !store
 
       # Because FirebaseSimpleLogin does not propagate login state across
-      # browser windows, we need to track change manually.
+      # windows/tabs, we need to track change manually.
       if store instanceof app.user.Store
-        userWasLogged = !!store.user
+        userWasLogged = store.isLogged()
 
       # TODO: Try/Catch in case of error. Report error to server.
       json = (`/** @type {Object} */`) JSON.parse browserEvent.newValue
       store.fromJson json
       store.notify @
 
-      # Reload browser on user login state change.
+      # Reload window/tab if user login state has changed.
       if store instanceof app.user.Store
-        userLogged = !userWasLogged && store.user
-        userLogout = userWasLogged && !store.user
+        userLogged = !userWasLogged && store.isLogged()
+        userLogout = userWasLogged && !store.isLogged()
         location.reload() if userLogged || userLogout
 
   ###*
