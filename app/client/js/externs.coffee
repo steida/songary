@@ -183,6 +183,20 @@ class Firebase
   startAt: (priority, name) ->
 
   ###*
+    @param {(string|number)=} priority
+    @param {(string|number)=} name
+    @return {Firebase} Actually it returns Query
+  ###
+  endAt: (priority, name) ->
+
+  ###*
+    @param {(string|number)=} priority
+    @param {(string|number)=} name
+    @return {Firebase} Actually it returns Query
+  ###
+  equalTo: (priority, name) ->
+
+  ###*
     Get a Firebase reference to the Query's location.
     @return {Firebase}
   ###
