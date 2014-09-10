@@ -18,7 +18,9 @@ class app.react.pages.Me
       render: ->
         user = userStore.user
         publishedSongs = for id, url of userStore.publishedSongs
-          li {}, a href: routes.editSong.url(id: id), url
+          href = routes.myPublishedSongUrl id
+          li key: id,
+            a href: href, location.host + href
 
         div className: 'page',
           p {}, @getWelcomeMessage user.displayName

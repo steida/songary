@@ -92,9 +92,9 @@ class app.react.pages.EditSong
               p {},
                 EditSong.MSG_SONG_WAS_PUBLISHED + ' '
                 a
-                  href: '/' + userStore.publishedSongs[song.id]
+                  href: routes.myPublishedSongUrl song.id
                   ref: 'published-song-link'
-                , location.host + '/' + userStore.publishedSongs[song.id]
+                , location.host + routes.myPublishedSongUrl song.id
                 '.'
 
       renderLocalHistory: (song) ->

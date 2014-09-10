@@ -5,10 +5,11 @@ goog.require 'este.Routes'
 class app.Routes extends este.Routes
 
   ###*
+    @param {app.user.Store} userStore
     @constructor
     @extends {este.Routes}
   ###
-  constructor: ->
+  constructor: (userStore) ->
     @home = @route '/'
     @about = @route '/about'
     @song = @route '/:name/:artist'
@@ -17,3 +18,10 @@ class app.Routes extends este.Routes
     @trash = @route '/@me/songs/trash'
     @editSong = @route '/@me/songs/:id/edit'
     @mySong = @route '/@me/songs/:id'
+
+    ###*
+      @param {string} songId
+      @return {string}
+    ###
+    @myPublishedSongUrl = (songId) ->
+      '/' + userStore.publishedSongs[songId]
