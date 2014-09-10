@@ -6,26 +6,27 @@ class app.react.pages.MySongs
     @param {app.Routes} routes
     @param {app.user.Store} userStore
     @param {app.react.Touch} touch
+    @param {app.Firebase} firebase
     @constructor
   ###
-  constructor: (routes, userStore, touch) ->
-    {div,h1,ul,li,p,nav} = React.DOM
+  constructor: (routes, userStore, touch, firebase) ->
+    {div,h1,ul,li,p,nav,button} = React.DOM
     {a} = touch.scroll 'a'
 
     @component = React.createClass
 
       render: ->
         allSongs = userStore.songsSortedByName()
-        songs = allSongs.filter (song) -> !song.inTrash
+        songs = allSongs
+          .filter (song) -> !song.inTrash
+          .map (song) ->
+            li key: song.id, a href: routes.mySong.url(song),
+              "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
         deletedSongs = allSongs.filter (song) -> song.inTrash
 
         div className: 'page',
           if songs.length
-            ul className: 'songs',
-              songs.map (song) ->
-                li key: song.id,
-                  a href: routes.mySong.url(song),
-                    "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
+            ul className: 'songs', songs
           else
             p {}, MySongs.MSG_NO_SONGS
           nav {},
