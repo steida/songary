@@ -29,7 +29,7 @@ class app.react.pages.EditSong
       render: ->
         song = @props.song ? userStore.newSong
         editMode = !!@props.song
-        publishedSong = song.id of userStore.publishedSongs
+        isPublishedSong = song.id of userStore.publishedSongs
 
         div className: 'page',
           form autoComplete: 'off', onSubmit: @onFormSubmit, ref: 'form', role: 'form',
@@ -82,14 +82,15 @@ class app.react.pages.EditSong
                   onPointerUp: @onPublishPointerUp
                   type: 'button'
                 , EditSong.MSG_PUBLISH
-              if editMode && publishedSong
+              if editMode && isPublishedSong
                 button
                   className: 'btn btn-default'
                   onPointerUp: @onUnpublishPointerUp
                   type: 'button'
                 , EditSong.MSG_UNPUBLISH
-            if editMode && publishedSong
+            if editMode && isPublishedSong
               p {},
+                EditSong.MSG_SONG_WAS_PUBLISHED + ' '
                 a
                   href: '/' + userStore.publishedSongs[song.id]
                   ref: 'published-song-link'
@@ -196,3 +197,4 @@ class app.react.pages.EditSong
   @MSG_UNPUBLISH: goog.getMsg 'Unpublish'
   @MSG_LOGIN_TO_PUBLISH: goog.getMsg 'You must be logged to publish song.'
   @MSG_MUST_BE_ONLINE: goog.getMsg 'You must be online to publish song. Check your internet connection please.'
+  @MSG_SONG_WAS_PUBLISHED: goog.getMsg 'Song has been published:'
