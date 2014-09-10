@@ -31,24 +31,19 @@ class app.react.App
 
       render: ->
         pageProps = {}
-        page = @page pageProps
+        page = @getActivePage pageProps
 
-        div className: 'app active-page-' + @pageClassName(page),
+        div className: 'app active-page-' + @getPageClassName(page),
           header.component()
           page.component pageProps
           footer.component()
 
-      page: (props) ->
+      getActivePage: (props) ->
         switch routes.active
           when routes.home then mySongs
           when routes.newSong then editSongPage
           when routes.mySong, routes.editSong
-            song = userStore.songByRoute routes.active
-            return notFoundPage if !song
-            props.song = song
-            switch routes.active
-              when routes.mySong then songPage
-              when routes.editSong then editSongPage
+            @getLocalSongPage props
           when routes.trash then trashPage
           when routes.about then aboutPage
           when routes.me
@@ -56,7 +51,15 @@ class app.react.App
             mePage
           else notFoundPage
 
-      pageClassName: (page) ->
+      getLocalSongPage: (props) ->
+        song = userStore.songByRoute routes.active
+        return notFoundPage if !song
+        props.song = song
+        switch routes.active
+          when routes.mySong then songPage
+          when routes.editSong then editSongPage
+
+      getPageClassName: (page) ->
         switch page
           when aboutPage then 'about'
           when editSongPage then 'edit-song'
