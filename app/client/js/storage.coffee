@@ -8,6 +8,8 @@ goog.require 'goog.structs.Set'
 class app.Storage extends este.labs.Storage
 
   ###*
+    Storage manages stores state. Store itself should not load nor save anything
+    directly since it's used both on client and server side.
     @param {app.LocalStorage} localStorage
     @param {app.Firebase} firebase
     @param {app.Routes} routes
