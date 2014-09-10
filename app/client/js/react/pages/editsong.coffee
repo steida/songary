@@ -1,19 +1,19 @@
 goog.provide 'app.react.pages.EditSong'
 
 goog.require 'app.songs.Song'
-goog.require 'goog.dom.classlist'
 goog.require 'goog.ui.Textarea'
 
 class app.react.pages.EditSong
 
   ###*
-    @param {app.Routes} routes
-    @param {app.user.Store} userStore
-    @param {app.react.Touch} touch
     @param {app.Firebase} firebase
+    @param {app.Routes} routes
+    @param {app.react.Touch} touch
+    @param {app.react.YellowFade} yellowFade
+    @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (routes, userStore, touch, firebase) ->
+  constructor: (firebase, routes, touch, yellowFade, userStore) ->
     {div,form,input,textarea,p,nav,ol,li} = React.DOM
     {a,span,button} = touch.none 'a', 'span', 'button'
 
@@ -135,12 +135,7 @@ class app.react.pages.EditSong
 
       doYellowFadeIfHistoryChanged: ->
         if !lyricsHistoryShown && lyricsHistoryChanged
-          el = @refs['lyrics-history-button'].getDOMNode()
-          return if !el
-          goog.dom.classlist.remove el, 'yellow-fade'
-          setTimeout ->
-            goog.dom.classlist.add el, 'yellow-fade'
-          , 0
+          yellowFade.on @refs['lyrics-history-button'].getDOMNode()
 
       componentWillUnmount: ->
         @chordproTextarea_.dispose()
@@ -178,12 +173,7 @@ class app.react.pages.EditSong
           alert EditSong.MSG_MUST_BE_ONLINE
           return
         firebase.publishSong song
-          .then =>
-            link = @refs['published-song-link'].getDOMNode()
-            goog.dom.classlist.remove link, 'yellow-fade'
-            setTimeout ->
-              goog.dom.classlist.add link, 'yellow-fade'
-            , 0
+          .then => yellowFade.on @refs['published-song-link'].getDOMNode()
 
       onUnpublishPointerUp: ->
         if !navigator.onLine
