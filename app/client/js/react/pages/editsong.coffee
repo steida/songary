@@ -94,8 +94,9 @@ class app.react.pages.EditSong
                 a
                   href: '/' + userStore.publishedSongs[song.id]
                   ref: 'published-song-link'
-                  # target: '_blank'
+                  target: '_blank'
                 , location.host + '/' + userStore.publishedSongs[song.id]
+                '.'
 
       renderLocalHistory: (song) ->
         lyricsHistory = @getLyricsHistory song
@@ -197,4 +198,4 @@ class app.react.pages.EditSong
   @MSG_UNPUBLISH: goog.getMsg 'Unpublish'
   @MSG_LOGIN_TO_PUBLISH: goog.getMsg 'You must be logged to publish song.'
   @MSG_MUST_BE_ONLINE: goog.getMsg 'You must be online to publish song. Check your internet connection please.'
-  @MSG_SONG_WAS_PUBLISHED: goog.getMsg 'Song has been published:'
+  @MSG_SONG_WAS_PUBLISHED: goog.getMsg 'Song is published at'

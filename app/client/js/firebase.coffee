@@ -7,14 +7,23 @@ class app.Firebase
 
   ###*
     Firebase wrapper for app. Remember, app has to always work without Firebase
-    and be able to switch Firebase for something else anytime.
+    and be able to replace Firebase with something else anytime.
+    @param {Function} firebase
     @param {app.user.Store} userStore
     @param {app.LocalHistory} localHistory
     @constructor
     @final
   ###
-  constructor: (@userStore, @localHistory) ->
-    @setRefs_()
+  constructor: (firebase, @userStore, @localHistory) ->
+    @Firebase_ = firebase
+    @rootRef = new @Firebase_ 'https://shining-fire-6810.firebaseio.com/'
+    @songsRef = @rootRef.child 'songs'
+
+  ###*
+    @type {Function}
+    @private
+  ###
+  Firebase_: null
 
   ###*
     @type {Firebase}
@@ -37,20 +46,7 @@ class app.Firebase
   ###
   isLocalChange_: false
 
-  ###*
-    @private
-  ###
-  setRefs_: ->
-    # TODO: Use server data for path, make it isomorphic.
-    return if !window.Firebase
-    @rootRef = new window.Firebase 'https://shining-fire-6810.firebaseio.com/'
-    @songsRef = @rootRef.child 'songs'
-
-  ###*
-    TODO: Do it on server side.
-  ###
   simpleLogin: ->
-    # TODO: Make it isomorphic.
     return if !window.FirebaseSimpleLogin
     goog.asserts.assert !@authClient
     @authClient = new window.FirebaseSimpleLogin @rootRef, @onSimpleLogin.bind @
@@ -93,7 +89,7 @@ class app.Firebase
   setUserLastOnlineOnDisconnect_: ->
     @userRef.child 'user/lastOnline'
       .onDisconnect()
-      .set window.Firebase.ServerValue.TIMESTAMP
+      .set @Firebase_.ServerValue.TIMESTAMP
 
   ###*
     @param {Object} user Firebase user.
@@ -143,7 +139,7 @@ class app.Firebase
   ###
   createNewUser: (user) ->
     user = @userStore.authUserToAppUser user
-    user.createdAt = window.Firebase.ServerValue.TIMESTAMP
+    user.createdAt = @Firebase_.ServerValue.TIMESTAMP
     user
 
   ###*
@@ -231,7 +227,7 @@ class app.Firebase
     url = "#{json.urlArtist}/#{json.urlName}"
 
     payload =
-      'byUpdated': window.Firebase.ServerValue.TIMESTAMP
+      'byUpdated': @Firebase_.ServerValue.TIMESTAMP
       'byUrl': url
       'byName': este.string.removeDiacritics json.name.toLowerCase()
       'byArtist': este.string.removeDiacritics json.artist.toLowerCase()

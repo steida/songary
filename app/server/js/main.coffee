@@ -20,6 +20,9 @@ server.main = (config) ->
       bodyParser: require 'body-parser'
       methodOverride: require 'method-override'
   ,
+    resolve: app.Firebase
+    with: firebase: require 'firebase'
+  ,
     resolve: server.FrontPage
     with:
       isDev: config['env']['development']
