@@ -2,7 +2,6 @@ goog.provide 'app.Storage'
 
 goog.require 'este.labs.Storage'
 goog.require 'goog.async.Throttle'
-goog.require 'goog.structs.Map'
 goog.require 'goog.structs.Set'
 
 class app.Storage extends este.labs.Storage
@@ -22,7 +21,6 @@ class app.Storage extends este.labs.Storage
     super()
 
     @stores = [@userStore]
-    @storesStates = new goog.structs.Map
     @pendingStores = new goog.structs.Set
     @save = new goog.async.Throttle @savePendingStores, Storage.THROTTLE_MS, @
 
@@ -99,7 +97,16 @@ class app.Storage extends este.labs.Storage
   load: (route, params) ->
     switch route
       when @routes.me
-        return @notFound() if !@userStore.isLogged()
+        if !@userStore.isLogged()
+          return @notFound()
       when @routes.mySong, @routes.editSong
-        return @notFound() if !@userStore.songById params.id
+        if !@userStore.songById params.id
+          return @notFound()
+      when @routes.song
+        @firebase
+          .getSongByUrl params.name + '/' + params.artist
+          .then (value) ->
+            # měl bych to nastavit na store
+            console.log value
+
     @ok()
