@@ -51,7 +51,7 @@ class app.react.pages.About
         @forceUpdate()
 
       getSuspiciousMessageWarning: (message) ->
-        About.MSG_FOK = goog.getMsg 'Is "{$message}" really what you want to tell us?',
+        About.MSG_FOK = goog.getMsg 'Is “{$message}” really what you want to tell us?',
           message: message
 
       componentDidMount: ->
