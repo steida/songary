@@ -11,11 +11,13 @@ goog.require 'goog.string'
 class app.react.pages.Song
 
   ###*
+    @param {app.Firebase} firebase
     @param {app.Routes} routes
     @param {app.react.Touch} touch
+    @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (routes, touch) ->
+  constructor: (firebase, routes, touch, userStore) ->
     {div} = touch.scroll 'div'
     {article,menu} = React.DOM
     {a,menuitem} = touch.none 'a', 'menuitem'
@@ -44,7 +46,17 @@ class app.react.pages.Song
             menuitem
               onPointerUp: @onFontResizeButtonPointerUp.bind @, false
             , '-'
-            a href: routes.editSong.url(song), Song.MSG_EDIT
+            if userStore.isLogged()
+              if userStore.songById song.id
+                a href: routes.editSong.url(song), Song.MSG_EDIT
+              else if userStore.publishedSongs[song.id]
+                menuitem
+                  onPointerUp: @onUnpublishButtonPointerUp.bind @, song
+                , Song.MSG_UNPUBLISH
+              else
+                false
+            else
+              false
 
       ref: (name) ->
         @refs[name].getDOMNode()
@@ -164,6 +176,13 @@ class app.react.pages.Song
         fn()
         songEl.style.visibility = ''
 
+      onUnpublishButtonPointerUp: (song) ->
+        # if !navigator.onLine
+        #   alert EditSong.MSG_MUST_BE_ONLINE
+        #   return
+        firebase.unpublishSong song
+        routes.home.redirect()
+
   # TODO: Set by platform.
   @HIDE_MENU_DELAY: 2000
   @MAX_FONT_SIZE: 60
@@ -172,3 +191,4 @@ class app.react.pages.Song
 
   @MSG_BACK: goog.getMsg 'Back'
   @MSG_EDIT: goog.getMsg 'Edit'
+  @MSG_UNPUBLISH: goog.getMsg 'Unpublish'
