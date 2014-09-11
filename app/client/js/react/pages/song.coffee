@@ -12,12 +12,13 @@ class app.react.pages.Song
 
   ###*
     @param {app.Firebase} firebase
+    @param {app.Online} online
     @param {app.Routes} routes
     @param {app.react.Touch} touch
     @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (firebase, routes, touch, userStore) ->
+  constructor: (firebase, online, routes, touch, userStore) ->
     {div} = touch.scroll 'div'
     {article,menu} = React.DOM
     {a,menuitem} = touch.none 'a', 'menuitem'
@@ -177,9 +178,7 @@ class app.react.pages.Song
         songEl.style.visibility = ''
 
       onUnpublishButtonPointerUp: (song) ->
-        # if !navigator.onLine
-        #   alert EditSong.MSG_MUST_BE_ONLINE
-        #   return
+        return if !online.check()
         firebase.unpublishSong song
         routes.home.redirect()
 

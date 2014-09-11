@@ -7,13 +7,14 @@ class app.react.pages.EditSong
 
   ###*
     @param {app.Firebase} firebase
+    @param {app.Online} online
     @param {app.Routes} routes
     @param {app.react.Touch} touch
     @param {app.react.YellowFade} yellowFade
     @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (firebase, routes, touch, yellowFade, userStore) ->
+  constructor: (firebase, online, routes, touch, yellowFade, userStore) ->
     {div,form,input,textarea,p,nav,ol,li} = React.DOM
     {a,span,button} = touch.none 'a', 'span', 'button'
 
@@ -170,16 +171,12 @@ class app.react.pages.EditSong
         if !userStore.isLogged()
           alert EditSong.MSG_LOGIN_TO_PUBLISH
           return
-        if !navigator.onLine
-          alert EditSong.MSG_MUST_BE_ONLINE
-          return
+        return if !online.check()
         firebase.publishSong song
           .then => yellowFade.on @refs['published-song-link'].getDOMNode()
 
       onUnpublishPointerUp: ->
-        if !navigator.onLine
-          alert EditSong.MSG_MUST_BE_ONLINE
-          return
+        return if !online.check()
         firebase.unpublishSong song
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
@@ -196,5 +193,4 @@ class app.react.pages.EditSong
   @MSG_PUBLISH: goog.getMsg 'Publish'
   @MSG_UNPUBLISH: goog.getMsg 'Unpublish'
   @MSG_LOGIN_TO_PUBLISH: goog.getMsg 'You must be logged to publish song.'
-  @MSG_MUST_BE_ONLINE: goog.getMsg 'You must be online to publish song. Check your internet connection please.'
   @MSG_SONG_WAS_PUBLISHED: goog.getMsg 'Song is published at'
