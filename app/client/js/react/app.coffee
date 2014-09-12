@@ -12,20 +12,21 @@ class app.react.App
     @param {app.songs.Store} songsStore
     @param {app.react.Header} header
     @param {app.react.Footer} footer
-    @param {app.react.pages.MySongs} mySongs
-    @param {app.react.pages.EditSong} editSongPage
-    @param {app.react.pages.Song} songPage
-    @param {app.react.pages.NotFound} notFoundPage
-    @param {app.react.pages.Trash} trashPage
     @param {app.react.pages.About} aboutPage
+    @param {app.react.pages.EditSong} editSongPage
     @param {app.react.pages.Me} mePage
+    @param {app.react.pages.MySongs} mySongs
+    @param {app.react.pages.NotFound} notFoundPage
+    @param {app.react.pages.Songs} songsPage
+    @param {app.react.pages.Song} songPage
+    @param {app.react.pages.Trash} trashPage
     @constructor
   ###
   constructor: (routes, appTitle,
       userStore, songsStore,
       header, footer,
-      mySongs, editSongPage, songPage, notFoundPage, trashPage, aboutPage,
-      mePage) ->
+      aboutPage, editSongPage, mePage, mySongs, notFoundPage, songsPage,
+      songPage, trashPage) ->
 
     {div} = React.DOM
 
@@ -44,6 +45,7 @@ class app.react.App
         switch routes.active
           when routes.home then mySongs
           when routes.newSong then editSongPage
+          when routes.songs then songsPage
           when routes.song
             props.song = songsStore.songByUrl()
             songPage

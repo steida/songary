@@ -13,11 +13,15 @@ class app.react.Header
 
     @component = React.createClass
       render: ->
-        header {}, nav {},
-          link.to routes.home, Header.MSG_MY_SONGS
-          link.to routes.about, Header.MSG_ABOUT
-          link.to routes.me, Header.MSG_ME if userStore.isLogged()
+        header {},
+          nav {},
+            link.to routes.home, Header.MSG_MY_SONGS
+            link.to routes.songs, Header.MSG_SONGS
+            link.to routes.about, Header.MSG_ABOUT
+            if userStore.isLogged()
+              link.to routes.me, Header.MSG_ME
 
   @MSG_ABOUT: goog.getMsg 'About'
   @MSG_ME: goog.getMsg 'Me'
   @MSG_MY_SONGS: goog.getMsg 'My Songs'
+  @MSG_SONGS: goog.getMsg 'Songs'

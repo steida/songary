@@ -20,8 +20,9 @@ class app.react.pages.MySongs
         songs = allSongs
           .filter (song) -> !song.inTrash
           .map (song) ->
-            li key: song.id, a href: routes.mySong.url(song),
-              "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
+            li key: song.id,
+              a href: routes.mySong.url(song),
+                "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
         deletedSongs = allSongs.filter (song) -> song.inTrash
 
         div className: 'page',

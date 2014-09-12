@@ -15,6 +15,7 @@ class app.react.pages.NotFound
 
       render: ->
         div className: 'page',
+          # TODO: Localize.
           h1 {}, "This page isn't available"
           p {}, 'The link may be broken, or the page may have been removed.'
           a href: routes.home.url(), 'Continue here please.'

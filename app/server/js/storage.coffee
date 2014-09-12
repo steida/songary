@@ -28,4 +28,12 @@ class server.Storage extends este.labs.Storage
             if !value
               throw goog.net.HttpStatus.NOT_FOUND
             @songsStore.songsByUrl = value
+      when @routes.songs
+        return @firebase
+          .getLastTenSongs()
+          .then (value) =>
+            if !value
+              throw goog.net.HttpStatus.NOT_FOUND
+            @songsStore.fromJson
+              lastTenSongs: value
     @ok()

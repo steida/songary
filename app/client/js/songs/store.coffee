@@ -29,3 +29,10 @@ class app.songs.Store extends este.labs.Store
   songByUrl: ->
     json = goog.object.getAnyValue @songsByUrl
     @instanceFromJson app.songs.Song, json || {}
+
+  ###*
+    @override
+  ###
+  fromJson: (json) ->
+    @lastTenSongs = @asArray json.lastTenSongs || {}
+      .map @instanceFromJson app.songs.Song

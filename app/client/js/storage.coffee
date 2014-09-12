@@ -104,9 +104,20 @@ class app.Storage extends este.labs.Storage
         if !@userStore.songById params.id
           return @notFound()
       when @routes.song
-        return @firebase.getSongByUrl params.name + '/' + params.artist
+        return @firebase
+          .getSongByUrl params.name + '/' + params.artist
+          .then (value) =>
+            # TODO: Handle better.
+            if !value
+              throw goog.net.HttpStatus.NOT_FOUND
+            # TODO: fromJson
+            @songsStore.songsByUrl = value
+      when @routes.songs
+        return @firebase
+          .getLastTenSongs()
           .then (value) =>
             if !value
               throw goog.net.HttpStatus.NOT_FOUND
-            @songsStore.songsByUrl = value
+            @songsStore.fromJson
+              lastTenSongs: value
     @ok()

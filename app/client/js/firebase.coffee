@@ -280,3 +280,16 @@ class app.Firebase
           resolve snapshot.val()
         , (err) ->
           reject err
+
+  ###*
+    @return {goog.Promise}
+  ###
+  getLastTenSongs: ->
+    new goog.Promise (resolve, reject) =>
+      @songsRef
+        # TODO: Just last ten songs.
+        .child 'byUpdated'
+        .once 'value', (snapshot) ->
+          resolve snapshot.val()
+        , (err) ->
+          reject err
