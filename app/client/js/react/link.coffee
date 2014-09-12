@@ -12,12 +12,16 @@ class app.react.Link
   ###*
     @param {este.Route} route
     @param {string} text
-    @param {Object=} params
+    @param {Object=} urlParams
+    @param {Object=} props
   ###
-  to: (route, text, params) ->
+  to: (route, text, urlParams, props) ->
     {a} = @touch.none 'a'
 
-    a
-      className: if @routes.active == route then 'active' else null
-      href: route.url params
-    , text
+    linkProps = href: route.url urlParams
+    goog.mixin linkProps, props if props
+    linkProps.className ?= ''
+    linkProps.className += ' ' + if @routes.active == route then 'active' else ''
+    delete linkProps.className if !linkProps.className.trim()
+
+    a linkProps, text
