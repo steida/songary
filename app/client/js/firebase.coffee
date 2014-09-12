@@ -147,6 +147,7 @@ class app.Firebase
     @private
   ###
   mergeLocalChangesToServer: (val) ->
+    val.songs ?= {}
     songs = []
     json = @userStore.toJson()
     for id, song of json.songs
