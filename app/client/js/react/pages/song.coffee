@@ -47,15 +47,12 @@ class app.react.pages.Song
             menuitem
               onPointerUp: @onFontResizeButtonPointerUp.bind @, false
             , '-'
-            if userStore.isLogged()
-              if userStore.songById song.id
-                a href: routes.editSong.url(song), Song.MSG_EDIT
-              else if userStore.publishedSongs[song.id]
-                menuitem
-                  onPointerUp: @onUnpublishButtonPointerUp.bind @, song
-                , Song.MSG_UNPUBLISH
-              else
-                false
+            if userStore.songById song.id
+              a href: routes.editSong.url(song), Song.MSG_EDIT
+            else if userStore.isLogged() && userStore.publishedSongs[song.id]
+              menuitem
+                onPointerUp: @onUnpublishButtonPointerUp.bind @, song
+              , Song.MSG_UNPUBLISH
             else
               false
 

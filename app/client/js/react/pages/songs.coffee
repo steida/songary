@@ -17,13 +17,12 @@ class app.react.pages.Songs
       render: ->
         lastTenSongs = songsStore.lastTenSongs.map (song) ->
           li key: song.id,
-            a href: routes.song.url(song),
-             "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
+            a
+              href: routes.song.url song
+            , "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
 
         div className: 'page',
-          p {},
-            Songs.MSG_LAST_TEN_SONGS
-          ul {},
-            lastTenSongs
+          p {}, Songs.MSG_LAST_TEN_SONGS
+          ul {}, lastTenSongs
 
   @MSG_LAST_TEN_SONGS: goog.getMsg 'Last ten added songs:'

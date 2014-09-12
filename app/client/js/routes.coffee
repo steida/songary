@@ -13,7 +13,7 @@ class app.Routes extends este.Routes
     @home = @route '/'
     @about = @route '/about'
     @songs = @route '/songs'
-    @song = @route '/:name/:artist'
+    @song = @route '/:urlArtist/:urlName'
     @me = @route '/@me'
     @newSong = @route '/@me/songs/new'
     @trash = @route '/@me/songs/trash'

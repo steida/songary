@@ -23,7 +23,8 @@ class server.Storage extends este.labs.Storage
       when @routes.editSong, @routes.mySong, @routes.trash, @routes.me
         return @notFound()
       when @routes.song
-        return @firebase.getSongByUrl params.name + '/' + params.artist
+        return @firebase
+          .getSongByUrl params.urlArtist + '/' + params.urlName
           .then (value) =>
             if !value
               throw goog.net.HttpStatus.NOT_FOUND
