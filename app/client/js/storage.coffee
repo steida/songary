@@ -98,26 +98,10 @@ class app.Storage extends este.labs.Storage
   load: (route, params) ->
     switch route
       when @routes.me
-        if !@userStore.isLogged()
-          return @notFound()
+        return @notFound() if !@userStore.isLogged()
       when @routes.mySong, @routes.editSong
-        if !@userStore.songById params.id
-          return @notFound()
-      when @routes.song
-        return @firebase
-          .getSongByUrl params.urlArtist + '/' + params.urlName
-          .then (value) =>
-            # TODO: Handle better notfound.
-            if !value
-              throw goog.net.HttpStatus.NOT_FOUND
-            # TODO: fromJson
-            @songsStore.songsByUrl = value
-      when @routes.songs
-        return @firebase
-          .getLastTenSongs()
-          .then (value) =>
-            if !value
-              throw goog.net.HttpStatus.NOT_FOUND
-            @songsStore.fromJson
-              lastTenSongs: value
+        return @notFound() if !@userStore.songById params.id
+        
+    promise = @firebase.loadByRoute route, @routes, params
+    return promise if promise
     @ok()

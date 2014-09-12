@@ -2,6 +2,7 @@ goog.provide 'app.Firebase'
 
 goog.require 'este.string'
 goog.require 'goog.asserts'
+goog.require 'goog.net.HttpStatus'
 
 class app.Firebase
 
@@ -9,12 +10,13 @@ class app.Firebase
     Firebase wrapper for app. Remember, app has to always work without Firebase
     and be able to replace Firebase with something else anytime.
     @param {Function} firebase
-    @param {app.user.Store} userStore
     @param {app.LocalHistory} localHistory
+    @param {app.songs.Store} songsStore
+    @param {app.user.Store} userStore
     @constructor
     @final
   ###
-  constructor: (firebase, @userStore, @localHistory) ->
+  constructor: (firebase, @localHistory, @songsStore, @userStore) ->
     @Firebase_ = firebase
     @rootRef = new @Firebase_ 'https://shining-fire-6810.firebaseio.com/'
     @songsRef = @rootRef.child 'songs'
@@ -294,3 +296,23 @@ class app.Firebase
           resolve snapshot.val()
         , (err) ->
           reject err
+
+  ###*
+    @param {este.Route} route
+    @param {este.Routes} routes
+    @param {Object} params
+    @return {goog.Promise}
+  ###
+  loadByRoute: (route, routes, params) ->
+    switch route
+      when routes.song
+        return @getSongByUrl params.urlArtist + '/' + params.urlName
+          .then (value) =>
+            throw goog.net.HttpStatus.NOT_FOUND if !value
+            @songsStore.songsByUrl = value
+      when routes.songs
+        return @getLastTenSongs()
+          .then (value) =>
+            throw goog.net.HttpStatus.NOT_FOUND if !value
+            @songsStore.fromJson lastTenSongs: value
+    null

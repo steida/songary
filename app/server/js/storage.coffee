@@ -22,19 +22,7 @@ class server.Storage extends este.labs.Storage
     switch route
       when @routes.editSong, @routes.mySong, @routes.trash, @routes.me
         return @notFound()
-      when @routes.song
-        return @firebase
-          .getSongByUrl params.urlArtist + '/' + params.urlName
-          .then (value) =>
-            if !value
-              throw goog.net.HttpStatus.NOT_FOUND
-            @songsStore.songsByUrl = value
-      when @routes.songs
-        return @firebase
-          .getLastTenSongs()
-          .then (value) =>
-            if !value
-              throw goog.net.HttpStatus.NOT_FOUND
-            @songsStore.fromJson
-              lastTenSongs: value
+
+    promise = @firebase.loadByRoute route, @routes, params
+    return promise if promise
     @ok()
