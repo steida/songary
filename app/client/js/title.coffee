@@ -17,12 +17,14 @@ class app.Title
   @MSG_ME: goog.getMsg 'Me'
   @MSG_NEW_SONG: goog.getMsg 'New Song'
   @MSG_NOT_FOUND: goog.getMsg 'Page Not Found'
+  @MSG_SONGS: goog.getMsg 'Songs'
   @MSG_TRASH: goog.getMsg 'Trash'
 
   get: ->
     switch @routes.active
       when @routes.about then Title.MSG_ABOUT
       when @routes.home then Title.MSG_HOME
+      when @routes.songs then Title.MSG_SONGS
       when @routes.me then Title.MSG_ME
       when @routes.song then @getSongTitle @songsStore.songsByUrl[0]
       when @routes.mySong, @routes.editSong
