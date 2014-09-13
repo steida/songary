@@ -309,7 +309,7 @@ class app.Firebase
         return @getSongByUrl params.urlArtist + '/' + params.urlName
           .then (value) =>
             throw goog.net.HttpStatus.NOT_FOUND if !value
-            @songsStore.songsByUrl = value
+            @songsStore.fromJson songsByUrl: value
       when routes.songs
         return @getLastTenSongs()
           .then (value) =>

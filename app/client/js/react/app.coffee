@@ -47,7 +47,10 @@ class app.react.App
           when routes.newSong then editSongPage
           when routes.songs then songsPage
           when routes.song
-            props.song = songsStore.songByUrl()
+            # TODO: Show all song versions, not just first.
+            # /beatles/let-it-be -> All songs published under this url.
+            # /beatles/let-it-be/yz525kwxli9s -> One song.
+            props.song = songsStore.songsByUrl[0]
             songPage
           when routes.mySong, routes.editSong
             @getLocalSongPage props

@@ -24,7 +24,7 @@ class app.Title
       when @routes.about then Title.MSG_ABOUT
       when @routes.home then Title.MSG_HOME
       when @routes.me then Title.MSG_ME
-      when @routes.song then @getSongTitle @songsStore.songByUrl()
+      when @routes.song then @getSongTitle @songsStore.songsByUrl[0]
       when @routes.mySong, @routes.editSong
         song = @userStore.songByRoute @routes.active
         return Title.MSG_NOT_FOUND if !song

@@ -12,27 +12,26 @@ class app.songs.Store extends este.labs.Store
   ###
   constructor: (@localHistory) ->
     super 'songs'
+    @lastTenSongs = []
+    @songsByUrl = []
 
   ###*
-    From Firebase songs byUrl. Plural, because more songs can share the same
-    name and artist.
-    @type {Object}
+    @type {Array.<app.songs.Song>}
+  ###
+  lastTenSongs: null
+
+  ###*
+    @type {Array.<app.songs.Song>}
   ###
   songsByUrl: null
-
-  ###*
-    TODO: Show all song versions, not just first. /beatles/let-it-be should show
-    all songs published with this url. /beatles/let-it-be/yz525kwxli9s will be
-    unique url.
-    @return {app.songs.Song}
-  ###
-  songByUrl: ->
-    json = goog.object.getAnyValue @songsByUrl
-    @instanceFromJson app.songs.Song, json || {}
 
   ###*
     @override
   ###
   fromJson: (json) ->
-    @lastTenSongs = @asArray json.lastTenSongs || {}
-      .map @instanceFromJson app.songs.Song
+    if json.lastTenSongs
+      @lastTenSongs = @asArray json.lastTenSongs || {}
+        .map @instanceFromJson app.songs.Song
+    if json.songsByUrl
+      @songsByUrl = @asArray json.songsByUrl || {}
+        .map @instanceFromJson app.songs.Song
