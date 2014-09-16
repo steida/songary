@@ -221,54 +221,54 @@ class app.Firebase
         displayName: displayName
         message: message
 
-  ###*
-    @param {app.songs.Song} song
-  ###
-  publishSong: (song) ->
-    json = song.toJson()
-    json.publisher = @userStore.user.uid
-    url = "#{json.urlArtist}/#{json.urlName}"
-
-    payload =
-      'byUpdated': @Firebase_.ServerValue.TIMESTAMP
-      'byUrl': url
-      'byName': este.string.removeDiacritics json.name.toLowerCase()
-      'byArtist': este.string.removeDiacritics json.artist.toLowerCase()
-
-    promises = for path, priority of payload
-      new goog.Promise (resolve, reject) =>
-        @songsRef
-          .child path
-          .child json.id
-          .setWithPriority json, priority, (e) ->
-            if e then reject e else resolve()
-
-    goog.Promise.all promises
-      .then (value) =>
-        @userStore.addPublishedSong json.id, url
-      .thenCatch (reason) =>
-        alert reason
-
-  ###*
-    @param {app.songs.Song} song
-  ###
-  unpublishSong: (song) ->
-    json = song.toJson()
-    paths = ['byUpdated', 'byUrl', 'byName', 'byArtist']
-
-    promises = for path in paths
-      new goog.Promise (resolve, reject) =>
-        @songsRef
-          .child path
-          .child json.id
-          .remove (e) ->
-            if e then reject e else resolve()
-
-    goog.Promise.all promises
-      .then (value) =>
-        @userStore.removePublishedSong json.id
-      .thenCatch (reason) =>
-        alert reason
+  # ###*
+  #   @param {app.songs.Song} song
+  # ###
+  # publishSong: (song) ->
+  #   json = song.toJson()
+  #   json.publisher = @userStore.user.uid
+  #   url = "#{json.urlArtist}/#{json.urlName}"
+  #
+  #   payload =
+  #     'byUpdated': @Firebase_.ServerValue.TIMESTAMP
+  #     'byUrl': url
+  #     'byName': este.string.removeDiacritics json.name.toLowerCase()
+  #     'byArtist': este.string.removeDiacritics json.artist.toLowerCase()
+  #
+  #   promises = for path, priority of payload
+  #     new goog.Promise (resolve, reject) =>
+  #       @songsRef
+  #         .child path
+  #         .child json.id
+  #         .setWithPriority json, priority, (e) ->
+  #           if e then reject e else resolve()
+  #
+  #   goog.Promise.all promises
+  #     .then (value) =>
+  #       @userStore.addPublishedSong json.id, url
+  #     .thenCatch (reason) =>
+  #       alert reason
+  #
+  # ###*
+  #   @param {app.songs.Song} song
+  # ###
+  # unpublishSong: (song) ->
+  #   json = song.toJson()
+  #   paths = ['byUpdated', 'byUrl', 'byName', 'byArtist']
+  #
+  #   promises = for path in paths
+  #     new goog.Promise (resolve, reject) =>
+  #       @songsRef
+  #         .child path
+  #         .child json.id
+  #         .remove (e) ->
+  #           if e then reject e else resolve()
+  #
+  #   goog.Promise.all promises
+  #     .then (value) =>
+  #       @userStore.removePublishedSong json.id
+  #     .thenCatch (reason) =>
+  #       alert reason
 
   ###*
     @param {string} url

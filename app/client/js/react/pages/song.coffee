@@ -175,9 +175,9 @@ class app.react.pages.Song
         songEl.style.visibility = ''
 
       onUnpublishButtonPointerUp: (song) ->
-        return if !online.check()
-        firebase.unpublishSong song
-        routes.home.redirect()
+        # return if !online.check()
+        # firebase.unpublishSong song
+        # routes.home.redirect()
 
   # TODO: Set by platform.
   @HIDE_MENU_DELAY: 2000

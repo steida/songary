@@ -9,10 +9,6 @@ class app.songs.Song
     @constructor
   ###
   constructor: ->
-    ###*
-      @type {string}
-      @const
-    ###
     @id = goog.string.getRandomString()
 
   @MSG_MISSING_LYRICS: goog.getMsg 'missing lyrics'
@@ -67,6 +63,19 @@ class app.songs.Song
         Song.MSG_FILL_OUT = goog.getMsg 'Please fill out {$prop}.', prop: prop
         new app.ValidationError prop, Song.MSG_FILL_OUT
 
+  ###*
+    @return {Array.<app.ValidationError>}
+  ###
+  validatePublished: ->
+    errors = @validate()
+    return errors if errors.length
+    if @id.indexOf('-') == -1
+      errors.push new app.ValidationError 'id', 'Required id format: userid-songid.'
+    if !@publisher
+      errors.push new app.ValidationError 'id', 'Missing publisher.'
+    errors
+
+
   update: ->
     @name = @name.slice 0, 100
     @artist = @artist.slice 0, 100
@@ -89,3 +98,9 @@ class app.songs.Song
 
   toJson: ->
     JSON.parse JSON.stringify @
+
+  toPublishedJson: (userId) ->
+    json = @toJson()
+    json.id = userId + '-' + @id
+    json.publisher = userId
+    json

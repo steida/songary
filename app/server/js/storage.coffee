@@ -22,6 +22,18 @@ class server.Storage extends este.labs.Storage
     switch route
       when @routes.editSong, @routes.mySong, @routes.trash, @routes.me
         return @notFound()
+      # when @routes.api.song
+      #   client.index
+      #     index: 'songary'
+      #     type: 'song'
+      #     id: '1'
+      #     body:
+      #       title: 'Test 1'
+      #       tags: ['y', 'z']
+      #       published: true
+      #   , (error, response) ->
+      #     console.log arguments
+
 
     promise = @firebase.loadByRoute route, @routes, params
     return promise if promise

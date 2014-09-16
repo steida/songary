@@ -6,15 +6,15 @@ goog.require 'goog.ui.Textarea'
 class app.react.pages.EditSong
 
   ###*
-    @param {app.Firebase} firebase
     @param {app.Online} online
     @param {app.Routes} routes
     @param {app.react.Touch} touch
     @param {app.react.YellowFade} yellowFade
+    @param {app.songs.Store} songsStore
     @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (firebase, online, routes, touch, yellowFade, userStore) ->
+  constructor: (online, routes, touch, yellowFade, songsStore, userStore) ->
     {div,form,input,textarea,p,nav,ol,li} = React.DOM
     {a,span,button} = touch.none 'a', 'span', 'button'
 
@@ -77,13 +77,13 @@ class app.react.pages.EditSong
                 , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
               else
                 button className: 'btn btn-default', EditSong.MSG_CREATE_NEW_SONG
-              if editMode && !song.inTrash
+              if 0 && editMode && !song.inTrash
                 button
                   className: 'btn btn-default'
                   onPointerUp: @onPublishPointerUp
                   type: 'button'
                 , EditSong.MSG_PUBLISH
-              if editMode && isPublishedSong
+              if 0 && editMode && isPublishedSong
                 button
                   className: 'btn btn-default'
                   onPointerUp: @onUnpublishPointerUp
@@ -172,12 +172,13 @@ class app.react.pages.EditSong
           alert EditSong.MSG_LOGIN_TO_PUBLISH
           return
         return if !online.check()
-        firebase.publishSong song
+        songsStore
+          .publish song, userStore.user
           .then => yellowFade.on @refs['published-song-link'].getDOMNode()
 
       onUnpublishPointerUp: ->
-        return if !online.check()
-        firebase.unpublishSong song
+        # return if !online.check()
+        # firebase.unpublishSong song
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method for later string localization.

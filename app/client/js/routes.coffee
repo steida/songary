@@ -20,6 +20,9 @@ class app.Routes extends este.Routes
     @editSong = @route '/@me/songs/:id/edit'
     @mySong = @route '/@me/songs/:id'
 
+    @api =
+      song: @route '/api/songs/:id'
+
     ###*
       @param {string} songId
       @return {string}
