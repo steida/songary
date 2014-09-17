@@ -2,6 +2,11 @@ goog.provide 'server.App'
 
 goog.require 'goog.labs.userAgent.util'
 
+bodyParser = require 'body-parser'
+compression = (`/** @type {Function} */`) require 'compression'
+favicon = (`/** @type {Function} */`) require 'static-favicon'
+methodOverride = (`/** @type {Function} */`) require 'method-override'
+
 class server.App
 
   ###*
@@ -11,24 +16,20 @@ class server.App
     @param {number} port
     @param {server.FrontPage} frontPage
     @param {server.Storage} storage
-    @param {Function} compression
-    @param {Function} favicon
-    @param {Function} bodyParser
-    @param {Function} methodOverride
     @constructor
   ###
-  constructor: (express, routes, isDev, port, frontPage, storage,
-      compression, favicon, bodyParser, methodOverride) ->
+  constructor: (express, routes, isDev, port, frontPage, storage) ->
 
     app = express()
 
     # Middleware must be first.
     app['use'] compression()
     app['use'] favicon 'app/client/img/favicon.ico'
+    # app.use(bodyParser.urlencoded({ extended: true }));
     app['use'] bodyParser['json']()
     app['use'] methodOverride()
 
-    # Then static assets.
+    # Static assets.
     if isDev
       app['use'] '/bower_components', express['static'] 'bower_components'
       app['use'] '/app', express['static'] 'app'
@@ -38,7 +39,10 @@ class server.App
       # TODO: Use CDN.
       app['use'] '/app', express['static'] 'app', 'maxAge': 31557600000
 
-    # Routes last.
+    # API
+    # TODO: server.Api here.
+
+    # Pages rendering.
     routes.addToExpress app, (route, req, res) ->
       params = req['params']
 

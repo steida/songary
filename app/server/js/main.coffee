@@ -12,13 +12,9 @@ server.main = (config) ->
   container.configure
     resolve: server.App
     with:
+      express: require 'express'
       isDev: config['env']['development']
       port: config['server']['port']
-      express: require 'express'
-      compression: require 'compression'
-      favicon: require 'static-favicon'
-      bodyParser: require 'body-parser'
-      methodOverride: require 'method-override'
   ,
     resolve: app.Firebase
     with: firebase: require 'firebase'
