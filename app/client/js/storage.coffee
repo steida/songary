@@ -50,7 +50,7 @@ class app.Storage extends este.labs.Storage
     @private
   ###
   saveStoreToClient: (store, json) ->
-    console.log 'storage.saveStoreToClient' if goog.DEBUG
+    # console.log 'storage.saveStoreToClient' if goog.DEBUG
     @localStorage.set store, json
 
   ###*
@@ -60,10 +60,10 @@ class app.Storage extends este.labs.Storage
     @private
   ###
   saveStoreToServer: (store, json) ->
-    console.log 'storage.saveStoreToServer' if goog.DEBUG
+    # console.log 'storage.saveStoreToServer' if goog.DEBUG
     if store instanceof app.user.Store
       if @firebase.userRef
-        console.log '@userRef.set json' if goog.DEBUG
+        # console.log '@userRef.set json' if goog.DEBUG
         @firebase.sync -> @userRef.set json
 
   ###*
@@ -101,7 +101,7 @@ class app.Storage extends este.labs.Storage
         return @notFound() if !@userStore.isLogged()
       when @routes.mySong, @routes.editSong
         return @notFound() if !@userStore.songById params.id
-        
+
     promise = @firebase.loadByRoute route, @routes, params
     return promise if promise
     @ok()
