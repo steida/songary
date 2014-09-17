@@ -16,7 +16,7 @@ class app.react.Header
         header {},
           nav {},
             link.to routes.home, Header.MSG_MY_SONGS
-            link.to routes.songs, Header.MSG_SONGS
+            # link.to routes.songs, Header.MSG_SONGS
             link.to routes.about, Header.MSG_ABOUT
             if userStore.isLogged()
               link.to routes.me, Header.MSG_ME

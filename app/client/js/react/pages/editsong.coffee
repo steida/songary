@@ -30,7 +30,6 @@ class app.react.pages.EditSong
       render: ->
         song = @props.song ? userStore.newSong
         editMode = !!@props.song
-        isPublishedSong = song.id of userStore.publishedSongs
 
         div className: 'page',
           form autoComplete: 'off', onSubmit: @onFormSubmit, ref: 'form', role: 'form',
@@ -77,25 +76,25 @@ class app.react.pages.EditSong
                 , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
               else
                 button className: 'btn btn-default', EditSong.MSG_CREATE_NEW_SONG
-              if 0 && editMode && !song.inTrash
+              if editMode && !song.inTrash
                 button
                   className: 'btn btn-default'
                   onPointerUp: @onPublishPointerUp
                   type: 'button'
                 , EditSong.MSG_PUBLISH
-              if 0 && editMode && isPublishedSong
+              if editMode && song.isPublished()
                 button
                   className: 'btn btn-default'
                   onPointerUp: @onUnpublishPointerUp
                   type: 'button'
                 , EditSong.MSG_UNPUBLISH
-            if editMode && isPublishedSong
+            if editMode && song.isPublished()
               p {},
                 EditSong.MSG_SONG_WAS_PUBLISHED + ' '
                 a
-                  href: routes.myPublishedSongUrl song.id
+                  href: routes.song.url song
                   ref: 'published-song-link'
-                , location.host + routes.myPublishedSongUrl song.id
+                , location.host + routes.song.url song
                 '.'
 
       renderLocalHistory: (song) ->
@@ -160,6 +159,10 @@ class app.react.pages.EditSong
         routes.home.redirect()
 
       onToggleDeleteButtonPointerUp: ->
+        if song.isPublished() && !song.inTrash
+          alert EditSong.MSG_UNPUBLISH_BEFORE_DELETE
+          return
+
         userStore.trashSong song, !song.inTrash
         routes.home.redirect()
 
@@ -172,13 +175,12 @@ class app.react.pages.EditSong
           alert EditSong.MSG_LOGIN_TO_PUBLISH
           return
         return if !online.check()
-        songsStore
-          .publish song, userStore.user
+        songsStore.publish song
           .then => yellowFade.on @refs['published-song-link'].getDOMNode()
 
       onUnpublishPointerUp: ->
-        # return if !online.check()
-        # firebase.unpublishSong song
+        return if !online.check()
+        songsStore.unpublish song
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method for later string localization.
@@ -195,3 +197,4 @@ class app.react.pages.EditSong
   @MSG_UNPUBLISH: goog.getMsg 'Unpublish'
   @MSG_LOGIN_TO_PUBLISH: goog.getMsg 'You must be logged to publish song.'
   @MSG_SONG_WAS_PUBLISHED: goog.getMsg 'Song is published at'
+  @MSG_UNPUBLISH_BEFORE_DELETE: goog.getMsg 'Song is published. Unpublish it before delete.'

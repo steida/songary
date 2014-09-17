@@ -49,10 +49,6 @@ class app.react.pages.Song
             , '-'
             if userStore.songById song.id
               a href: routes.editSong.url(song), Song.MSG_EDIT
-            else if userStore.isLogged() && userStore.publishedSongs[song.id]
-              menuitem
-                onPointerUp: @onUnpublishButtonPointerUp.bind @, song
-              , Song.MSG_UNPUBLISH
             else
               false
 
@@ -174,11 +170,6 @@ class app.react.pages.Song
         fn()
         songEl.style.visibility = ''
 
-      onUnpublishButtonPointerUp: (song) ->
-        # return if !online.check()
-        # firebase.unpublishSong song
-        # routes.home.redirect()
-
   # TODO: Set by platform.
   @HIDE_MENU_DELAY: 2000
   @MAX_FONT_SIZE: 60
@@ -187,4 +178,3 @@ class app.react.pages.Song
 
   @MSG_BACK: goog.getMsg 'Back'
   @MSG_EDIT: goog.getMsg 'Edit'
-  @MSG_UNPUBLISH: goog.getMsg 'Unpublish'

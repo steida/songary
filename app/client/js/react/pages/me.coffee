@@ -17,20 +17,24 @@ class app.react.pages.Me
 
       render: ->
         user = userStore.user
-        publishedSongs = for id, url of userStore.publishedSongs
-          href = routes.myPublishedSongUrl id
-          li key: id,
-            a href: href, location.host + href
+        publishedSongs = userStore.songs
+          .filter (song) -> song.isPublished()
+          .map (song) ->
+            href = routes.song.url song
+            li key: song.id,
+              a href: href, location.host + href
 
         div className: 'page',
           p {}, @getWelcomeMessage user.displayName
           img src: user.thirdPartyUserData.picture.data.url
           if publishedSongs.length
             div {},
-              p {}, 'Published songs:'
+              p {}, Me.MSG_PUBLISHED_SONGS
               ul {}, publishedSongs
           div {}, login.component {}
 
       getWelcomeMessage: (displayName) ->
         Me.MSG_WELCOME_MESSAGE = goog.getMsg 'Hi, {$displayName}.',
           displayName: displayName
+
+  @MSG_PUBLISHED_SONGS: goog.getMsg 'Published songs:'

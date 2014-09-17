@@ -10,10 +10,11 @@ class app.songs.Store extends este.labs.Store
     @param {app.LocalHistory} localHistory
     @param {app.RestStorage} restStorage
     @param {app.Routes} routes
+    @param {app.user.Store} userStore
     @constructor
     @extends {este.labs.Store}
   ###
-  constructor: (@localHistory, @restStorage, @routes) ->
+  constructor: (@localHistory, @restStorage, @routes, @userStore) ->
     super 'songs'
     @lastTenSongs = []
     @songsByUrl = []
@@ -41,18 +42,27 @@ class app.songs.Store extends este.labs.Store
 
   ###*
     @param {app.songs.Song} song
-    @param {Object} user
     @return {!goog.Promise}
   ###
-  publish: (song, user) ->
-    json = song.toPublishedJson user.id
-    song = @instanceFromJson app.songs.Song, json
-    errors = song.validatePublished()
+  publish: (song) ->
+    published = @instanceFromJson app.songs.Song, song.toJson()
+    published.publisher = @userStore.user.uid
+
+    errors = song.validate()
     if errors.length
       return goog.Promise.reject errors
+
     @restStorage
-      .put @routes.api.song.url(id: json.id), json
-      .then (value) ->
-        # TODO: Update store, then notify, co delal firebase?
-        # @userStore.addPublishedSong json.id, url
-        # ? nebo songs store? hmm, nevim, asi jak sem to dělal :-)
+      .put @routes.api.song.url(id: song.id), published.toJson()
+      .then (value) =>
+        @userStore.setSongPublisher song
+
+  ###*
+    @param {app.songs.Song} song
+    @return {!goog.Promise}
+  ###
+  unpublish: (song) ->
+    @restStorage
+      .delete @routes.api.song.url(id: song.id)
+      .then (value) =>
+        @userStore.removeSongPublisher song

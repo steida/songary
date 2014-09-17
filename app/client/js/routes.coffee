@@ -22,10 +22,3 @@ class app.Routes extends este.Routes
 
     @api =
       song: @route '/api/songs/:id'
-
-    ###*
-      @param {string} songId
-      @return {string}
-    ###
-    @myPublishedSongUrl = (songId) ->
-      '/' + userStore.publishedSongs[songId]

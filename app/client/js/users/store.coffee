@@ -27,7 +27,8 @@ class app.user.Store extends este.labs.Store
   songs: null
 
   ###*
-    @type {Object.<string,string>}
+    @type {Object.<string,boolean>}
+    @protected
   ###
   publishedSongs: null
 
@@ -179,16 +180,15 @@ class app.user.Store extends este.labs.Store
         seen[lyrics] = true
 
   ###*
-    @param {string} id
-    @param {string} url
+    @param {app.songs.Song} song
   ###
-  addPublishedSong: (id, url) ->
-    @publishedSongs[id] = url
+  setSongPublisher: (song) ->
+    song.publisher = @user.uid
     @notify()
 
   ###*
-    @param {string} id
+    @param {app.songs.Song} song
   ###
-  removePublishedSong: (id) ->
-    delete @publishedSongs[id]
+  removeSongPublisher: (song) ->
+    song.publisher = null
     @notify()

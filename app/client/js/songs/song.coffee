@@ -47,10 +47,15 @@ class app.songs.Song
   inTrash: false
 
   ###*
-    User uid.
     @type {?string}
   ###
   publisher: null
+
+  ###*
+    @return {boolean}
+  ###
+  isPublished: ->
+    !!@publisher
 
   ###*
     @return {Array.<app.ValidationError>}
@@ -62,19 +67,6 @@ class app.songs.Song
       .map (prop) =>
         Song.MSG_FILL_OUT = goog.getMsg 'Please fill out {$prop}.', prop: prop
         new app.ValidationError prop, Song.MSG_FILL_OUT
-
-  ###*
-    @return {Array.<app.ValidationError>}
-  ###
-  validatePublished: ->
-    errors = @validate()
-    return errors if errors.length
-    if @id.indexOf('-') == -1
-      errors.push new app.ValidationError 'id', 'Required id format: userid-songid.'
-    if !@publisher
-      errors.push new app.ValidationError 'id', 'Missing publisher.'
-    errors
-
 
   update: ->
     @name = @name.slice 0, 100
@@ -98,9 +90,3 @@ class app.songs.Song
 
   toJson: ->
     JSON.parse JSON.stringify @
-
-  toPublishedJson: (userId) ->
-    json = @toJson()
-    json.id = userId + '-' + @id
-    json.publisher = userId
-    json
