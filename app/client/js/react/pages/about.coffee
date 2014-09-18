@@ -10,7 +10,7 @@ class app.react.pages.About
     @constructor
   ###
   constructor: (userStore, firebase) ->
-    {div,p,form,textarea,menu,button} = React.DOM
+    {div,p,form,textarea,menu,button,a} = React.DOM
 
     message = ''
 
@@ -35,6 +35,13 @@ class app.react.pages.About
                 onClick: @onContactFromSubmit
                 type: 'button'
               , About.MSG_SEND_BUTTON_LABEL
+          p {},
+            a
+              href: 'https://github.com/steida/songary/issues'
+              target: '_blank'
+            , About.MSG_ISSUES
+
+
 
       onContactFormMessageChange: (e) ->
         message = e.target.value.slice 0, 499
@@ -63,6 +70,7 @@ class app.react.pages.About
         @messageTextarea.dispose()
 
   @MSG_ABOUT: goog.getMsg 'Songary. Your songbook.'
-  @MSG_SEND_PLACEHOLDER: goog.getMsg 'Compliments, complaints, or suggestions.'
+  @MSG_ISSUES: goog.getMsg 'Songary issues on Github'
   @MSG_SEND_BUTTON_LABEL: goog.getMsg 'Let Us Know'
+  @MSG_SEND_PLACEHOLDER: goog.getMsg 'Compliments, complaints, or suggestions.'
   @MSG_THANK_YOU: goog.getMsg 'Thank you.'
