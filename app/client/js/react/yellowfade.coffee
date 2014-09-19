@@ -10,10 +10,15 @@ class app.react.YellowFade
   constructor: ->
 
   ###*
-    @param {Element} el
+    @param {Element|Object} arg
   ###
-  on: (el) ->
-    return if !el
+  on: (arg) ->
+    return if !arg
+    # To allow React ref.
+    el = if arg.getDOMNode
+      arg.getDOMNode()
+    else
+      arg
     goog.dom.classlist.remove el, 'yellow-fade'
     setTimeout ->
       goog.dom.classlist.add el, 'yellow-fade'

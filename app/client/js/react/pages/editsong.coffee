@@ -136,7 +136,7 @@ class app.react.pages.EditSong
 
       doYellowFadeIfHistoryChanged: ->
         if !lyricsHistoryShown && lyricsHistoryChanged
-          yellowFade.on @refs['lyrics-history-button'].getDOMNode()
+          yellowFade.on @refs['lyrics-history-button']
 
       componentWillUnmount: ->
         @chordproTextarea_.dispose()
@@ -175,11 +175,11 @@ class app.react.pages.EditSong
           alert EditSong.MSG_LOGIN_TO_PUBLISH
           return
         return if !online.check()
-        songsStore.publish song
-          .then => yellowFade.on @refs['published-song-link'].getDOMNode()
+        songsStore
+          .publish song
+          .then => yellowFade.on @refs['published-song-link']
 
       onUnpublishPointerUp: ->
-        return if !online.check()
         songsStore.unpublish song
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
