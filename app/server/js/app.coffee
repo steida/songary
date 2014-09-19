@@ -49,6 +49,7 @@ class server.App
       else
         console.log reason
 
+    # API.
     api.addToExpress app, (route, req, res, promise) ->
       promise
         .then (json) -> res['json'] json
@@ -56,7 +57,7 @@ class server.App
           onError route, reason
           res['status'](500)['json'] {}
 
-    # Pages rendering.
+    # FrontPage rendering.
     routes.addToExpress app, (route, req, res) ->
       params = req['params']
 

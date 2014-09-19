@@ -23,6 +23,7 @@ class app.Xhr
     @put = @send.bind @, 'PUT'
 
   ###*
+    TODO: Check connection.
     @param {string} method
     @param {string} url
     @param {Object=} json
