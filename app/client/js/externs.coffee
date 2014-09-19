@@ -54,6 +54,14 @@ class serverClientData
   serverClientData::app
   serverClientData::version
 
+class elasticSearch
+  elasticSearch::Client
+  elasticSearch::host
+  elasticSearch::index
+  elasticSearch::type
+  elasticSearch::id
+  elasticSearch::body
+
 # TODO: Move to separate externs repo. Use typedef.
 
 class Firebase
