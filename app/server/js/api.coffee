@@ -14,10 +14,10 @@ class server.Api
 
     @route api.song
       .put (params, body) ->
-        console.log params, body
-        goog.Promise.resolve foo: 'bla'
+        # console.log params, body
+        goog.Promise.resolve()
       .delete (params, body) ->
-        goog.Promise.reject body
+        goog.Promise.resolve()
 
   ###*
     @param {este.Route} route
