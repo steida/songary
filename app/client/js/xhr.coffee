@@ -1,26 +1,26 @@
-goog.provide 'app.RestStorage'
+goog.provide 'app.Xhr'
 
 goog.require 'goog.Promise'
 goog.require 'goog.labs.net.xhr'
 
-class app.RestStorage
+class app.Xhr
 
   ###*
     @constructor
   ###
   constructor: ->
-    @createHttpMethodAliases_()
-
-  createHttpMethodAliases_: ->
-    @delete = @send.bind @, 'DELETE'
-    @get = @send.bind @, 'GET'
-    @patch = @send.bind @, 'PATCH'
-    @push = @send.bind @, 'PUSH'
-    @put = @send.bind @, 'PUT'
+    @createHttpMethods_()
 
   @XHR_OPTIONS:
     headers:
       'Content-Type': 'application/json;charset=utf-8'
+
+  createHttpMethods_: ->
+    @delete = @send.bind @, 'DELETE'
+    @get = @send.bind @, 'GET'
+    @patch = @send.bind @, 'PATCH'
+    @post = @send.bind @, 'POST'
+    @put = @send.bind @, 'PUT'
 
   ###*
     @param {string} method
@@ -32,4 +32,4 @@ class app.RestStorage
     # TODO: Throw error or ignore pending requests with the same args.
     data = JSON.stringify json
     goog.labs.net.xhr
-      .send method, url, data, RestStorage.XHR_OPTIONS
+      .send method, url, data, Xhr.XHR_OPTIONS

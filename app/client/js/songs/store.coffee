@@ -8,13 +8,13 @@ class app.songs.Store extends este.labs.Store
 
   ###*
     @param {app.LocalHistory} localHistory
-    @param {app.RestStorage} restStorage
     @param {app.Routes} routes
+    @param {app.Xhr} xhr
     @param {app.user.Store} userStore
     @constructor
     @extends {este.labs.Store}
   ###
-  constructor: (@localHistory, @restStorage, @routes, @userStore) ->
+  constructor: (@localHistory, @routes, @xhr, @userStore) ->
     super 'songs'
     @lastTenSongs = []
     @songsByUrl = []
@@ -33,9 +33,9 @@ class app.songs.Store extends este.labs.Store
     @override
   ###
   fromJson: (json) ->
-    if json.lastTenSongs
-      @lastTenSongs = @asArray json.lastTenSongs || {}
-        .map @instanceFromJson app.songs.Song
+    # if json.lastTenSongs
+    #   @lastTenSongs = @asArray json.lastTenSongs || {}
+    #     .map @instanceFromJson app.songs.Song
     if json.songsByUrl
       @songsByUrl = @asArray json.songsByUrl || {}
         .map @instanceFromJson app.songs.Song
@@ -52,7 +52,7 @@ class app.songs.Store extends este.labs.Store
     if errors.length
       return goog.Promise.reject errors
 
-    @restStorage
+    @xhr
       .put @routes.api.song.url(id: song.id), published.toJson()
       .then (value) =>
         @userStore.setSongPublisher song
@@ -62,7 +62,7 @@ class app.songs.Store extends este.labs.Store
     @return {!goog.Promise}
   ###
   unpublish: (song) ->
-    @restStorage
+    @xhr
       .delete @routes.api.song.url(id: song.id)
       .then (value) =>
         @userStore.removeSongPublisher song
