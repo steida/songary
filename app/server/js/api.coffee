@@ -6,14 +6,20 @@ class server.Api
 
   ###*
     @param {app.Routes} routes
+    @param {app.songs.Store} songsStore
     @constructor
   ###
-  constructor: (routes) ->
+  constructor: (routes, songsStore) ->
     @handlers = []
     api = routes.api
 
     @route api.song
       .put (params, body) ->
+        errors = songsStore
+          .instanceFromJson app.songs.Song, body
+          .validatePublished()
+        if errors.length
+          return goog.Promise.reject errors
         # console.log params, body
         goog.Promise.resolve()
       .delete (params, body) ->

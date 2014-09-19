@@ -45,10 +45,11 @@ class app.songs.Store extends este.labs.Store
     @return {!goog.Promise}
   ###
   publish: (song) ->
-    published = @instanceFromJson app.songs.Song, song.toJson()
-    published.publisher = @userStore.user.uid
+    json = song.toJson()
+    json.publisher = @userStore.user.uid
+    published = @instanceFromJson app.songs.Song, json
 
-    errors = song.validate()
+    errors = published.validatePublished()
     if errors.length
       return goog.Promise.reject errors
 

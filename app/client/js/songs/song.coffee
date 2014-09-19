@@ -14,6 +14,7 @@ class app.songs.Song
   @MSG_MISSING_LYRICS: goog.getMsg 'missing lyrics'
   @MSG_UNKNOWN_ARTIST: goog.getMsg 'unknown artist'
   @MSG_UNKNOWN_NAME: goog.getMsg 'unknown name'
+  @MSG_NOT_PUBLISHED: goog.getMsg 'Song must be published.'
 
   ###*
     @type {string}
@@ -67,6 +68,15 @@ class app.songs.Song
       .map (prop) =>
         Song.MSG_FILL_OUT = goog.getMsg 'Please fill out {$prop}.', prop: prop
         new app.ValidationError prop, Song.MSG_FILL_OUT
+
+  ###*
+    @return {Array.<app.ValidationError>}
+  ###
+  validatePublished: ->
+    errors = @validate()
+    if !@publisher
+      errors.push new app.ValidationError 'publisher', Song.MSG_NOT_PUBLISHED
+    errors
 
   update: ->
     @name = @name.slice 0, 100
