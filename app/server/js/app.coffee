@@ -14,18 +14,18 @@ class server.App
     @param {app.Routes} routes
     @param {boolean} isDev
     @param {number} port
+    @param {server.Api} api
     @param {server.FrontPage} frontPage
     @param {server.Storage} storage
     @constructor
   ###
-  constructor: (express, routes, isDev, port, frontPage, storage) ->
+  constructor: (express, routes, isDev, port, api, frontPage, storage) ->
 
     app = express()
 
     # Middleware must be first.
     app['use'] compression()
     app['use'] favicon 'app/client/img/favicon.ico'
-    # app.use(bodyParser.urlencoded({ extended: true }));
     app['use'] bodyParser['json']()
     app['use'] methodOverride()
 
@@ -39,29 +39,38 @@ class server.App
       # TODO: Use CDN.
       app['use'] '/app', express['static'] 'app', 'maxAge': 31557600000
 
-    # API
-    # TODO: server.Api here.
+    onError = (route, reason) ->
+      console.log 'Error: ' + '500'
+      console.log 'Route path: ' + route.path
+      console.log 'Reason:'
+      if reason.stack
+        # The stack property contains the message as well as the stack.
+        console.log reason.stack
+      else
+        console.log reason
+
+    api.addToExpress app, (route, req, res, promise) ->
+      promise
+        .then (json) -> res.json json
+        .thenCatch (reason) =>
+          onError route, reason
+          res['status'](500)['json'] {}
 
     # Pages rendering.
     routes.addToExpress app, (route, req, res) ->
       params = req['params']
 
       storage.load route, params
+        .then -> routes.setActive route, params
+        .thenCatch (reason) -> routes.trySetErrorRoute reason
         .then ->
-          routes.setActive route, params
-        .thenCatch (reason) ->
-          routes.trySetErrorRoute reason
-        .then ->
-          # User-agent detection on server for isomorphic responsive web design.
           goog.labs.userAgent.util.setUserAgent req['headers']['user-agent']
           frontPage.render()
-        .then (html) ->
-          res['send'] html
+        .then (html) -> res['send'] html
         .thenCatch (reason) ->
-          # The stack property contains the message as well as the stack.
-          console.log reason.stack
+          onError route, reason
           # TODO: Show something more beautiful, with static content only.
-          res['status'](500)['send'] 'Something is wrong, please reload browser.'
+          res['status'](500)['send'] 'Server error.'
 
     app['listen'] port, ->
       console.log 'Express server listening on port ' + port
