@@ -51,7 +51,7 @@ class server.App
 
     api.addToExpress app, (route, req, res, promise) ->
       promise
-        .then (json) -> res.json json
+        .then (json) -> res['json'] json
         .thenCatch (reason) =>
           onError route, reason
           res['status'](500)['json'] {}
