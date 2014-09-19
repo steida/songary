@@ -55,8 +55,7 @@ class app.songs.Store extends este.labs.Store
 
     @xhr
       .put @routes.api.song.url(id: song.id), published.toJson()
-      .then (value) =>
-        @userStore.setSongPublisher song
+      .then => @userStore.setSongPublisher song
 
   ###*
     @param {app.songs.Song} song

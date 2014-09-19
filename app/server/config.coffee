@@ -11,4 +11,6 @@ module.exports =
       "http://localhost:#{port}/"
     else
       "http://#{process.env.SUBDOMAIN}.jit.su/"
+  elasticSearch:
+    host: ''
   version: require('../../package.json')['version']

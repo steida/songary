@@ -26,6 +26,11 @@ server.main = (config) ->
       clientData:
         app:
           version: config['version']
+  ,
+    resolve: server.ElasticSearch
+    with:
+      elasticSearch: require 'elasticsearch'
+      host: config['elasticSearch']['host']
 
   container.resolveServerApp()
 
