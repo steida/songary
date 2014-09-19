@@ -101,7 +101,10 @@ class app.Storage extends este.labs.Storage
         return @notFound() if !@userStore.isLogged()
       when @routes.mySong, @routes.editSong
         return @notFound() if !@userStore.songById params.id
+      when @routes.song
+        # TODO: Preload store or 404
+        return @notFound()
 
-    promise = @firebase.loadByRoute route, @routes, params
-    return promise if promise
+    # promise = @firebase.loadByRoute route, @routes, params
+    # return promise if promise
     @ok()
