@@ -6,9 +6,11 @@ goog.require 'goog.labs.net.xhr'
 class app.Xhr
 
   ###*
+    TODO: Check connection etc.
+    @param {app.Error} error
     @constructor
   ###
-  constructor: ->
+  constructor: (@error) ->
     @createHttpMethods_()
 
   @XHR_OPTIONS:
@@ -23,7 +25,6 @@ class app.Xhr
     @put = @send.bind @, 'PUT'
 
   ###*
-    TODO: Check connection.
     @param {string} method
     @param {string} url
     @param {Object=} json
@@ -34,3 +35,4 @@ class app.Xhr
     data = JSON.stringify json
     goog.labs.net.xhr
       .send method, url, data, Xhr.XHR_OPTIONS
+      .thenCatch @error.handle
