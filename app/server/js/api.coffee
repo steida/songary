@@ -7,13 +7,12 @@ class server.Api
   ###*
     @param {app.Routes} routes
     @param {app.songs.Store} songsStore
-    @param {server.ElasticSearch} elasticSearch
+    @param {server.ElasticSearch} elastic
     @constructor
   ###
-  constructor: (routes, songsStore, elasticSearch) ->
+  constructor: (routes, songsStore, elastic) ->
     @handlers = []
     api = routes.api
-    client = elasticSearch.client
 
     @route api.song
       .put (params, body) ->
@@ -22,22 +21,17 @@ class server.Api
           .validatePublished()
         if errors.length
           return goog.Promise.reject errors
+        elastic.index
+          index: 'songary'
+          type: 'song'
+          id: params.id
+          body: body
 
-        # TODO: Refactor.
-        new goog.Promise (resolve, reject) ->
-          client.index
-            index: 'songary'
-            type: 'song'
-            id: params.id
-            body: body
-          , (error, response) ->
-            if error
-              reject error
-            else
-              resolve()
-
-      .delete (params, body) ->
-        goog.Promise.resolve()
+      .delete (params) ->
+        elastic.delete
+          index: 'songary'
+          type: 'song'
+          id: params.id
 
   ###*
     @param {este.Route} route

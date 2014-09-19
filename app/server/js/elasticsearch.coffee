@@ -10,17 +10,21 @@ class server.ElasticSearch
     @constructor
   ###
   constructor: (elasticSearch, host) ->
-    @client = new elasticSearch['Client'] 'host': host
+    @client = new elasticSearch.Client host: host
 
-    # @client.ping
-    #   # ping usually has a 100ms timeout
-    #   requestTimeout: 500
-    #
-    #   # undocumented params are appended to the query string
-    #   hello: "elasticsearch!"
-    # , (error) ->
-    #   if error
-    #     console.trace "elasticsearch cluster is down!"
-    #   else
-    #     console.log "All is well"
-    #   return
+    @index = @toPromise_ @client.index
+    @delete = @toPromise_ @client.delete
+
+  ###*
+    @param {Function} fn
+    @return {Function}
+    @private
+  ###
+  toPromise_: (fn) ->
+    (params) =>
+      new goog.Promise (resolve, reject) =>
+        fn.call @client, params, (error, response) ->
+          if error
+            reject error
+            return
+          resolve()
