@@ -6,11 +6,13 @@ class server.Storage extends este.labs.Storage
 
   ###*
     @param {app.Routes} routes
+    @param {server.ElasticSearch} elastic
+    @param {app.songs.Store} songsStore
     @constructor
     @extends {este.labs.Storage}
     @final
   ###
-  constructor: (@routes) ->
+  constructor: (@routes, @elastic, @songsStore) ->
     super()
 
   ###*
@@ -23,5 +25,10 @@ class server.Storage extends este.labs.Storage
       when @routes.song
         # TODO: Preload store or 404
         return @notFound()
-      #   @elastic.loadSong params
+      when @routes.songs
+        @elastic
+          .search index: 'songary', type: 'song'
+          .then (response) =>
+            @songsStore.fromJson
+              lastTenSongs: response.hits.hits.map (hit) -> hit._source
     @ok()

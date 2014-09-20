@@ -14,6 +14,7 @@ class server.ElasticSearch
 
     @index = @toPromise_ @client.index
     @delete = @toPromise_ @client.delete
+    @search = @toPromise_ @client.search
 
   ###*
     @param {Function} fn
@@ -27,4 +28,4 @@ class server.ElasticSearch
           if error
             reject error
             return
-          resolve()
+          resolve response

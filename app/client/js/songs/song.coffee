@@ -59,6 +59,11 @@ class app.songs.Song
     !!@publisher
 
   ###*
+    @type {?number}
+  ###
+  updatedAt: null
+
+  ###*
     @return {Array.<app.ValidationError>}
   ###
   validate: ->

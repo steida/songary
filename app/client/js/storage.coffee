@@ -9,16 +9,17 @@ class app.Storage extends este.labs.Storage
   ###*
     Storage manages stores state. Store itself should not load nor save anything
     directly since it's used both on client and server side.
-    @param {app.LocalStorage} localStorage
     @param {app.Firebase} firebase
+    @param {app.LocalStorage} localStorage
     @param {app.Routes} routes
-    @param {app.user.Store} userStore
+    @param {app.Xhr} xhr
     @param {app.songs.Store} songsStore
+    @param {app.user.Store} userStore
     @constructor
     @extends {este.labs.Storage}
     @final
   ###
-  constructor: (@localStorage, @firebase, @routes, @userStore, @songsStore) ->
+  constructor: (@firebase, @localStorage, @routes, @xhr, @songsStore, @userStore) ->
     super()
 
     @stores = [@userStore]
@@ -98,13 +99,16 @@ class app.Storage extends este.labs.Storage
   load: (route, params) ->
     switch route
       when @routes.me
-        return @notFound() if !@userStore.isLogged()
+        if !@userStore.isLogged()
+          return @notFound()
       when @routes.mySong, @routes.editSong
-        return @notFound() if !@userStore.songById params.id
+        if !@userStore.songById params.id
+          return @notFound()
       when @routes.song
-        # TODO: Preload store or 404
         return @notFound()
-
-    # promise = @firebase.loadByRoute route, @routes, params
-    # return promise if promise
+      when @routes.songs
+        return @xhr
+          .get @routes.api.songs.url()
+          .then (songs) =>
+            @songsStore.fromJson lastTenSongs: songs
     @ok()

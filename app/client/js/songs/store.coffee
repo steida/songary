@@ -33,12 +33,8 @@ class app.songs.Store extends este.labs.Store
     @override
   ###
   fromJson: (json) ->
-    # if json.lastTenSongs
-    #   @lastTenSongs = @asArray json.lastTenSongs || {}
-    #     .map @instanceFromJson app.songs.Song
-    if json.songsByUrl
-      @songsByUrl = @asArray json.songsByUrl || {}
-        .map @instanceFromJson app.songs.Song
+    if json.lastTenSongs
+      @lastTenSongs = json.lastTenSongs.map @instanceFromJson app.songs.Song
 
   ###*
     @param {app.songs.Song} song

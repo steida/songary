@@ -21,17 +21,17 @@ class server.Api
           .validatePublished()
         if errors.length
           return goog.Promise.reject errors
-        elastic.index
-          index: 'songary'
-          type: 'song'
-          id: params.id
-          body: body
+        body.updatedAt = new Date
+        elastic.index index: 'songary', type: 'song', id: params.id, body: body
 
       .delete (params) ->
-        elastic.delete
-          index: 'songary'
-          type: 'song'
-          id: params.id
+        elastic.delete index: 'songary', type: 'song', id: params.id
+
+    @route api.songs
+      .get ->
+        elastic.search index: 'songary', type: 'song'
+          .then (response) ->
+            response.hits.hits.map (hit) -> hit._source
 
   ###*
     @param {este.Route} route
