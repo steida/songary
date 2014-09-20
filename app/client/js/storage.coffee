@@ -33,6 +33,29 @@ class app.Storage extends este.labs.Storage
   @THROTTLE_MS: 1000
 
   ###*
+    @override
+  ###
+  load: (route, params) ->
+    switch route
+      when @routes.me
+        if !@userStore.isLogged()
+          return @notFound()
+      when @routes.mySong, @routes.editSong
+        if !@userStore.songById params.id
+          return @notFound()
+      when @routes.song
+        return @xhr
+          .get @routes.api.song.url params
+          .then (songs) =>
+            @songsStore.fromJson songsByUrl: songs
+      when @routes.songs
+        return @xhr
+          .get @routes.api.songs.url()
+          .then (songs) =>
+            @songsStore.fromJson lastTenSongs: songs
+    @ok()
+
+  ###*
     TODO: Handle error.
     @private
   ###
@@ -92,23 +115,3 @@ class app.Storage extends este.labs.Storage
     # Save all changes throttled.
     @pendingStores.add store
     @save.fire()
-
-  ###*
-    @override
-  ###
-  load: (route, params) ->
-    switch route
-      when @routes.me
-        if !@userStore.isLogged()
-          return @notFound()
-      when @routes.mySong, @routes.editSong
-        if !@userStore.songById params.id
-          return @notFound()
-      when @routes.song
-        return @notFound()
-      when @routes.songs
-        return @xhr
-          .get @routes.api.songs.url()
-          .then (songs) =>
-            @songsStore.fromJson lastTenSongs: songs
-    @ok()

@@ -16,8 +16,24 @@ class server.ElasticSearch
     @delete = @toPromise_ @client.delete
     @search = @toPromise_ @client.search
 
+  getLastTenSongs: ->
+    @asSource @search index: 'songary', type: 'song', body:
+      sort: updatedAt: order: 'desc'
+
+  getSongsByUrl: (urlArtist, urlName) ->
+    @asSource @search index: 'songary', type: 'song', body:
+      query: filtered: filter: bool: must: [
+        term: urlName: urlName
+      ,
+        term: urlArtist: urlArtist
+      ]
+
+  asSource: (promise) ->
+    promise.then (response) ->
+      response.hits.hits.map (hit) -> hit._source
+
   ###*
-    elasticSearch implements promise but without thenCatch, so use goog Promise.
+    ElasticSearch promises missing thenCatch method, so transform it to goog.Promise.
     @param {Function} fn
     @return {Function}
     @private
@@ -30,8 +46,3 @@ class server.ElasticSearch
             reject error
             return
           resolve response
-
-  getLastTenSongs: ->
-    @search index: 'songary', type: 'song', body: sort: updatedAt: order: 'desc'
-      .then (response) ->
-        response.hits.hits.map (hit) -> hit._source

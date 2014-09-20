@@ -35,6 +35,8 @@ class app.songs.Store extends este.labs.Store
   fromJson: (json) ->
     if json.lastTenSongs
       @lastTenSongs = json.lastTenSongs.map @instanceFromJson app.songs.Song
+    if json.songsByUrl
+      @songsByUrl = json.songsByUrl.map @instanceFromJson app.songs.Song
 
   ###*
     @param {app.songs.Song} song
@@ -43,6 +45,7 @@ class app.songs.Store extends este.labs.Store
   publish: (song) ->
     json = song.toJson()
     json.publisher = @userStore.user.uid
+    delete json.inTrash
     published = @instanceFromJson app.songs.Song, json
 
     errors = published.validatePublished()

@@ -38,9 +38,9 @@ class server.Api
   route: (route) ->
     create = (method, handler) ->
       @handlers.push
+        callback: handler
         method: method
         path: route.path
-        callback: handler
         route: route
       actions
 

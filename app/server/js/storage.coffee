@@ -21,11 +21,13 @@ class server.Storage extends este.labs.Storage
   load: (route, params) ->
     switch route
       when @routes.editSong, @routes.mySong, @routes.trash, @routes.me
-        return @notFound()
+        # No server state for user yet.
+        @notFound()
       when @routes.song
-        # TODO: Preload store or 404
-        return @notFound()
+        @elastic.getSongsByUrl params.urlArtist, params.urlName
+          .then (songs) => @songsStore.fromJson songsByUrl: songs
       when @routes.songs
         @elastic.getLastTenSongs()
           .then (songs) => @songsStore.fromJson lastTenSongs: songs
-    @ok()
+      else
+        @ok()
