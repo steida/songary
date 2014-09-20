@@ -44,6 +44,7 @@ class appSongsSong
   appSongsSong::lyrics
   appSongsSong::inTrash
   appSongsSong::publisher
+  appSongsSong::updatedAt
 
 class appRoutesParams
   appRoutesParams::id
@@ -64,6 +65,8 @@ class elasticSearch
   elasticSearch::search
   elasticSearch::hits
   elasticSearch::_source
+  elasticSearch::sort
+  elasticSearch::order
 
 # TODO: Move to separate externs repo. Use typedef.
 

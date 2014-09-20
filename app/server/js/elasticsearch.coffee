@@ -32,6 +32,6 @@ class server.ElasticSearch
           resolve response
 
   getLastTenSongs: ->
-    @search index: 'songary', type: 'song'
+    @search index: 'songary', type: 'song', body: sort: updatedAt: order: 'desc'
       .then (response) ->
         response.hits.hits.map (hit) -> hit._source
