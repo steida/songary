@@ -29,9 +29,7 @@ class server.Api
 
     @route api.songs
       .get ->
-        elastic.search index: 'songary', type: 'song'
-          .then (response) ->
-            response.hits.hits.map (hit) -> hit._source
+        elastic.getLastTenSongs()
 
   ###*
     @param {este.Route} route

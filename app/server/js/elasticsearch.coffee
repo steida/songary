@@ -17,6 +17,7 @@ class server.ElasticSearch
     @search = @toPromise_ @client.search
 
   ###*
+    elasticSearch implements promise but without thenCatch, so use goog Promise.
     @param {Function} fn
     @return {Function}
     @private
@@ -29,3 +30,8 @@ class server.ElasticSearch
             reject error
             return
           resolve response
+
+  getLastTenSongs: ->
+    @search index: 'songary', type: 'song'
+      .then (response) ->
+        response.hits.hits.map (hit) -> hit._source
