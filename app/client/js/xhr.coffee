@@ -6,7 +6,6 @@ goog.require 'goog.labs.net.xhr'
 class app.Xhr
 
   ###*
-    TODO: Check connection etc.
     @param {app.Error} error
     @constructor
   ###
@@ -31,8 +30,8 @@ class app.Xhr
     @return {!goog.Promise}
   ###
   send: (method, url, json) ->
-    # TODO: Throw error or ignore pending requests with the same args.
     data = JSON.stringify json
     goog.labs.net.xhr
       .send method, url, data, Xhr.XHR_OPTIONS
+      .then (xhr) -> JSON.parse xhr.responseText
       .thenCatch @error.handle
