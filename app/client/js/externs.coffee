@@ -67,6 +67,12 @@ class elasticSearch
   elasticSearch::_source
   elasticSearch::sort
   elasticSearch::order
+  elasticSearch::query
+  elasticSearch::filtered
+  elasticSearch::filter
+  elasticSearch::bool
+  elasticSearch::must
+  elasticSearch::term
 
 # TODO: Move to separate externs repo. Use typedef.
 
