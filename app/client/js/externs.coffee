@@ -61,6 +61,9 @@ class elasticSearch
   elasticSearch::type
   elasticSearch::id
   elasticSearch::body
+  elasticSearch::search
+  elasticSearch::hits
+  elasticSearch::_source
 
 # TODO: Move to separate externs repo. Use typedef.
 
