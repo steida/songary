@@ -1,6 +1,7 @@
 gulp = require 'gulp'
 
 GulpEste = require 'gulp-este'
+fixturesTask = require './tasks/fixtures.coffee'
 runSequence = require 'run-sequence'
 yargs = require 'yargs'
 
@@ -164,3 +165,5 @@ gulp.task 'default', (done) ->
 
 gulp.task 'bump', (done) ->
   este.bump './*.json', yargs, done
+
+gulp.task 'fixtures', fixturesTask
