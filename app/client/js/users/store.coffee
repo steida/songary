@@ -192,3 +192,15 @@ class app.user.Store extends este.labs.Store
   removeSongPublisher: (song) ->
     song.publisher = null
     @notify()
+
+  ###*
+    @param {app.songs.Song} publishedSong
+  ###
+  savePublishedSongToDevice: (publishedSong) ->
+    # Save the same song, but as unpublished.
+    json = publishedSong.toJson()
+    delete json.publisher
+    delete json.updatedAt
+    song = @instanceFromJson app.songs.Song, json
+    @songs.push song
+    @notify()
