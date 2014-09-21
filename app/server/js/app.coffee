@@ -24,20 +24,20 @@ class server.App
     app = express()
 
     # Middleware must be first.
-    app['use'] compression()
-    app['use'] favicon 'app/client/img/favicon.ico'
-    app['use'] bodyParser['json']()
-    app['use'] methodOverride()
+    app.use compression()
+    app.use favicon 'app/client/img/favicon.ico'
+    app.use bodyParser.json()
+    app.use methodOverride()
 
     # Static assets.
     if isDev
-      app['use'] '/bower_components', express['static'] 'bower_components'
-      app['use'] '/app', express['static'] 'app'
-      app['use'] '/tmp', express['static'] 'tmp'
+      app.use '/bower_components', express.static 'bower_components'
+      app.use '/app', express.static 'app'
+      app.use '/tmp', express.static 'tmp'
     else
       # Compiled script has per deploy specific url so set maxAge to one year.
       # TODO: Use CDN.
-      app['use'] '/app', express['static'] 'app', 'maxAge': 31557600000
+      app.use '/app', express.static 'app', 'maxAge': 31557600000
 
     onError = (route, reason) ->
       console.log 'Error: ' + '500'
@@ -52,10 +52,10 @@ class server.App
     # API.
     api.addToExpress app, (route, req, res, promise) ->
       promise
-        .then (json) -> res['json'] json
+        .then (json) -> res.json json
         .thenCatch (reason) =>
           onError route, reason
-          res['status'](500)['json'] {}
+          res.status(500).json {}
 
     # FrontPage rendering.
     routes.addToExpress app, (route, req, res) ->
@@ -67,11 +67,12 @@ class server.App
         .then ->
           goog.labs.userAgent.util.setUserAgent req['headers']['user-agent']
           frontPage.render()
-        .then (html) -> res['send'] html
+        .then (html) ->
+          res.send html
         .thenCatch (reason) ->
           onError route, reason
           # TODO: Show something more beautiful, with static content only.
-          res['status'](500)['send'] 'Server error.'
+          res.status(500).send 'Server error.'
 
-    app['listen'] port, ->
+    app.listen port, ->
       console.log 'Express server listening on port ' + port

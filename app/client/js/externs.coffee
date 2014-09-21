@@ -74,6 +74,14 @@ class elasticSearch
   elasticSearch::must
   elasticSearch::term
 
+class expressjs
+  expressjs::status
+  expressjs::send
+  expressjs::json
+  expressjs::listen
+  expressjs::use
+  expressjs::static
+
 # TODO: Move to separate externs repo. Use typedef.
 
 class Firebase
