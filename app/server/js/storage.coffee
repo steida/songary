@@ -20,9 +20,8 @@ class server.Storage extends este.labs.Storage
   ###
   load: (route, params) ->
     switch route
-      when @routes.editSong, @routes.mySong, @routes.trash, @routes.me
-        # No server state for user yet.
-        @notFound()
+      when @routes.about, @routes.home, @routes.newSong
+        @ok()
       when @routes.song
         @elastic.getSongsByUrl params.urlArtist, params.urlName
           .then (songs) =>
@@ -30,6 +29,7 @@ class server.Storage extends este.labs.Storage
             @songsStore.fromJson songsByUrl: songs
       when @routes.songs
         @elastic.getLastTenSongs()
-          .then (songs) => @songsStore.fromJson lastTenSongs: songs
+          .then (songs) =>
+            @songsStore.fromJson lastTenSongs: songs
       else
-        @ok()
+        @notFound()

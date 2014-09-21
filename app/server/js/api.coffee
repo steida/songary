@@ -16,11 +16,9 @@ class server.Api
 
     @route api.song
       .put (params, body) ->
-        errors = songsStore
-          .instanceFromJson app.songs.Song, body
+        errors = songsStore.instanceFromJson app.songs.Song, body
           .validatePublished()
-        if errors.length
-          return goog.Promise.reject errors
+        return goog.Promise.reject errors if errors.length
 
         body.updatedAt = new Date
         elastic.index index: 'songary', type: 'song', id: params.id, body: body
