@@ -37,9 +37,9 @@ class app.Storage extends este.labs.Storage
   ###
   load: (route, params) ->
     switch route
-      when @routes.about, @routes.home, @routes.newSong
+      when @routes.about, @routes.home, @routes.newSong, @routes.trash
         @ok()
-      when @routes.me, @routes.trash
+      when @routes.me
         return @notFound() if !@userStore.isLogged()
         @ok()
       when @routes.mySong, @routes.editSong
