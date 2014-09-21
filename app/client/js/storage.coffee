@@ -38,15 +38,14 @@ class app.Storage extends este.labs.Storage
   load: (route, params) ->
     switch route
       when @routes.me
-        if !@userStore.isLogged()
-          return @notFound()
+        return @notFound() if !@userStore.isLogged()
       when @routes.mySong, @routes.editSong
-        if !@userStore.songById params.id
-          return @notFound()
+        return @notFound() if !@userStore.songById params.id
       when @routes.song
         return @xhr
-          .get @routes.api.song.url params
+          .get @routes.api.songsByUrl.url params
           .then (songs) =>
+            return @notFound() if !songs.length
             @songsStore.fromJson songsByUrl: songs
       when @routes.songs
         return @xhr

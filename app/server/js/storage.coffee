@@ -25,7 +25,9 @@ class server.Storage extends este.labs.Storage
         @notFound()
       when @routes.song
         @elastic.getSongsByUrl params.urlArtist, params.urlName
-          .then (songs) => @songsStore.fromJson songsByUrl: songs
+          .then (songs) =>
+            return @notFound() if !songs.length
+            @songsStore.fromJson songsByUrl: songs
       when @routes.songs
         @elastic.getLastTenSongs()
           .then (songs) => @songsStore.fromJson lastTenSongs: songs

@@ -24,3 +24,4 @@ class app.Routes extends este.Routes
     @api =
       song: @route '/api/songs/:id'
       songs: @route '/api/songs'
+      songsByUrl: @route '/api/songs/:urlArtist/:urlName'

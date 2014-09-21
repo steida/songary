@@ -68,7 +68,8 @@ class server.App
           goog.labs.userAgent.util.setUserAgent req['headers']['user-agent']
           frontPage.render()
         .then (html) ->
-          res.send html
+          status = if routes.active == routes.notFound then 404 else 200
+          res.status(status).send html
         .thenCatch (reason) ->
           onError route, reason
           # TODO: Show something more beautiful, with static content only.

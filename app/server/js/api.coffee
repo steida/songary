@@ -21,6 +21,7 @@ class server.Api
           .validatePublished()
         if errors.length
           return goog.Promise.reject errors
+
         body.updatedAt = new Date
         elastic.index index: 'songary', type: 'song', id: params.id, body: body
 
@@ -30,6 +31,10 @@ class server.Api
     @route api.songs
       .get ->
         elastic.getLastTenSongs()
+
+    @route api.songsByUrl
+      .get (params, body) ->
+        elastic.getSongsByUrl params.urlArtist, params.urlName
 
   ###*
     @param {este.Route} route
