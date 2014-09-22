@@ -15,7 +15,10 @@ class app.react.Header
       render: ->
         header {},
           nav {},
-            link.to routes.home, Header.MSG_MY_SONGS
+            link.to
+              route: routes.home
+              text: Header.MSG_MY_SONGS
+              activeFor: [routes.editSong, routes.newSong, routes.trash]
             link.to routes.songs, Header.MSG_SONGS
             link.to routes.about, Header.MSG_ABOUT
             if userStore.isLogged()
