@@ -42,4 +42,6 @@ class app.react.pages.MySongs
               , "Trash (#{deletedSongs.length})"
 
   @MSG_ADD_NEW_SONG: goog.getMsg 'New Song'
-  @MSG_NO_SONGS: goog.getMsg 'No songs.'
+  @MSG_NO_SONGS: goog.getMsg "
+    You have no songs stored on your device yet. Add or search one.
+  "
