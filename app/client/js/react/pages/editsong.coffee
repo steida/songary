@@ -180,21 +180,23 @@ class app.react.pages.EditSong
           .then => yellowFade.on @refs['published-song-link']
 
       onUnpublishPointerUp: ->
+        return if !confirm EditSong.MSG_ARE_YOU_SURE_UNPUBLISH
         songsStore.unpublish song
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method for later string localization.
+  @MSG_ARE_YOU_SURE_UNPUBLISH: goog.getMsg 'Are you sure you want to unpublish this song?'
   @MSG_CREATE_NEW_SONG: goog.getMsg 'Add New Song'
   @MSG_DELETE: goog.getMsg 'Delete'
   @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to write lyrics'
-  @MSG_LYRICS_HISTORY_P: goog.getMsg 'This is just MVP version. Formatting, cleaning, merging etc. will be implemented later. For now, you can merge with copy&paste :-P'
-  @MSG_RESTORE: goog.getMsg 'Restore'
+  @MSG_LOGIN_TO_PUBLISH: goog.getMsg 'You must be logged to publish song.'
   @MSG_LYRICS_HISTORY: goog.getMsg 'Lyrics History'
+  @MSG_LYRICS_HISTORY_P: goog.getMsg 'This is just MVP version. Formatting, cleaning, merging etc. will be implemented later. For now, you can merge with copy&paste :-P'
+  @MSG_PUBLISH: goog.getMsg 'Publish'
+  @MSG_RESTORE: goog.getMsg 'Restore'
   @MSG_SONG_ARTIST: goog.getMsg 'Artist (or band)'
   @MSG_SONG_NAME: goog.getMsg 'Song name'
-  @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'
-  @MSG_PUBLISH: goog.getMsg 'Publish'
-  @MSG_UNPUBLISH: goog.getMsg 'Unpublish'
-  @MSG_LOGIN_TO_PUBLISH: goog.getMsg 'You must be logged to publish song.'
   @MSG_SONG_WAS_PUBLISHED: goog.getMsg 'Song is published at'
+  @MSG_UNPUBLISH: goog.getMsg 'Unpublish'
   @MSG_UNPUBLISH_BEFORE_DELETE: goog.getMsg 'Song is published. Unpublish it before delete.'
+  @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'
