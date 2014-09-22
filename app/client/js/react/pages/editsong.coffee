@@ -61,12 +61,11 @@ class app.react.pages.EditSong
                 value: song.lyrics
               userStore.isLogged() &&
                 @renderLocalHistory song
-              !song.inTrash &&
-                p className: 'help-block',
-                  a
-                    href: 'http://linkesoft.com/songbook/chordproformat.html'
-                    target: '_blank'
-                  , EditSong.MSG_HOW_TO_WRITE_LYRICS
+              !song.inTrash && p {},
+                a
+                  href: 'http://linkesoft.com/songbook/chordproformat.html'
+                  target: '_blank'
+                , EditSong.MSG_HOW_TO_WRITE_LYRICS
             nav {},
               if editMode
                 button
