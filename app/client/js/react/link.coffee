@@ -1,8 +1,11 @@
 goog.provide 'app.react.Link'
 
+goog.require 'goog.asserts'
+
 class app.react.Link
 
   ###*
+    TODO: Move to este-library once api is stabilized.
     @param {app.Routes} routes
     @param {app.react.Touch} touch
     @constructor
@@ -10,18 +13,42 @@ class app.react.Link
   constructor: (@routes, @touch) ->
 
   ###*
-    @param {este.Route} route
-    @param {string} text
-    @param {Object=} urlParams
-    @param {Object=} props
+    @typedef {{
+      route: este.Route,
+      text: string,
+      params: (Object|undefined),
+      props: (Object|undefined),
+      activeFor: (Array.<este.Route>|undefined)
+    }}
   ###
-  to: (route, text, urlParams, props) ->
+  @Options: null
+
+  ###*
+    @param {(este.Route|app.react.Link.Options)} routeOrOptions
+    @param {string=} text
+    @param {Object=} params Url params.
+    @param {Object=} props React props.
+    @param {Array.<este.Route>=} activeFor Additional active routes.
+  ###
+  to: (routeOrOptions, text, params, props, activeFor) ->
+    if arguments.length == 1
+      goog.asserts.assertObject routeOrOptions
+      {route, text, params, props, activeFor} = routeOrOptions
+    else
+      route = routeOrOptions
+      goog.asserts.assertInstanceof route, este.Route
+      goog.asserts.assertString text
+
+    activeFor ?= []
+    activeFor.push route
+
+    linkProps = href: route.url params
+    goog.mixin linkProps, props || {}
+
+    classNames = (linkProps.className || '').match(/\S+/g) || []
+    classNames.push 'active' if activeFor.indexOf(@routes.active) != -1
+    linkProps.className = classNames.join ' '
+
+    # "Fast click" anchor.
     {a} = @touch.none 'a'
-
-    linkProps = href: route.url urlParams
-    goog.mixin linkProps, props if props
-    linkProps.className ?= ''
-    linkProps.className += ' ' + if @routes.active == route then 'active' else ''
-    delete linkProps.className if !linkProps.className.trim()
-
     a linkProps, text
