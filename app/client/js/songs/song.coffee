@@ -12,9 +12,10 @@ class app.songs.Song
     @id = goog.string.getRandomString()
 
   @MSG_MISSING_LYRICS: goog.getMsg 'missing lyrics'
+  @MSG_NOT_PUBLISHED: goog.getMsg 'Song must be published.'
+  @MSG_UNKNOWN_ALBUM: goog.getMsg 'unknown album'
   @MSG_UNKNOWN_ARTIST: goog.getMsg 'unknown artist'
   @MSG_UNKNOWN_NAME: goog.getMsg 'unknown name'
-  @MSG_NOT_PUBLISHED: goog.getMsg 'Song must be published.'
 
   ###*
     @type {string}
@@ -35,6 +36,17 @@ class app.songs.Song
     @type {string}
   ###
   urlArtist: ''
+
+  ###*
+    Optional.
+    @type {string}
+  ###
+  album: ''
+
+  ###*
+    @type {string}
+  ###
+  urlAlbum: ''
 
   ###*
     http://linkesoft.com/songbook/chordproformat.html
@@ -86,6 +98,7 @@ class app.songs.Song
   update: ->
     @name = @name.slice 0, 100
     @artist = @artist.slice 0, 100
+    @album = @album.slice 0, 100
     @lyrics = @lyrics.slice 0, 32000
 
     @urlName = este.string.toFancyUrl @name
@@ -94,11 +107,17 @@ class app.songs.Song
     @urlArtist = este.string.toFancyUrl @artist
     @artist = '' if !@urlArtist
 
+    @urlAlbum = este.string.toFancyUrl @album
+    @album = '' if !@urlAlbum
+
   getDisplayName: ->
     @name || Song.MSG_UNKNOWN_NAME
 
   getDisplayArtist: ->
     @artist || Song.MSG_UNKNOWN_ARTIST
+
+  getDisplayAlbum: ->
+    @album || Song.MSG_UNKNOWN_ALBUM
 
   getDisplayLyrics: ->
     @lyrics || Song.MSG_MISSING_LYRICS

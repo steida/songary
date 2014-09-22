@@ -45,6 +45,8 @@ class appSongsSong
   appSongsSong::inTrash
   appSongsSong::publisher
   appSongsSong::updatedAt
+  appSongsSong::album
+  appSongsSong::urlAlbum
 
 class appRoutesParams
   appRoutesParams::id
