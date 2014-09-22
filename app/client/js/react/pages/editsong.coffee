@@ -159,10 +159,6 @@ class app.react.pages.EditSong
         routes.home.redirect()
 
       onToggleDeleteButtonPointerUp: ->
-        if song.isPublished() && !song.inTrash
-          alert EditSong.MSG_UNPUBLISH_BEFORE_DELETE
-          return
-
         userStore.trashSong song, !song.inTrash
         routes.home.redirect()
 
@@ -198,5 +194,4 @@ class app.react.pages.EditSong
   @MSG_SONG_NAME: goog.getMsg 'Song name'
   @MSG_SONG_WAS_PUBLISHED: goog.getMsg 'Song is published at'
   @MSG_UNPUBLISH: goog.getMsg 'Unpublish'
-  @MSG_UNPUBLISH_BEFORE_DELETE: goog.getMsg 'Song is published. Unpublish it before delete.'
   @MSG_WRITE_LYRICS_HERE: goog.getMsg '[F]Michelle [Bmi7]ma belle...'
