@@ -161,7 +161,8 @@ class app.react.pages.EditSong
 
       onToggleDeleteButtonPointerUp: ->
         userStore.trashSong song, !song.inTrash
-        routes.home.redirect()
+        if song.inTrash
+          routes.home.redirect()
 
       getLyricsHistory: (song) ->
         userStore.getSongLyricsLocalHistory song
