@@ -71,7 +71,12 @@ class app.react.pages.EditSong
                     href: 'http://linkesoft.com/songbook/chordproformat.html'
                     target: '_blank'
                   , EditSong.MSG_HOW_TO_WRITE_LYRICS
-                  ', or paste lyrics from '
+                  ', or find some on '
+                  a
+                    href: 'http://www.ultimate-guitar.com/'
+                    target: '_blank'
+                  , 'ultimate-guitar.com'
+                  ' or '
                   a
                     href: 'http://www.supermusic.sk/'
                     target: '_blank'
@@ -219,12 +224,13 @@ class app.react.pages.EditSong
           else
             ''
           # Append because app model doesn't define caret position.
+          # Can I read caret position?
           lyrics += @parsePastedHtml html
           userStore.updateSong song, 'lyrics', lyrics
 
       parsePastedHtml: (html) ->
         node = goog.dom.htmlToDocumentFragment html
-        # Convert sup elements to chords.
+        # Convert sup elements to chords. Used by supermusic.sk for example.
         sups = node.querySelectorAll 'sup'
         if sups.length > 0
           for sup in goog.array.toArray sups
@@ -235,6 +241,7 @@ class app.react.pages.EditSong
         for br in node.querySelectorAll 'br'
           newLine = document.createTextNode '\n'
           br.parentNode.replaceChild newLine, br
+        # Flatten all other elements.
         for child in node.querySelectorAll '*'
           goog.dom.flattenElement child
         node.textContent.trim()
