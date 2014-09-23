@@ -2,7 +2,7 @@
 
 Your personal song book. [Demo](http://songary.jit.su/).
 
-Made with [Este.js](https://github.com/steida/este). _Still under heavy development._
+Made with [Este.js](https://github.com/steida/este).
 
 ## Install and run
 
