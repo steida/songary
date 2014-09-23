@@ -12,8 +12,12 @@ class app.Error
   constructor: ->
 
   handle: (reason) ->
-    alert 'Application error. Sorry for that. Please reload browser.'
-    # Ensure error is shown in console.
-    goog.async.throwException reason if goog.DEBUG
+    # Don't report the same reason repeatedly.
+    if reason != @previousReason
+      alert 'Application error. Sorry for that. Please reload browser.'
+      # Ensure error is shown in console.
+      goog.async.throwException reason if goog.DEBUG
+    @previousReason = reason
+
     # Propagate error.
     throw reason
