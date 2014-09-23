@@ -75,18 +75,20 @@ class app.react.pages.EditSong
                 , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
               else
                 button className: 'btn btn-default', EditSong.MSG_CREATE_NEW_SONG
-              if editMode && !song.inTrash
+              if editMode && !song.inTrash then [
                 button
                   className: 'btn btn-default'
+                  key: 'publish'
                   onPointerUp: @onPublishPointerUp
                   type: 'button'
                 , EditSong.MSG_PUBLISH
-              if editMode && song.isPublished()
-                button
+                song.isPublished() && button
                   className: 'btn btn-default'
+                  key: 'unpublish'
                   onPointerUp: @onUnpublishPointerUp
                   type: 'button'
                 , EditSong.MSG_UNPUBLISH
+              ]
             if editMode && song.isPublished()
               p {},
                 EditSong.MSG_SONG_WAS_PUBLISHED + ' '
