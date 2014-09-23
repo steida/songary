@@ -70,7 +70,7 @@ class app.react.pages.EditSong
             nav {},
               if editMode
                 button
-                  className: "btn btn-#{song.inTrash && 'default' || 'danger'}"
+                  className: "btn btn-#{if song.inTrash then 'default' else 'danger'}"
                   onPointerUp: @onToggleDeleteButtonPointerUp
                   type: 'button'
                 , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
