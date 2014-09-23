@@ -46,7 +46,10 @@ class app.react.Link
     goog.mixin linkProps, props || {}
 
     classNames = (linkProps.className || '').match(/\S+/g) || []
-    classNames.push 'active' if activeFor.indexOf(@routes.active) != -1
+    if activeFor.indexOf(@routes.active) != -1
+      classNames.push 'active'
+    if @routes.active != route
+      classNames.push 'clickable'
     linkProps.className = classNames.join ' '
 
     # "Fast click" anchor.
