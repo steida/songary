@@ -59,7 +59,7 @@ class app.react.pages.EditSong
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
                 value: song.lyrics
-              userStore.isLogged() &&
+              if userStore.isLogged()
                 @renderLocalHistory song
               if !song.inTrash
                 p {},
@@ -83,12 +83,13 @@ class app.react.pages.EditSong
                   onPointerUp: @onPublishPointerUp
                   type: 'button'
                 , EditSong.MSG_PUBLISH
-                song.isPublished() && button
-                  className: 'btn btn-default'
-                  key: 'unpublish'
-                  onPointerUp: @onUnpublishPointerUp
-                  type: 'button'
-                , EditSong.MSG_UNPUBLISH
+                if song.isPublished()
+                  button
+                    className: 'btn btn-default'
+                    key: 'unpublish'
+                    onPointerUp: @onUnpublishPointerUp
+                    type: 'button'
+                  , EditSong.MSG_UNPUBLISH
               ]
             if editMode && song.isPublished()
               p {},
@@ -118,7 +119,7 @@ class app.react.pages.EditSong
             onPointerUp: @onLyricsHistoryBtnPointerUp
             type: 'button'
           , EditSong.MSG_LYRICS_HISTORY
-          lyricsHistoryShown &&
+          if lyricsHistoryShown
             div {},
               ol {}, lyrics
               p {}, EditSong.MSG_LYRICS_HISTORY_P
