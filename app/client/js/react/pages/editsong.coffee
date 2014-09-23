@@ -1,6 +1,9 @@
 goog.provide 'app.react.pages.EditSong'
 
 goog.require 'app.songs.Song'
+goog.require 'goog.array'
+goog.require 'goog.dom'
+goog.require 'goog.labs.userAgent.browser'
 goog.require 'goog.ui.Textarea'
 
 class app.react.pages.EditSong
@@ -55,6 +58,7 @@ class app.react.pages.EditSong
                 className: 'form-control'
                 disabled: song.inTrash
                 name: 'lyrics'
+                onPaste: @onLyricsPaste
                 onChange: @onFieldChange
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
@@ -62,11 +66,17 @@ class app.react.pages.EditSong
               if userStore.isLogged()
                 @renderLocalHistory song
               if !song.inTrash
-                p {},
+                p className: 'help',
                   a
                     href: 'http://linkesoft.com/songbook/chordproformat.html'
                     target: '_blank'
                   , EditSong.MSG_HOW_TO_WRITE_LYRICS
+                  ', or paste lyrics from '
+                  a
+                    href: 'http://www.supermusic.sk/'
+                    target: '_blank'
+                  , 'supermusic.sk'
+                  '.'
             nav {},
               if editMode
                 button
@@ -182,6 +192,52 @@ class app.react.pages.EditSong
       onUnpublishPointerUp: ->
         return if !confirm EditSong.MSG_ARE_YOU_SURE_UNPUBLISH
         songsStore.unpublish song
+
+      onLyricsPaste: (e) ->
+        @tryParsePastedHtmlWithChordsAndAllThatStuff e
+
+      tryParsePastedHtmlWithChordsAndAllThatStuff: (e) ->
+        # IE doesn't support e.clipboardData.getData 'text/html'
+        # TODO: Check IE11, IE12, IE13...
+        return if goog.labs.userAgent.browser.isIE()
+
+        try
+          # Returns empty string for data without HTML.
+          html = e.clipboardData.getData 'text/html'
+        catch e
+          # TODO: Log to server.
+
+        if html
+          # Prevent pasting plain text when we have rich HTML.
+          e.preventDefault()
+          previousLyrics = e.target.value
+          lyrics = if previousLyrics.trim()
+            if goog.string.endsWith previousLyrics, '\n'
+              previousLyrics
+            else
+              previousLyrics + '\n'
+          else
+            ''
+          # Append because app model doesn't define caret position.
+          lyrics += @parsePastedHtml html
+          userStore.updateSong song, 'lyrics', lyrics
+
+      parsePastedHtml: (html) ->
+        node = goog.dom.htmlToDocumentFragment html
+        # Convert sup elements to chords.
+        sups = node.querySelectorAll 'sup'
+        if sups.length > 0
+          for sup in goog.array.toArray sups
+            chord = sup.textContent
+            textNode = document.createTextNode "[#{chord}]"
+            sup.parentNode.replaceChild textNode, sup
+        # Preserve new lines.
+        for br in node.querySelectorAll 'br'
+          newLine = document.createTextNode '\n'
+          br.parentNode.replaceChild newLine, br
+        for child in node.querySelectorAll '*'
+          goog.dom.flattenElement child
+        node.textContent.trim()
 
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method for later string localization.
