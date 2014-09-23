@@ -35,7 +35,7 @@ class app.react.pages.MySongs
               className: 'btn btn-link'
               href: routes.newSong.url()
             , MySongs.MSG_ADD_NEW_SONG
-            deletedSongs.length > 0 &&
+            if deletedSongs.length > 0
               a
                 className: 'btn btn-link'
                 href: routes.trash.url()

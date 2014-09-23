@@ -19,7 +19,7 @@ class app.react.pages.About
       render: ->
         div className: 'page',
           p {}, About.MSG_ABOUT
-          userStore.isLogged() &&
+          if userStore.isLogged()
             form className: 'contact-form',
               div className: 'form-group',
                 textarea
@@ -40,7 +40,7 @@ class app.react.pages.About
               href: 'https://github.com/steida/songary/issues'
               target: '_blank'
             , About.MSG_ISSUES
-            
+
       onContactFormMessageChange: (e) ->
         message = e.target.value.slice 0, 499
         @forceUpdate()
