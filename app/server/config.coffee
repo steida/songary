@@ -12,5 +12,5 @@ module.exports =
     else
       "http://#{process.env.SUBDOMAIN}.jit.su/"
   elasticSearch:
-    host: 'https://101e695cd8f4b826000.qbox.io'
+    host: 'http://101e695cd8f4b826000.qbox.io'
   version: require('../../package.json')['version']
