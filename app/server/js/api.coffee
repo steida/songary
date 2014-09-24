@@ -47,6 +47,7 @@ class server.Api
             error: req.query['error']
             # Does not work for some reason, but line is specified in trace.
             # line: req.body['line']
+            reportedAt: new Date
             script: req.query['script']
             trace: req.body['trace']
             userAgent: req.headers['user-agent']
