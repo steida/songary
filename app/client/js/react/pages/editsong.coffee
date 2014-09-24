@@ -19,7 +19,7 @@ class app.react.pages.EditSong
     @constructor
   ###
   constructor: (online, routes, touch, yellowFade, songsStore, userStore) ->
-    {div,form,input,textarea,p,nav,ol,li} = React.DOM
+    {div,form,input,textarea,p,nav,ol,li,br} = React.DOM
     {a,span,button} = touch.none 'a', 'span', 'button'
 
     # Why not React state? Because it's not preserved over component life cycle.
@@ -84,6 +84,11 @@ class app.react.pages.EditSong
                     href: 'http://www.supermusic.sk/'
                     target: '_blank'
                   , 'supermusic.sk'
+                  '. Extract chords from '
+                  a
+                    href: 'http://chordify.net/'
+                    target: '_blank'
+                  , 'any song'
                   '.'
             nav {},
               if editMode
