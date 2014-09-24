@@ -1,15 +1,15 @@
-// TODO: Favor CSS media queries.
+// This is for server side responsive web design. Favor CSS media queries.
 
 // html.is-desktop
 // html.is-tablet
 // html.is-mobile
 
 html:not(.is-desktop)
-  // NOTE(steida): Disable hover for touch devices since it's janky.
+  // Override hover for touch devices because it's janky as hell.
   a, a:hover
     color #428bca
     text-decoration none
-    // NOTE(steida): Reimplemented with PointerEvents works like a charm.
+    // Custom hover detection works like a charm.
     &.touch-hover
       color #2a6496
       text-decoration underline
