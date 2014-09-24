@@ -22,6 +22,7 @@ class app.Routes extends este.Routes
     @mySong = @route '/@me/songs/:id'
 
     @api =
-      song: @route '/api/songs/:id'
-      songs: @route '/api/songs'
-      songsByUrl: @route '/api/songs/:urlArtist/:urlName'
+      song: new este.Route '/api/songs/:id'
+      songs: new este.Route '/api/songs'
+      songsByUrl: new este.Route '/api/songs/:urlArtist/:urlName'
+      clientErrors: new este.Route '/api/client-errors'

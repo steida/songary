@@ -1,3 +1,6 @@
+fs = require 'fs'
+path = require 'path'
+
 currentEnv = process.env.NODE_ENV || 'development'
 port = process.env.PORT || 8000
 
@@ -14,3 +17,4 @@ module.exports =
   elasticSearch:
     host: 'http://101e695cd8f4b826000.qbox.io'
   version: require('../../package.json')['version']
+  clientCompiledAppSource: fs.readFileSync path.resolve(__dirname, '../client/build/app.js'), 'UTF-8'

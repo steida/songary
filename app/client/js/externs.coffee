@@ -83,6 +83,12 @@ class expressjs
   expressjs::listen
   expressjs::use
   expressjs::static
+  expressjs::params
+  expressjs::body
+  expressjs::query
+  expressjs::headers
+  expressjs::urlencoded
+  expressjs::extended
 
 # TODO: Move to separate externs repo. Use typedef.
 

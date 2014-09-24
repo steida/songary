@@ -26,6 +26,7 @@ class server.App
     # Middleware must be first.
     app.use compression()
     app.use favicon 'app/client/img/favicon.ico'
+    app.use bodyParser.urlencoded extended: false
     app.use bodyParser.json()
     app.use methodOverride()
 

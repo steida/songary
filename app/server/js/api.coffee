@@ -8,31 +8,48 @@ class server.Api
     @param {app.Routes} routes
     @param {app.songs.Store} songsStore
     @param {server.ElasticSearch} elastic
+    @param {string} clientCompiledAppSource
     @constructor
   ###
-  constructor: (routes, songsStore, elastic) ->
-    @handlers = []
+  constructor: (routes, songsStore, elastic, clientCompiledAppSource) ->
     api = routes.api
+    @handlers = []
 
     @route api.song
-      .put (params, body) ->
-        errors = songsStore.instanceFromJson app.songs.Song, body
+      .put (req) ->
+        errors = songsStore.instanceFromJson app.songs.Song, req.body
           .validatePublished()
-        return goog.Promise.reject errors if errors.length
+        if errors.length
+          return goog.Promise.reject errors
 
-        body.updatedAt = new Date
-        elastic.index index: 'songary', type: 'song', id: params.id, body: body
+        req.body.updatedAt = new Date
 
-      .delete (params) ->
-        elastic.delete index: 'songary', type: 'song', id: params.id
+        elastic.index index: 'songary', type: 'song', id: req.params.id, body: req.body
+
+      .delete (req) ->
+        elastic.delete index: 'songary', type: 'song', id: req.params.id
 
     @route api.songs
       .get ->
         elastic.getLastTenSongs()
 
     @route api.songsByUrl
-      .get (params, body) ->
-        elastic.getSongsByUrl params.urlArtist, params.urlName
+      .get (req) ->
+        elastic.getSongsByUrl req.params.urlArtist, req.params.urlName
+
+    @route api.clientErrors
+      .post (req) ->
+        # TODO: Use source maps to get source code from clientCompiledAppSource.
+        elastic.index
+          index: 'songary'
+          type: 'clienterror'
+          body:
+            error: req.query['error']
+            # Does not work for some reason, but line is specified in trace.
+            # line: req.body['line']
+            script: req.query['script']
+            trace: req.body['trace']
+            userAgent: req.headers['user-agent']
 
   ###*
     @param {este.Route} route
@@ -61,5 +78,5 @@ class server.Api
   addToExpress: (app, callback) ->
     @handlers.forEach (handler) ->
       app[handler.method] handler.path, (req, res) ->
-        promise = handler.callback.call @, req['params'], req['body']
+        promise = handler.callback.call @, req
         callback handler.route, req, res, promise
