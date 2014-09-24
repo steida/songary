@@ -4,6 +4,7 @@ goog.require 'app.songs.Song'
 goog.require 'goog.array'
 goog.require 'goog.dom'
 goog.require 'goog.labs.userAgent.browser'
+goog.require 'goog.labs.userAgent.device'
 goog.require 'goog.ui.Textarea'
 
 class app.react.pages.EditSong
@@ -38,7 +39,9 @@ class app.react.pages.EditSong
           form autoComplete: 'off', onSubmit: @onFormSubmit, ref: 'form', role: 'form',
             div className: 'form-group',
               input
-                autoFocus: !editMode
+                # autoFocus is not a good UX pattern for touch devices, because
+                # focused field invokes keyboard animation, which scrolls view.
+                autoFocus: goog.labs.userAgent.device.isDesktop() && !editMode
                 className: 'form-control'
                 disabled: song.inTrash
                 name: 'name'
