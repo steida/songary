@@ -1,5 +1,6 @@
 goog.provide 'app.react.pages.About'
 
+goog.require 'goog.labs.userAgent.device'
 goog.require 'goog.ui.Textarea'
 
 class app.react.pages.About
@@ -23,7 +24,7 @@ class app.react.pages.About
             form className: 'contact-form',
               div className: 'form-group',
                 textarea
-                  autoFocus: true
+                  autoFocus: goog.labs.userAgent.device.isDesktop()
                   className: 'form-control'
                   onChange: @onContactFormMessageChange
                   placeholder: About.MSG_SEND_PLACEHOLDER
