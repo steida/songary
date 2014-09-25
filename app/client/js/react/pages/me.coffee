@@ -11,7 +11,7 @@ class app.react.pages.Me
   ###
   constructor: (routes, login, touch, userStore) ->
     {div,p,img,ul,li} = React.DOM
-    {a} = touch.none 'a'
+    {a} = touch.scroll 'a'
 
     @component = React.createClass
 
