@@ -63,7 +63,7 @@ class app.react.App
 
       getLocalSongPage: (props) ->
         song = userStore.songByRoute routes.active
-        # Local song can be removed any time, for instance in different tab.
+        # Local song can be removed anytime, for example from different tab.
         return notFoundPage if !song
         props.song = song
         switch routes.active

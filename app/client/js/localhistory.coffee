@@ -3,7 +3,7 @@ goog.provide 'app.LocalHistory'
 class app.LocalHistory
 
   ###*
-    Server can update local state anytime with any value. For instance, when
+    Server can update local state anytime with any value. For example, when
     some disconnected device is reconnected, it will save its waiting changes,
     which can be obsolete, and these changes can override newer data on another
     device. There is no way how workaround such behaviour without locks.
