@@ -10,8 +10,8 @@ class app.react.pages.Me
     @constructor
   ###
   constructor: (routes, login, touch, userStore) ->
-    {div,p,img,ul,li} = React.DOM
-    {a} = touch.scroll 'a'
+    {div,p,img,ul,li,nav} = React.DOM
+    {a,button} = touch.scroll 'a', 'button'
 
     @component = React.createClass
 
@@ -31,10 +31,24 @@ class app.react.pages.Me
             div {},
               p {}, Me.MSG_PUBLISHED_SONGS
               ul {}, publishedSongs
-          div {}, login.component {}
+          nav {},
+            button
+              className: 'btn btn-default'
+              onPointerUp: @onBackupButtonPointerUp
+              type: 'button'
+            , Me.MSG_BACKUP
+            login.component {}
 
       getWelcomeMessage: (displayName) ->
         Me.MSG_WELCOME_MESSAGE = goog.getMsg 'Hi, {$displayName}.',
           displayName: displayName
 
+      onBackupButtonPointerUp: ->
+        data = JSON.stringify userStore.songs
+        anchor = document.createElement 'a'
+        anchor.setAttribute 'href', 'data:text/plain;charset=utf-8,' + encodeURIComponent data
+        anchor.setAttribute 'download', 'songs.json'
+        anchor.click()
+
   @MSG_PUBLISHED_SONGS: goog.getMsg 'Published songs:'
+  @MSG_BACKUP: goog.getMsg 'Backup'
