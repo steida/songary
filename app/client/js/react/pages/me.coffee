@@ -26,7 +26,7 @@ class app.react.pages.Me
 
         div className: 'page',
           p {}, @getWelcomeMessage user.displayName
-          img src: user.thirdPartyUserData.picture.data.url
+          img className: 'user-picture', src: user.thirdPartyUserData.picture.data.url
           if publishedSongs.length
             div {},
               p {}, Me.MSG_PUBLISHED_SONGS
