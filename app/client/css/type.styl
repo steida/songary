@@ -1,22 +1,24 @@
-a
-  color linkColor
-  text-decoration none
-  transition color .3s ease
-  &:focus, &:hover
-    color linkHoverColor
-    text-decoration underline
-  &.active
-    color linkHoverColor
+// HTML to have the same css specificity as device.styl anchor.
+html
+  a
+    color linkColor
     text-decoration none
-    cursor default
-    &.clickable:hover
+    transition color .3s ease
+    &:focus, &:hover
+      color linkHoverColor
       text-decoration underline
-  &:focus
-    // Default
-    outline thin dotted
-    // WebKit
-    outline 5px auto -webkit-focus-ring-color
-    outline-offset -2px
+    &.active
+      color linkHoverColor
+      text-decoration none
+      cursor default
+      &.clickable:hover
+        text-decoration underline
+    &:focus
+      // Default
+      outline thin dotted
+      // WebKit
+      outline 5px auto -webkit-focus-ring-color
+      outline-offset -2px
 
 nav
   inline-block-container()

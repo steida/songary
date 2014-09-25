@@ -6,10 +6,11 @@
 
 html:not(.is-desktop)
   // Override hover for touch devices because it's janky as hell.
+
   a, a:hover
-    color #428bca
+    color linkColor
     text-decoration none
     // Custom hover detection works like a charm.
     &.touch-hover
-      color #2a6496
+      color linkHoverColor
       text-decoration underline
