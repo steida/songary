@@ -16,7 +16,8 @@ class app.react.pages.MySongs
     @component = React.createClass
 
       render: ->
-        allSongs = userStore.songsSortedByName()
+        # TODO: Add byName sort option.
+        allSongs = userStore.songsSortedByUpdatedAt()
         songs = allSongs
           .filter (song) -> !song.inTrash
           .map (song) ->

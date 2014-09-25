@@ -52,6 +52,14 @@ class app.user.Store extends este.labs.Store
     songs
 
   ###*
+    @return {Array.<app.songs.Song>}
+  ###
+  songsSortedByUpdatedAt: ->
+    songs = @songs.slice 0
+    songs.sort (a, b) -> new Date(b.updatedAt) - new Date(a.updatedAt)
+    songs
+
+  ###*
     @return {Array.<app.ValidationError>}
   ###
   addNewSong: ->

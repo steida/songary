@@ -71,7 +71,8 @@ class app.songs.Song
     !!@publisher
 
   ###*
-    @type {?number}
+    ISO string.
+    @type {?string}
   ###
   updatedAt: null
 
@@ -109,6 +110,8 @@ class app.songs.Song
 
     @urlAlbum = este.string.toFancyUrl @album
     @album = '' if !@urlAlbum
+
+    @updatedAt = new Date().toISOString()
 
   getDisplayName: ->
     @name || Song.MSG_UNKNOWN_NAME

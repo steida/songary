@@ -15,17 +15,15 @@ class server.Api
     api = routes.api
     @handlers = []
 
+    # Publish/Unpublish.
     @route api.song
       .put (req) ->
         errors = songsStore.instanceFromJson app.songs.Song, req.body
           .validatePublished()
         if errors.length
           return goog.Promise.reject errors
-
-        req.body.updatedAt = new Date
-
+        req.body.updatedAt = new Date().toISOString()
         elastic.index index: 'songary', type: 'song', id: req.params.id, body: req.body
-
       .delete (req) ->
         elastic.delete index: 'songary', type: 'song', id: req.params.id
 
@@ -47,7 +45,7 @@ class server.Api
             error: req.query['error']
             # Does not work for some reason, but line is specified in trace.
             # line: req.body['line']
-            reportedAt: new Date
+            reportedAt: new Date().toISOString()
             script: req.query['script']
             trace: req.body['trace']
             userAgent: req.headers['user-agent']
