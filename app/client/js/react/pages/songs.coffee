@@ -10,7 +10,7 @@ class app.react.pages.Songs
   ###
   constructor: (routes, touch, songsStore) ->
     {div,p,ul,li} = React.DOM
-    {a} = touch.none 'a'
+    {a} = touch.scroll 'a'
 
     @component = React.createClass
 
