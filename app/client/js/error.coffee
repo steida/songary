@@ -1,5 +1,6 @@
 goog.provide 'app.Error'
 
+goog.require 'goog.Promise'
 goog.require 'goog.async.throwException'
 goog.require 'goog.debug.ErrorReporter'
 
@@ -10,14 +11,19 @@ class app.Error
     @constructor
   ###
   constructor: (routes) ->
-    reporter = goog.debug.ErrorReporter.install routes.api.clientErrors.url()
     alreadyReported = {}
 
-    # Defined in constuctor to use without binding: .thenCatch error.handle
-    @handle = (reason) ->
-      reasonAsString = reason.toString()
+    if !goog.DEBUG
+      goog.debug.ErrorReporter.install routes.api.clientErrors.url()
 
-      # Don't report the same reason repeatedly.
+    # Defined in constuctor for use without binding: .thenCatch error.handle
+    @handle = (reason) ->
+      # Cancellation is not considered as a real error. For example, este.Router
+      # cancels loading when another route is requested before previous is done.
+      return if reason instanceof goog.Promise.CancellationError
+
+      # Don't report already reported reason.
+      reasonAsString = reason.toString()
       return if alreadyReported[reasonAsString]
       alreadyReported[reasonAsString] = true
 
@@ -25,8 +31,8 @@ class app.Error
       # to reload app. Not even think about auto reloading, very dangerous.
       alert 'Application error. Sorry for that. Please reload browser.'
 
-      # Ensure error is shown in console and catcheable by reporter.
+      # Ensure error is shown in console and catcheable by reporter too.
       goog.async.throwException reason
 
-      # Don't swallow errors. For instance, este.Router cancels loading on error.
+      # Don't swallow errors. For example este.Router uses .then for url update.
       throw reason
