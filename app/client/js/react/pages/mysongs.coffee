@@ -17,18 +17,16 @@ class app.react.pages.MySongs
 
       render: ->
         # TODO: Add byName sort option.
-        allSongs = userStore.songsSortedByUpdatedAt()
-        songs = allSongs
-          .filter (song) -> !song.inTrash
-          .map (song) ->
-            li key: song.id,
-              a href: routes.mySong.url(song),
-                "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
-        deletedSongs = allSongs.filter (song) -> song.inTrash
+        songs = userStore.songsSortedByUpdatedAt()
+        visibleSongs = songs.filter (song) -> !song.inTrash
+        deletedSongs = songs.filter (song) -> song.inTrash
 
         div className: 'page',
           if songs.length
-            ul className: 'songs', songs
+            ul className: 'songs', visibleSongs.map (song) ->
+              li key: song.id,
+                a href: routes.mySong.url(song),
+                  "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
           else
             p {}, MySongs.MSG_NO_SONGS
           nav {},
