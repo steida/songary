@@ -3,6 +3,7 @@ goog.provide 'app.react.pages.EditSong'
 goog.require 'app.songs.Song'
 goog.require 'goog.array'
 goog.require 'goog.dom'
+goog.require 'goog.dom.selection'
 goog.require 'goog.labs.userAgent.browser'
 goog.require 'goog.labs.userAgent.device'
 goog.require 'goog.ui.Textarea'
@@ -168,6 +169,7 @@ class app.react.pages.EditSong
         @chordproTextarea_.dispose()
 
       onFieldChange: (e) ->
+        console.log 'changed: ' + e.target.name
         userStore.updateSong song, e.target.name, e.target.value
 
       onFormSubmit: (e) ->
@@ -197,6 +199,7 @@ class app.react.pages.EditSong
         if !userStore.isLogged()
           alert EditSong.MSG_LOGIN_TO_PUBLISH
           return
+        # TODO: Move to XHR itself.
         return if !online.check()
         songsStore
           .publish song
@@ -214,29 +217,26 @@ class app.react.pages.EditSong
         # TODO: Check IE11, IE12, IE13...
         return if goog.labs.userAgent.browser.isIE()
 
-        try
-          # Returns empty string for data without HTML.
-          html = e.clipboardData.getData 'text/html'
-        catch e
-          # TODO: Log to server.
+        # Can be empty string for data without any HTML.
+        html = e.clipboardData.getData 'text/html'
+        # Do nothing aka let browser to paste plain text.
+        return if !html
 
-        if html
-          # Prevent pasting plain text when we have rich HTML.
-          e.preventDefault()
-          previousLyrics = e.target.value
-          lyrics = if previousLyrics.trim()
-            if goog.string.endsWith previousLyrics, '\n'
-              previousLyrics
-            else
-              previousLyrics + '\n'
-          else
-            ''
-          # Append because app model doesn't define caret position.
-          # Can I read caret position?
-          lyrics += @parsePastedHtml html
-          userStore.updateSong song, 'lyrics', lyrics
+        e.preventDefault()
+        text = @convertPastedHtmlToText html
+        target = e.target
+        endPoints = goog.dom.selection.getEndPoints target
+        before = target.value.substr 0, endPoints[0]
+        after = target.value.substr endPoints[1]
+        lyrics = before + text + after
+        userStore.updateSong song, 'lyrics', lyrics
+        # Give a React time to update, setCursorPosition is not destructive so
+        # it's ok to use timeout.
+        setTimeout ->
+          goog.dom.selection.setCursorPosition target, (before + text).length
+        , 10
 
-      parsePastedHtml: (html) ->
+      convertPastedHtmlToText: (html) ->
         node = goog.dom.htmlToDocumentFragment html
         # Convert sup elements to chords. Used by supermusic.sk for example.
         sups = node.querySelectorAll 'sup'
