@@ -32,6 +32,6 @@ class server.Storage extends este.labs.Storage
       when @routes.recentlyUpdatedSongs
         @elastic.getRecentlyUpdatedSongs()
           .then (songs) =>
-            @songsStore.fromJson lastTenSongs: songs
+            @songsStore.fromJson recentlyUpdatedSongs: songs
       else
         @notFound()

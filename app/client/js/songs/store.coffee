@@ -17,7 +17,7 @@ class app.songs.Store extends este.labs.Store
     super 'songs'
 
     ###* @type {Array.<app.songs.Song>} ###
-    @lastTenSongs = []
+    @recentlyUpdatedSongs = []
 
     ###* @type {Array.<app.songs.Song>} ###
     @songsByUrl = []
@@ -43,8 +43,8 @@ class app.songs.Store extends este.labs.Store
     @override
   ###
   fromJson: (json) ->
-    if json.lastTenSongs
-      @lastTenSongs = json.lastTenSongs.map @instanceFromJson app.songs.Song
+    if json.recentlyUpdatedSongs
+      @recentlyUpdatedSongs = json.recentlyUpdatedSongs.map @instanceFromJson app.songs.Song
     if json.songsByUrl
       @songsByUrl = json.songsByUrl.map @instanceFromJson app.songs.Song
 

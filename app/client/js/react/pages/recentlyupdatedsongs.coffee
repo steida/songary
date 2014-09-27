@@ -17,7 +17,7 @@ class app.react.pages.RecentlyUpdatedSongs
       render: ->
         div className: 'page',
           p {}, RecentlyUpdatedSongs.MSG_RECENTLY_UPDATED_SONGS
-          ul {}, songsStore.lastTenSongs.map (song) ->
+          ul {}, songsStore.recentlyUpdatedSongs.map (song) ->
             li key: song.id,
               a
                 href: routes.song.url song

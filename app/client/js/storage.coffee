@@ -57,7 +57,7 @@ class app.Storage extends este.labs.Storage
         @xhr
           .get @routes.api.recentlyUpdatedSongs.url()
           .then (songs) =>
-            @songsStore.fromJson lastTenSongs: songs
+            @songsStore.fromJson recentlyUpdatedSongs: songs
       else
         @notFound()
 
