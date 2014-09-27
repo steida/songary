@@ -29,7 +29,7 @@ class server.Api
 
     @route api.songs
       .get ->
-        elastic.getLastTenSongs()
+        elastic.getRecentlyUpdatedSongs()
 
     @route api.songsByUrl
       .get (req) ->

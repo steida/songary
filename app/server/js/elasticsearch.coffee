@@ -16,7 +16,7 @@ class server.ElasticSearch
     @delete = @toPromise_ @client.delete
     @search = @toPromise_ @client.search
 
-  getLastTenSongs: ->
+  getRecentlyUpdatedSongs: ->
     @asSource @search index: 'songary', type: 'song', body:
       sort: updatedAt: order: 'desc'
 
