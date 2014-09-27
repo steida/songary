@@ -1,20 +1,24 @@
 goog.provide 'app.Xhr'
 
 goog.require 'goog.Promise'
+goog.require 'goog.debug.Error'
 goog.require 'goog.labs.net.xhr'
 
 class app.Xhr
 
   ###*
-    @param {app.Error} error
     @constructor
   ###
-  constructor: (@error) ->
+  constructor: ->
     @createHttpMethods_()
 
   @XHR_OPTIONS:
     headers:
       'Content-Type': 'application/json;charset=utf-8'
+
+  @MSG_MUST_BE_ONLINE: goog.getMsg '
+    For this action you have to be online. Check your internet connection please.
+  '
 
   createHttpMethods_: ->
     @delete = @send.bind @, 'DELETE'
@@ -30,8 +34,24 @@ class app.Xhr
     @return {!goog.Promise}
   ###
   send: (method, url, json) ->
-    data = JSON.stringify json
+    if !navigator.onLine
+      return goog.Promise.reject new app.Xhr.OfflineError
+
     goog.labs.net.xhr
-      .send method, url, data, Xhr.XHR_OPTIONS
+      .send method, url, JSON.stringify(json), Xhr.XHR_OPTIONS
       .then (xhr) -> JSON.parse xhr.responseText
-      .thenCatch @error.handle
+
+class app.Xhr.OfflineError extends goog.debug.Error
+
+  ###*
+    @constructor
+    @extends {goog.debug.Error}
+    @final
+  ###
+  constructor: ->
+    super app.Xhr.MSG_MUST_BE_ONLINE
+
+  ###*
+    @override
+  ###
+  name: 'offline'

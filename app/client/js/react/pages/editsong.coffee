@@ -11,7 +11,6 @@ goog.require 'goog.ui.Textarea'
 class app.react.pages.EditSong
 
   ###*
-    @param {app.Online} online
     @param {app.Routes} routes
     @param {app.react.Touch} touch
     @param {app.react.YellowFade} yellowFade
@@ -19,7 +18,7 @@ class app.react.pages.EditSong
     @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (online, routes, touch, yellowFade, songsStore, userStore) ->
+  constructor: (routes, touch, yellowFade, songsStore, userStore) ->
     {div,form,input,textarea,p,nav,ol,li,br} = React.DOM
     {a,span,button} = touch.none 'a', 'span', 'button'
 
@@ -199,8 +198,6 @@ class app.react.pages.EditSong
         if !userStore.isLogged()
           alert EditSong.MSG_LOGIN_TO_PUBLISH
           return
-        # TODO: Move to XHR itself.
-        return if !online.check()
         songsStore
           .publish song
           .then => yellowFade.on @refs['published-song-link']
