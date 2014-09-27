@@ -42,12 +42,13 @@ class server.Api
           index: 'songary'
           type: 'clienterror'
           body:
-            error: req.query['error']
             # Does not work for some reason, but line is specified in trace.
             # line: req.body['line']
+            action: req.query.action
+            error: req.query.error
             reportedAt: new Date().toISOString()
-            script: req.query['script']
-            trace: req.body['trace']
+            script: req.query.script
+            trace: req.body.trace
             userAgent: req.headers['user-agent']
 
   ###*

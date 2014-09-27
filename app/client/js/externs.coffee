@@ -48,11 +48,6 @@ class appSongsSong
   appSongsSong::album
   appSongsSong::urlAlbum
 
-class appRoutesParams
-  appRoutesParams::id
-  appRoutesParams::artist
-  appRoutesParams::song
-
 class serverClientData
   serverClientData::app
   serverClientData::version
@@ -75,6 +70,14 @@ class elasticSearch
   elasticSearch::bool
   elasticSearch::must
   elasticSearch::term
+
+class elasticSearchClientError
+  elasticSearchClientError::action
+  elasticSearchClientError::error
+  elasticSearchClientError::reportedAt
+  elasticSearchClientError::script
+  elasticSearchClientError::trace
+  elasticSearchClientError::userAgent
 
 class expressjs
   expressjs::status
