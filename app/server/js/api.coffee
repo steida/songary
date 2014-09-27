@@ -23,7 +23,8 @@ class server.Api
         if errors.length
           return goog.Promise.reject errors
         req.body.updatedAt = new Date().toISOString()
-        elastic.index index: 'songary', type: 'song', id: req.params.id, body: req.body
+        elastic.index index: 'songary', type: 'song', id: req.params.id, body:
+          req.body
       .delete (req) ->
         elastic.delete index: 'songary', type: 'song', id: req.params.id
 
@@ -38,18 +39,15 @@ class server.Api
     @route api.clientErrors
       .post (req) ->
         # TODO: Use source maps to get source code from clientCompiledAppSource.
-        elastic.index
-          index: 'songary'
-          type: 'clienterror'
-          body:
-            # Does not work for some reason, but line is specified in trace.
-            # line: req.body['line']
-            action: req.query.action
-            error: req.query.error
-            reportedAt: new Date().toISOString()
-            script: req.query.script
-            trace: req.body.trace
-            userAgent: req.headers['user-agent']
+        elastic.index index: 'songary',  type: 'clienterror', body:
+          # Does not work for some reason, but line is specified in trace.
+          # line: req.body['line']
+          action: req.query.action
+          error: req.query.error
+          reportedAt: new Date().toISOString()
+          script: req.query.script
+          trace: req.body.trace
+          userAgent: req.headers['user-agent']
 
   ###*
     @param {este.Route} route
