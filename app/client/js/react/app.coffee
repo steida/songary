@@ -17,6 +17,7 @@ class app.react.App
     @param {app.react.pages.Me} mePage
     @param {app.react.pages.MySongs} mySongs
     @param {app.react.pages.NotFound} notFoundPage
+    @param {app.react.pages.RecentlyUpdatedSongs} recentlyUpdatedSongsPage
     @param {app.react.pages.Songs} songsPage
     @param {app.react.pages.Song} songPage
     @param {app.react.pages.Trash} trashPage
@@ -25,8 +26,8 @@ class app.react.App
   constructor: (routes, appTitle,
       userStore, songsStore,
       header, footer,
-      aboutPage, editSongPage, mePage, mySongs, notFoundPage, songsPage,
-      songPage, trashPage) ->
+      aboutPage, editSongPage, mePage, mySongs, notFoundPage,
+      recentlyUpdatedSongsPage, songsPage, songPage, trashPage) ->
 
     {div} = React.DOM
 
@@ -46,6 +47,7 @@ class app.react.App
           when routes.home then mySongs
           when routes.newSong then editSongPage
           when routes.songs then songsPage
+          when routes.recentlyUpdatedSongs then recentlyUpdatedSongsPage
           when routes.song
             # TODO: Show all song versions, not just first.
             # /beatles/let-it-be -> All songs published under this url.

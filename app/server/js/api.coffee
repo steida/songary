@@ -28,7 +28,7 @@ class server.Api
       .delete (req) ->
         elastic.delete index: 'songary', type: 'song', id: req.params.id
 
-    @route api.songs
+    @route api.recentlyUpdatedSongs
       .get ->
         elastic.getRecentlyUpdatedSongs()
 

@@ -13,6 +13,7 @@ class app.Routes extends este.Routes
     @home = @route '/'
     @about = @route '/about'
     @songs = @route '/songs'
+    @recentlyUpdatedSongs = @route '/songs/recently-updated'
     @song = @route '/:urlArtist/:urlName'
 
     @me = @route '/@me'
@@ -23,6 +24,6 @@ class app.Routes extends este.Routes
 
     @api =
       song: new este.Route '/api/songs/:id'
-      songs: new este.Route '/api/songs'
+      recentlyUpdatedSongs: new este.Route '/api/songs/recently-updated'
       songsByUrl: new este.Route '/api/songs/:urlArtist/:urlName'
       clientErrors: new este.Route '/api/client-errors'
