@@ -11,14 +11,12 @@ goog.require 'goog.string'
 class app.react.pages.Song
 
   ###*
-    @param {app.Firebase} firebase
-    @param {app.Online} online
     @param {app.Routes} routes
     @param {app.react.Touch} touch
     @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (firebase, online, routes, touch, userStore) ->
+  constructor: (routes, touch, userStore) ->
     {div} = touch.scroll 'div'
     {article,menu} = React.DOM
     {a,menuitem} = touch.none 'a', 'menuitem'
