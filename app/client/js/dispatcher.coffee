@@ -6,6 +6,7 @@ class app.Dispatcher
 
   ###*
     http://facebook.github.io/flux/docs/todo-list.html#creating-a-dispatcher
+    TODO: Detect circular dependencies.
     @param {app.Error} error
     @constructor
     @final
