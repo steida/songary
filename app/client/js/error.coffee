@@ -1,7 +1,6 @@
 goog.provide 'app.Error'
 
 goog.require 'goog.Promise'
-goog.require 'goog.async.throwException'
 goog.require 'goog.debug.ErrorReporter'
 
 class app.Error
@@ -11,28 +10,35 @@ class app.Error
     @constructor
   ###
   constructor: (routes) ->
-    alreadyReported = {}
+    @alreadyReported_ = Object.create null
 
     if !goog.DEBUG
-      goog.debug.ErrorReporter.install routes.api.clientErrors.url()
+      @reporter = goog.debug.ErrorReporter.install routes.api.clientErrors.url()
 
-    # Defined in constuctor for use without binding: .thenCatch error.handle
-    @handle = (reason) ->
-      # Cancellation is not considered as a real error. For example, este.Router
-      # cancels loading when another route is requested before previous is done.
-      return if reason instanceof goog.Promise.CancellationError
+  ###*
+    @param {*} reason
+    @param {string} action
+  ###
+  handle: (reason, action) ->
+    # Cancellation is not considered as a real error. For example, este.Router
+    # cancels loading when another route is requested before previous is done.
+    return if reason instanceof goog.Promise.CancellationError
 
-      # Don't report already reported reason.
-      reasonAsString = reason.toString()
-      return if alreadyReported[reasonAsString]
-      alreadyReported[reasonAsString] = true
+    # Don't report already reported reason. TODO: Consider throttling.
+    # reasonAsString = reason.toString()
+    # return if @alreadyReported_[reasonAsString]
+    # @alreadyReported_[reasonAsString] = true
 
-      # TODO: Show something more beautiful then alert. There will be a button
-      # to reload app. Not even think about auto reloading, very dangerous.
-      alert 'Application error. Sorry for that. Please reload browser.'
+    if reason instanceof app.Xhr.OfflineError
+      alert reason.message
+      return
 
-      # Ensure error is shown in console and catcheable by reporter too.
-      goog.async.throwException reason
+    # TODO: Show something more beautiful then alert. There will be a button
+    # to reload app. Not even think about auto reloading, very dangerous.
+    alert 'Application error. Sorry for that. Please reload browser.'
 
-      # Don't swallow errors. For example este.Router uses .then for url update.
-      throw reason
+    if @reporter
+      @reporter.setAdditionalArguments action: action
+
+    # Don't swallow errors. For example este.Router uses .then for url update.
+    throw reason

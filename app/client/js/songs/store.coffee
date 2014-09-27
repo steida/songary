@@ -2,32 +2,42 @@ goog.provide 'app.songs.Store'
 
 goog.require 'app.songs.Song'
 goog.require 'este.labs.Store'
-goog.require 'goog.object'
 
 class app.songs.Store extends este.labs.Store
 
   ###*
-    @param {app.LocalHistory} localHistory
+    @param {app.Dispatcher} dispatcher
     @param {app.Routes} routes
     @param {app.Xhr} xhr
     @param {app.user.Store} userStore
     @constructor
     @extends {este.labs.Store}
   ###
-  constructor: (@localHistory, @routes, @xhr, @userStore) ->
+  constructor: (@dispatcher, @routes, @xhr, @userStore) ->
     super 'songs'
+
+    ###* @type {Array.<app.songs.Song>} ###
     @lastTenSongs = []
+
+    ###* @type {Array.<app.songs.Song>} ###
     @songsByUrl = []
 
-  ###*
-    @type {Array.<app.songs.Song>}
-  ###
-  lastTenSongs: null
+    @dispatcherIndex = @dispatcher.register @handleAction_.bind @
 
-  ###*
-    @type {Array.<app.songs.Song>}
-  ###
-  songsByUrl: null
+  @Actions:
+    PUBLISH_SONG: 'publish-song'
+    UNPUBLISH_SONG: 'unpublish-song'
+
+  handleAction_: (action, payload) ->
+    switch action
+      when Store.Actions.PUBLISH_SONG
+        @xhr
+          .put @routes.api.song.url(id: payload.song.id), payload.json
+          .then => @userStore.setSongPublisher payload.song
+      when Store.Actions.UNPUBLISH_SONG
+        @xhr
+          .delete @routes.api.song.url(id: payload.song.id)
+          .then => @userStore.removeSongPublisher payload.song
 
   ###*
     @override
@@ -40,28 +50,26 @@ class app.songs.Store extends este.labs.Store
 
   ###*
     @param {app.songs.Song} song
-    @return {!goog.Promise}
   ###
   publish: (song) ->
-    json = song.toJson()
-    json.publisher = @userStore.user.uid
-    delete json.inTrash
-    published = @instanceFromJson app.songs.Song, json
-
-    errors = published.validatePublished()
+    publishedSong = @createPublishedSong_ song
+    errors = publishedSong.validatePublished()
     if errors.length
       return goog.Promise.reject errors
 
-    @xhr
-      .put @routes.api.song.url(id: song.id), published.toJson()
-      .then => @userStore.setSongPublisher song
+    @dispatcher.dispatch Store.Actions.PUBLISH_SONG,
+      song: song
+      json: publishedSong.toJson()
+
+  createPublishedSong_: (song) ->
+    json = song.toJson()
+    json.publisher = @userStore.user.uid
+    delete json.inTrash
+    @instanceFromJson app.songs.Song, json
 
   ###*
     @param {app.songs.Song} song
-    @return {!goog.Promise}
   ###
   unpublish: (song) ->
-    @xhr
-      .delete @routes.api.song.url(id: song.id)
-      .then (value) =>
-        @userStore.removeSongPublisher song
+    @dispatcher.dispatch Store.Actions.UNPUBLISH_SONG,
+      song: song

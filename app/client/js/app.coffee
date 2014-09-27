@@ -18,6 +18,6 @@ class App
         .then -> routes.setActive route, params
         .thenCatch (reason) -> routes.trySetErrorRoute reason
         .then -> React.renderComponent reactApp.component(), element
-        .thenCatch error.handle
+        .thenCatch (reason) -> error.handle reason, 'router-load'
 
     router.start()
