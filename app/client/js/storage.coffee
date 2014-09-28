@@ -47,7 +47,7 @@ class app.Storage extends este.labs.Storage
         @ok()
       when @routes.song
         @xhr
-          .get @routes.api.songsByUrl.url params
+          .get @routes.api.songs.byUrl.url params
           .then (songs) =>
             return @notFound() if !songs.length
             @songsStore.fromJson songsByUrl: songs
@@ -55,7 +55,7 @@ class app.Storage extends este.labs.Storage
         @ok()
       when @routes.recentlyUpdatedSongs
         @xhr
-          .get @routes.api.recentlyUpdatedSongs.url()
+          .get @routes.api.songs.recentlyUpdated.url()
           .then (songs) =>
             @songsStore.fromJson recentlyUpdatedSongs: songs
       else

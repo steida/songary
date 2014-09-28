@@ -16,7 +16,7 @@ class server.Api
     @handlers = []
 
     # Publish/Unpublish.
-    @route api.song
+    @route api.songs.id
       .put (req) ->
         errors = songsStore.instanceFromJson app.songs.Song, req.body
           .validatePublished()
@@ -28,11 +28,11 @@ class server.Api
       .delete (req) ->
         elastic.delete index: 'songary', type: 'song', id: req.params.id
 
-    @route api.recentlyUpdatedSongs
+    @route api.songs.recentlyUpdated
       .get ->
         elastic.getRecentlyUpdatedSongs()
 
-    @route api.songsByUrl
+    @route api.songs.byUrl
       .get (req) ->
         elastic.getSongsByUrl req.params.urlArtist, req.params.urlName
 

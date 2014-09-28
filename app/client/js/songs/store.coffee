@@ -32,11 +32,11 @@ class app.songs.Store extends este.labs.Store
     switch action
       when Store.Actions.PUBLISH_SONG
         @xhr
-          .put @routes.api.song.url(id: payload.song.id), payload.json
+          .put @routes.api.songs.id.url(id: payload.song.id), payload.json
           .then => @userStore.setSongPublisher payload.song
       when Store.Actions.UNPUBLISH_SONG
         @xhr
-          .delete @routes.api.song.url(id: payload.song.id)
+          .delete @routes.api.songs.id.url(id: payload.song.id)
           .then => @userStore.removeSongPublisher payload.song
 
   ###*
