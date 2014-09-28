@@ -8,14 +8,6 @@ Made with [Este.js](https://github.com/steida/este).
 
 Read [Este.js](https://github.com/steida/este).
 
-## Learn
-
-Just read source code, there are plethora of comments. 
-
-#### CoffeeScript, Really?
-
-I like CoffeeScript and significant whitespace. I'm enjoying CoffeeScript for years and it just works. But I understand that some people doubt about CS future, or simply doesn't like it. I will add gulp task to switch to plain old JavaScript soon. It will just delete `*.coffee` files and update `.gitignore`. Done. Now you have JavaScript version :-) But I would like to do more than that. Yes, ES6 is coming in town. I will add ES6 version once Closure Compiler finish its [work](https://github.com/google/closure-compiler/wiki/ECMAScript6).
-
 ## Demonstrated Techniques
   - frontend/mobile/offline first
   - isomorphic web app
@@ -41,6 +33,9 @@ Imagine you have two models, A and B. And you would like to change B whenever A 
 
 There is even more of that. Imagine you have A, B, C, D, E, F, G, H listening each other. Can you tell what happen when A dispatches change event? Without reading whole source code of A, B, C...? Without debugging? Hardly. Flux architecture allows encapsulate flow or flows in one method.
 
+#### Why CoffeeScript?
+
+I like CoffeeScript and significant whitespace. I'm enjoying CoffeeScript for years and it just works. But I understand that some people doubt about CS future, or simply doesn't like it. I will add gulp task to switch to plain old JavaScript soon. It will just delete `*.coffee` files and update `.gitignore`. Done. Now you have JavaScript version :-) But I would like to do more than that. Yes, ES6 is coming in town. I will add ES6 version once Closure Compiler finish its [work](https://github.com/google/closure-compiler/wiki/ECMAScript6).
 
 
 
