@@ -17,7 +17,7 @@ class app.Title
   @MSG_ME: goog.getMsg 'Me'
   @MSG_NEW_SONG: goog.getMsg 'New Song'
   @MSG_NOT_FOUND: goog.getMsg 'Page Not Found'
-  @MSG_RECENTLY_UPDATED_SONGS: goog.getMsg 'Recently updated songs'
+  @MSG_RECENTLY_UPDATED_SONGS: goog.getMsg 'Recently Updated Songs'
   @MSG_SONGS: goog.getMsg 'Songs'
   @MSG_TRASH: goog.getMsg 'Trash'
 
