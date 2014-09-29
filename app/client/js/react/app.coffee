@@ -84,12 +84,13 @@ class app.react.App
 
       componentDidMount: ->
         goog.events.listen window, 'orientationchange', @onOrientationChange
-        userStore.listen 'change', @onStoreChange
+        songsStore.listen 'change', @updateUI
+        userStore.listen 'change', @updateUI
 
       onOrientationChange: ->
         goog.dom.getDocumentScrollElement().scrollTop = 0
 
-      onStoreChange: ->
+      updateUI: ->
         @forceUpdate()
 
       componentDidUpdate: ->
