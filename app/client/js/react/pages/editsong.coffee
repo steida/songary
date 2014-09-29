@@ -168,7 +168,6 @@ class app.react.pages.EditSong
         @chordproTextarea_.dispose()
 
       onFieldChange: (e) ->
-        console.log 'changed: ' + e.target.name
         userStore.updateSong song, e.target.name, e.target.value
 
       onFormSubmit: (e) ->
