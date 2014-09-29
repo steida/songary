@@ -36,6 +36,10 @@ class server.Api
       .get (req) ->
         elastic.getSongsByUrl req.params.urlArtist, req.params.urlName
 
+    @route api.songs.search
+      .get (req) ->
+        elastic.searchSongsByQuery req.query.query
+
     @route api.clientErrors
       .post (req) ->
         # TODO: Use source maps to get source code from clientCompiledAppSource.
