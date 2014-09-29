@@ -1,21 +1,49 @@
 goog.provide 'app.react.pages.Songs'
 
+goog.require 'goog.async.Delay'
+
 class app.react.pages.Songs
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.Touch} touch
+    @param {app.react.Link} link
+    @param {app.react.Songs} songs
+    @param {app.songs.Store} songsStore
     @constructor
   ###
-  constructor: (routes, touch) ->
-    {div,p} = React.DOM
-    {a} = touch.scroll 'a'
+  constructor: (routes, link, songs, songsStore) ->
+    {div,input,p} = React.DOM
+    searchQuery = ''
 
     @component = React.createClass
 
       render: ->
         div className: 'page',
+          div className: 'form-group',
+            input
+              autoFocus: goog.labs.userAgent.device.isDesktop()
+              className: 'form-control'
+              onChange: @onSearchChange
+              placeholder: Songs.MSG_SEARCH_FIELD_PLACEHOLDER
+              value: searchQuery
+          songs.component songs: songsStore.foundSongs
           p {},
-            a href: routes.recentlyUpdatedSongs.url(), Songs.MSG_RECENTLY_UPDATED_SONGS
+            link.to routes.recentlyUpdatedSongs, Songs.MSG_RECENTLY_UPDATED_SONGS
 
+      componentDidMount: ->
+        @delay = new goog.async.Delay @onDelayAction, 300
+
+      onDelayAction: ->
+        songsStore.search searchQuery
+
+      componentWillUnmount: ->
+        @delay.dispose()
+
+      onSearchChange: (e) ->
+        searchQuery = e.target.value.slice 0, Songs.SEARCH_QUERY_MAX_LENGTH
+        @forceUpdate()
+        @delay.start()
+
+  @SEARCH_QUERY_MAX_LENGTH: 100
   @MSG_RECENTLY_UPDATED_SONGS: goog.getMsg 'Recently updated songs.'
+  @MSG_SEARCH_FIELD_PLACEHOLDER: goog.getMsg 'Search song by name, artist, or lyrics.'
