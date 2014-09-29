@@ -91,14 +91,8 @@ class app.react.pages.EditSong
                   , 'any song'
                   '.'
             nav {},
-              if editMode
-                button
-                  className: "btn btn-#{if song.inTrash then 'default' else 'danger'}"
-                  onPointerUp: @onToggleDeleteButtonPointerUp
-                  type: 'button'
-                , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
-              else
-                button className: 'btn btn-default', EditSong.MSG_CREATE_NEW_SONG
+              if !editMode
+                button className: 'btn btn-default', EditSong.MSG_ADD_NEW_SONG
               if editMode && !song.inTrash then [
                 button
                   className: 'btn btn-default'
@@ -114,6 +108,12 @@ class app.react.pages.EditSong
                     type: 'button'
                   , EditSong.MSG_UNPUBLISH
               ]
+              if editMode
+                button
+                  className: "btn btn-#{if song.inTrash then 'default' else 'danger'}"
+                  onPointerUp: @onToggleDeleteButtonPointerUp
+                  type: 'button'
+                , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
             if editMode && song.isPublished()
               p {},
                 EditSong.MSG_SONG_WAS_PUBLISHED + ' '
@@ -254,7 +254,7 @@ class app.react.pages.EditSong
   # PATTERN: String localization. Remember, every string has to be wrapped with
   # goog.getMsg method for later string localization.
   @MSG_ARE_YOU_SURE_UNPUBLISH: goog.getMsg 'Are you sure you want to unpublish this song?'
-  @MSG_CREATE_NEW_SONG: goog.getMsg 'Add New Song'
+  @MSG_ADD_NEW_SONG: goog.getMsg 'Add New Song'
   @MSG_DELETE: goog.getMsg 'Delete'
   @MSG_HOW_TO_WRITE_LYRICS: goog.getMsg 'How to write lyrics'
   @MSG_LOGIN_TO_PUBLISH: goog.getMsg 'You must be logged to publish song.'
