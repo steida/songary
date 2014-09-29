@@ -26,10 +26,17 @@ class server.ElasticSearch
       response.hits.hits.map (hit) -> hit._source
 
   ###*
+    @param {Object} body
+    @return {goog.Promise}
+  ###
+  searchSongarySong: (body) ->
+    @search index: 'songary', type: 'song', body: body
+
+  ###*
     @return {goog.Promise}
   ###
   getRecentlyUpdatedSongs: ->
-    @asSource @search index: 'songary', type: 'song', body:
+    @asSource @searchSongarySong
       sort: updatedAt: order: 'desc'
 
   ###*
@@ -38,7 +45,7 @@ class server.ElasticSearch
     @return {goog.Promise}
   ###
   getSongsByUrl: (urlArtist, urlName) ->
-    @asSource @search index: 'songary', type: 'song', body:
+    @asSource @searchSongarySong
       query: filtered: filter: bool: must: [
         term: urlName: urlName
       ,
@@ -50,8 +57,7 @@ class server.ElasticSearch
     @return {goog.Promise}
   ###
   searchSongsByQuery: (query) ->
-    # TODO: Ignore diacritics, boost name and artist, use detected language.
-    @asSource @search index: 'songary', type: 'song', body:
+    @asSource @searchSongarySong
       query: bool: should: [
         match: name: query: query, operator: 'and'
       ,
