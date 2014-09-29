@@ -8,18 +8,35 @@ class server.ElasticSearch
     @param {Object} elasticSearch
     @param {string} host
     @constructor
+    @final
   ###
   constructor: (elasticSearch, host) ->
     @client = new elasticSearch.Client host: host
 
-    @index = @toPromise_ @client.index
     @delete = @toPromise_ @client.delete
+    @index = @toPromise_ @client.index
     @search = @toPromise_ @client.search
 
+  ###*
+    @param {goog.Promise} promise
+    @return {goog.Promise}
+  ###
+  asSource: (promise) ->
+    promise.then (response) ->
+      response.hits.hits.map (hit) -> hit._source
+
+  ###*
+    @return {goog.Promise}
+  ###
   getRecentlyUpdatedSongs: ->
     @asSource @search index: 'songary', type: 'song', body:
       sort: updatedAt: order: 'desc'
 
+  ###*
+    @param {string} urlArtist
+    @param {string} urlName
+    @return {goog.Promise}
+  ###
   getSongsByUrl: (urlArtist, urlName) ->
     @asSource @search index: 'songary', type: 'song', body:
       query: filtered: filter: bool: must: [
@@ -28,12 +45,23 @@ class server.ElasticSearch
         term: urlArtist: urlArtist
       ]
 
-  asSource: (promise) ->
-    promise.then (response) ->
-      response.hits.hits.map (hit) -> hit._source
+  ###*
+    @param {string} query
+    @return {goog.Promise}
+  ###
+  searchSongsByQuery: (query) ->
+    # TODO: Ignore diacritics, boost name and artist, use detected language.
+    @asSource @search index: 'songary', type: 'song', body:
+      query: bool: should: [
+        match: name: query: query, operator: 'and'
+      ,
+        match: artist: query: query, operator: 'and'
+      ,
+        match: lyrics: query: query, operator: 'and'
+      ]
 
   ###*
-    ElasticSearch promises missing thenCatch method, so transform it to goog.Promise.
+    Transform ElasticSearch callbacks to goog.Promise since I prefer it.
     @param {Function} fn
     @return {Function}
     @private
