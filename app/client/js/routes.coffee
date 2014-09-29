@@ -28,3 +28,4 @@ class app.Routes extends este.Routes
         byUrl: '/:urlArtist/:urlName'
         id: '/:id'
         recentlyUpdated: '/recently-updated'
+        search: '/search'
