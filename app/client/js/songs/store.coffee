@@ -16,17 +16,27 @@ class app.songs.Store extends este.labs.Store
   constructor: (@dispatcher, @routes, @xhr, @userStore) ->
     super 'songs'
 
-    ###* @type {Array.<app.songs.Song>} ###
+    ###*
+      @type {Array.<app.songs.Song>}
+    ###
     @recentlyUpdatedSongs = []
 
-    ###* @type {Array.<app.songs.Song>} ###
+    ###*
+      @type {Array.<app.songs.Song>}
+    ###
     @songsByUrl = []
+
+    ###*
+      @type {Array.<app.songs.Song>}
+    ###
+    @foundSongs = []
 
     @dispatcherIndex = @dispatcher.register @handleAction_.bind @
 
   @Actions:
-    PUBLISH_SONG: 'publish-song'
-    UNPUBLISH_SONG: 'unpublish-song'
+    PUBLISH_SONG: 'publishsong'
+    SEARCH: 'searchsongs'
+    UNPUBLISH_SONG: 'unpublishsong'
 
   handleAction_: (action, payload) ->
     switch action
@@ -34,6 +44,12 @@ class app.songs.Store extends este.labs.Store
         @xhr
           .put @routes.api.songs.id.url(id: payload.song.id), payload.json
           .then => @userStore.setSongPublisher payload.song
+      when Store.Actions.SEARCH
+        @xhr
+          .get @routes.api.songs.search.url null, query: payload.query
+          .then (songs) =>
+            @fromJson foundSongs: songs
+            @notify()
       when Store.Actions.UNPUBLISH_SONG
         @xhr
           .delete @routes.api.songs.id.url(id: payload.song.id)
@@ -43,6 +59,8 @@ class app.songs.Store extends este.labs.Store
     @override
   ###
   fromJson: (json) ->
+    if json.foundSongs
+      @foundSongs = json.foundSongs.map @instanceFromJson app.songs.Song
     if json.recentlyUpdatedSongs
       @recentlyUpdatedSongs = json.recentlyUpdatedSongs.map @instanceFromJson app.songs.Song
     if json.songsByUrl
@@ -50,6 +68,7 @@ class app.songs.Store extends este.labs.Store
 
   ###*
     @param {app.songs.Song} song
+    @return {goog.Promise}
   ###
   publish: (song) ->
     publishedSong = @createPublishedSong_ song
@@ -61,6 +80,11 @@ class app.songs.Store extends este.labs.Store
       song: song
       json: publishedSong.toJson()
 
+  ###*
+    @param {app.songs.Song} song
+    @return {app.songs.Song}
+    @private
+  ###
   createPublishedSong_: (song) ->
     json = song.toJson()
     json.publisher = @userStore.user.uid
@@ -69,7 +93,16 @@ class app.songs.Store extends este.labs.Store
 
   ###*
     @param {app.songs.Song} song
+    @return {goog.Promise}
   ###
   unpublish: (song) ->
     @dispatcher.dispatch Store.Actions.UNPUBLISH_SONG,
       song: song
+
+  ###*
+    @param {string} query
+    @return {goog.Promise}
+  ###
+  search: (query) ->
+    @dispatcher.dispatch Store.Actions.SEARCH,
+      query: query
