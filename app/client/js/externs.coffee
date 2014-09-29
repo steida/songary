@@ -54,22 +54,26 @@ class serverClientData
 
 class elasticSearch
   elasticSearch::Client
-  elasticSearch::host
-  elasticSearch::index
-  elasticSearch::type
-  elasticSearch::id
-  elasticSearch::body
-  elasticSearch::search
-  elasticSearch::hits
   elasticSearch::_source
-  elasticSearch::sort
+  elasticSearch::body
+  elasticSearch::bool
+  elasticSearch::filter
+  elasticSearch::filtered
+  elasticSearch::hits
+  elasticSearch::host
+  elasticSearch::id
+  elasticSearch::index
+  elasticSearch::match
+  elasticSearch::must
+  elasticSearch::must_not
+  elasticSearch::operator
   elasticSearch::order
   elasticSearch::query
-  elasticSearch::filtered
-  elasticSearch::filter
-  elasticSearch::bool
-  elasticSearch::must
+  elasticSearch::search
+  elasticSearch::should
+  elasticSearch::sort
   elasticSearch::term
+  elasticSearch::type
 
 class elasticSearchClientError
   elasticSearchClientError::action
