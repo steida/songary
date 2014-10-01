@@ -14,15 +14,15 @@ Read [Este.js](https://github.com/steida/este).
   - Closure Tools
   - Facebook React and Flux
   - one way data flow
-  - Polymer PointerEvents
-  - clean code
+  - same events across desktop and mobile 
+  - global error handling of sync and async code
   - Promises
   - app state persisted in localStorage
   - pending navigation and other [SPA UX patterns](https://medium.com/joys-of-javascript/beyond-pushstate-building-single-page-applications-4353246f4480)
-  - dependency injection with awesome DI container
+  - clean code via dependency injection with awesome DI container
   - statically typed code written in CoffeeScript
   - killer React.js HTML syntax
-  - Firebase and realtime collaboration
+  - Firebase for realtime collaboration
   - finest [dev stack](https://github.com/steida/gulp-este)
 
 ### Why Facebook [Flux](http://facebook.github.io/flux/) is better than XYZ?
