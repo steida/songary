@@ -5,11 +5,10 @@ goog.require 'este.Routes'
 class app.Routes extends este.Routes
 
   ###*
-    @param {app.user.Store} userStore
     @constructor
     @extends {este.Routes}
   ###
-  constructor: (userStore) ->
+  constructor: ->
     @home = @route '/'
     @about = @route '/about'
     @songs = @route '/songs'
