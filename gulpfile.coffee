@@ -101,16 +101,18 @@ gulp.task 'compile-clientapp', ->
         'goog.style.GET_BOUNDING_CLIENT_RECT_ALWAYS_EXISTS=true'
       ]
       externs: paths.externs
+      language_in: 'ECMASCRIPT5'
 
 gulp.task 'compile-serverapp', ->
   este.compile paths.js, 'app/server/build',
     compilerPath: paths.compiler
     compilerFlags:
       closure_entry_point: 'server.main'
-      externs: paths.externs.concat este.getNodeJsExterns()
       # NOTE(steida): To have compiled code readable, so we can trace errors.
       debug: true
+      externs: paths.externs.concat este.getNodeJsExterns()
       formatting: 'PRETTY_PRINT'
+      language_in: 'ECMASCRIPT5'
 
 gulp.task 'concat-all', ->
   este.concatAll
