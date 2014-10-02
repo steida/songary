@@ -11,7 +11,7 @@
     "express": "^4.0.0",
     "firebase": "^1.0.21",
     "gulp": "^3.6.0",
-    "jsdom": "^0.11.0",
+    "jsdom": "^1.0.0",
     "method-override": "^2.0.2",
     "react": "^0.11.0",
     "static-favicon": "^1.0.2"
@@ -19,7 +19,7 @@
   "devDependencies": {
     "gulp-este": "^1.0.1",
     "piping": "~0.1.6",
-    "run-sequence": "^0.3.6",
+    "run-sequence": "^1.0.0",
     "yargs": "^1.2.1"
   },
   "scripts": {
