@@ -87,12 +87,10 @@ class app.Dispatcher
    @return {!goog.Promise}
   ###
   waitFor: (indexes) ->
-    goog.asserts.assertArray indexes
     goog.asserts.assert @isDispatching_, 'Must be invoked while dispatching.'
+    goog.asserts.assertArray indexes
     for index in indexes
       goog.asserts.assertFunction @callbacks_[index],
         "`#{index}` does not map to a registered callback."
-
-    # `%s` does not map to a registered callback.'
     promises = indexes.map (index) => @promises_[index]
     goog.Promise.all promises
