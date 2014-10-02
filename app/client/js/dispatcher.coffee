@@ -76,8 +76,8 @@ class app.Dispatcher
         .then (value) =>
           resolves[i] payload
         .thenCatch (reason) =>
-          @error.handle reason, action
           rejects[i] reason
+          @error.handle reason, action
     @isDispatching_ = false
 
     goog.Promise.all @promises_
