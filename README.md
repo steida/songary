@@ -14,7 +14,7 @@ Read [Este.js](https://github.com/steida/este).
   - Closure Tools
   - Facebook React and Flux
   - one way data flow
-  - same events across desktop and mobile 
+  - polymes-gestures
   - global error handling of sync and async code
   - Promises
   - app state persisted in localStorage
