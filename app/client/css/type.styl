@@ -54,7 +54,8 @@ nav
 .btn.active, .btn:active { outline: 0px; -webkit-box-shadow: rgba(0, 0, 0, 0.121569) 0px 3px 5px inset; box-shadow: rgba(0, 0, 0, 0.121569) 0px 3px 5px inset; background-image: none; }
 .btn.disabled, .btn[disabled], fieldset[disabled] .btn { pointer-events: none; cursor: not-allowed; -webkit-box-shadow: none; box-shadow: none; opacity: 0.65; }
 .btn-default { color: rgb(51, 51, 51); border-color: rgb(204, 204, 204); background-color: rgb(255, 255, 255); }
-.btn-default.active, .btn-default:active, .btn-default:focus, .btn-default:hover, .open > .dropdown-toggle.btn-default { color: rgb(51, 51, 51); border-color: rgb(173, 173, 173); background-color: rgb(230, 230, 230); }
+// .btn-default:focus, .btn-default:hover, because we don't want it on mobile and desktop uses outline thin dotted.
+.btn-default.active, .btn-default:active, .open > .dropdown-toggle.btn-default { color: rgb(51, 51, 51); border-color: rgb(173, 173, 173); background-color: rgb(230, 230, 230); }
 .btn-default.active, .btn-default:active, .open > .dropdown-toggle.btn-default { background-image: none; }
 .btn-default.disabled, .btn-default.disabled.active, .btn-default.disabled:active, .btn-default.disabled:focus, .btn-default.disabled:hover, .btn-default[disabled], .btn-default[disabled].active, .btn-default[disabled]:active, .btn-default[disabled]:focus, .btn-default[disabled]:hover, fieldset[disabled] .btn-default, fieldset[disabled] .btn-default.active, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:hover { border-color: rgb(204, 204, 204); background-color: rgb(255, 255, 255); }
 .btn-default .badge { color: rgb(255, 255, 255); background-color: rgb(51, 51, 51); }
