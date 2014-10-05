@@ -27,7 +27,7 @@ Read [Este.js](https://github.com/steida/este).
 
 ### Why Facebook [Flux](http://facebook.github.io/flux/) is better than XYZ?
 
-Because [Ember computed properties](http://emberjs.com/guides/object-model/computed-properties/) and [Backbone model events](http://backbonejs.org/#Events) and [Angular scope hierarchies and scope events](https://docs.angularjs.org/guide/scope) mix app model with app data flow, irreversibly.
+Because [Ember](http://emberjs.com) observers and bindings, or [Backbone model events](http://backbonejs.org/#Events), or [Angular](https:angularjs.org) scope events propagation, mixes app model with app data flow, irreversibly.
 
 Imagine you have two models, A and B. And you would like to change B whenever A is changed. Events and computed properties works well, unless you need to change A without B be also changed. Got it? Flux uses `waitFor` method to explicitly describe what should be changed in which order.
 
