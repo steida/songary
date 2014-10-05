@@ -4,32 +4,30 @@ class app.react.Login
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.Touch} touch
+    @param {app.react.Gesture} gesture
     @param {app.user.Store} userStore
     @param {app.Firebase} firebase
     @constructor
   ###
-  constructor: (routes, touch, userStore, firebase) ->
-    {button} = touch.none 'button'
+  constructor: (routes, gesture, userStore, firebase) ->
+    {button} = React.DOM
 
     @component = React.createClass
 
       render: ->
+        button
+          className: 'btn btn-default'
+          # Click because popup needs it.
+          onClick: @onClick
+        , if userStore.isLogged() then Login.MSG_LOGOUT else Login.MSG_LOGIN
+
+      onClick: ->
         if userStore.isLogged()
-          @renderButton @logout, Login.MSG_LOGOUT
+          routes.home.redirect()
+          firebase.logout()
         else
-          @renderButton @login, Login.MSG_LOGIN
-
-      renderButton: (onPointerUp, label) ->
-        button className: 'btn btn-default', onPointerUp: onPointerUp, label
-
-      logout: ->
-        routes.home.redirect()
-        firebase.logout()
-
-      login: ->
-        # TODO: Add more options.
-        firebase.loginViaFacebook()
+          # TODO: Add more options.
+          firebase.loginViaFacebook()
 
   @MSG_LOGOUT: goog.getMsg 'Log Out'
   @MSG_LOGIN: goog.getMsg 'Login with Facebook'

@@ -4,12 +4,12 @@ class app.react.Songs
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.Touch} touch
+    @param {app.react.Gesture} gesture
     @constructor
   ###
-  constructor: (routes, touch) ->
+  constructor: (routes, gesture) ->
     {ul,li} = React.DOM
-    {a} = touch.scroll 'a'
+    {a} = gesture.scroll 'a'
 
     @component = React.createClass
       render: ->

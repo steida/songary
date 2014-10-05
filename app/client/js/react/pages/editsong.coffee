@@ -12,15 +12,15 @@ class app.react.pages.EditSong
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.Touch} touch
+    @param {app.react.Gesture} gesture
     @param {app.react.YellowFade} yellowFade
     @param {app.songs.Store} songsStore
     @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (routes, touch, yellowFade, songsStore, userStore) ->
+  constructor: (routes, gesture, yellowFade, songsStore, userStore) ->
     {div,form,input,textarea,p,nav,ol,li,br} = React.DOM
-    {a,span,button} = touch.none 'a', 'span', 'button'
+    {a,span,button} = gesture.none 'a', 'span', 'button'
 
     # Why not React state? Because it's not preserved over component life cycle.
     editMode = false
@@ -39,8 +39,7 @@ class app.react.pages.EditSong
           form autoComplete: 'off', onSubmit: @onFormSubmit, ref: 'form', role: 'form',
             div className: 'form-group',
               input
-                # autoFocus is not a good UX pattern for touch devices, because
-                # focused field invokes keyboard animation, which scrolls view.
+                # AutoFocus on small screen sucks, because it's confusing.
                 autoFocus: goog.labs.userAgent.device.isDesktop() && !editMode
                 className: 'form-control'
                 disabled: song.inTrash
@@ -92,26 +91,28 @@ class app.react.pages.EditSong
                   '.'
             nav {},
               if !editMode
-                button className: 'btn btn-default', EditSong.MSG_ADD_NEW_SONG
+                button
+                  className: 'btn btn-default'
+                , EditSong.MSG_ADD_NEW_SONG
               if editMode && !song.inTrash then [
                 button
                   className: 'btn btn-default'
                   key: 'publish'
-                  onPointerUp: @onPublishPointerUp
+                  onTap: @onPublishTap
                   type: 'button'
                 , EditSong.MSG_PUBLISH
                 if song.isPublished()
                   button
                     className: 'btn btn-default'
                     key: 'unpublish'
-                    onPointerUp: @onUnpublishPointerUp
+                    onTap: @onUnpublishTap
                     type: 'button'
                   , EditSong.MSG_UNPUBLISH
               ]
               if editMode
                 button
                   className: "btn btn-#{if song.inTrash then 'default' else 'danger'}"
-                  onPointerUp: @onToggleDeleteButtonPointerUp
+                  onTap: @onToggleDeleteTap
                   type: 'button'
                 , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
             if editMode && song.isPublished()
@@ -139,7 +140,7 @@ class app.react.pages.EditSong
           button
             ref: 'lyrics-history-button'
             className: 'btn btn-default ' + if lyricsHistoryShown then 'active' else ''
-            onPointerUp: @onLyricsHistoryBtnPointerUp
+            onTap: @onLyricsHistoryUp
             type: 'button'
           , EditSong.MSG_LYRICS_HISTORY
           if lyricsHistoryShown
@@ -147,7 +148,7 @@ class app.react.pages.EditSong
               ol {}, lyrics
               p {}, EditSong.MSG_LYRICS_HISTORY_P
 
-      onLyricsHistoryBtnPointerUp: ->
+      onLyricsHistoryUp: ->
         lyricsHistoryShown = !lyricsHistoryShown
         @forceUpdate()
 
@@ -179,12 +180,12 @@ class app.react.pages.EditSong
         # TODO: Reusable helper/mixin/whatever.
         if errors.length
           alert errors[0].message
-          field = this.refs['form'].getDOMNode().elements[errors[0].prop]
+          field = @refs['form'].getDOMNode().elements[errors[0].prop]
           field.focus() if field
           return
         routes.home.redirect()
 
-      onToggleDeleteButtonPointerUp: ->
+      onToggleDeleteTap: ->
         userStore.trashSong song, !song.inTrash
         if song.inTrash
           routes.home.redirect()
@@ -193,15 +194,16 @@ class app.react.pages.EditSong
         userStore.getSongLyricsLocalHistory song
           .filter (lyrics) -> lyrics != song.lyrics
 
-      onPublishPointerUp: ->
+      onPublishTap: ->
         if !userStore.isLogged()
+          # TODO: remove alert.
           alert EditSong.MSG_LOGIN_TO_PUBLISH
           return
         songsStore
           .publish song
           .then => yellowFade.on @refs['published-song-link']
 
-      onUnpublishPointerUp: ->
+      onUnpublishTap: ->
         return if !confirm EditSong.MSG_ARE_YOU_SURE_UNPUBLISH
         songsStore.unpublish song
 

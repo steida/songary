@@ -12,14 +12,14 @@ class app.react.pages.Song
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.Touch} touch
+    @param {app.react.Gesture} gesture
     @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (routes, touch, userStore) ->
-    {div} = touch.scroll 'div'
+  constructor: (routes, gesture, userStore) ->
+    {div} = gesture.scroll 'div'
     {article,menu} = React.DOM
-    {a,menuitem} = touch.none 'a', 'menuitem'
+    {a,menuitem} = gesture.none 'a', 'menuitem'
 
     @component = React.createClass
 
@@ -28,7 +28,8 @@ class app.react.pages.Song
       render: ->
         song = @props.song
 
-        div className: 'page', onPointerUp: @onSongPointerUp,
+        # onUp, because onTap does not dispatch clientX and clientY yet.
+        div className: 'page', onUp: @onSongUp,
           article
             dangerouslySetInnerHTML: '__html': @lyricsHtml song
             ref: 'article'
@@ -40,16 +41,16 @@ class app.react.pages.Song
           ,
             a href: routes.home.url(), ref: 'back', Song.MSG_BACK
             menuitem
-              onPointerUp: @onFontResizeButtonPointerUp.bind @, true
+              onTap: @onFontResizeTap.bind @, true
             , '+'
             menuitem
-              onPointerUp: @onFontResizeButtonPointerUp.bind @, false
+              onTap: @onFontResizeTap.bind @, false
             , '-'
             if userStore.songById song.id
               a href: routes.editSong.url(song), Song.MSG_EDIT
             else
               menuitem
-                onPointerUp: @onSaveToDeviceButtonPointerUp
+                onTap: @onSaveToDeviceTap
               , Song.MSG_SAVE_TO_DEVICE
 
       ref: (name) ->
@@ -61,9 +62,9 @@ class app.react.pages.Song
           .replace /\[([^\]]+)\]/g, (str, chord) ->
             "<sup>#{chord}</sup>"
 
-      onSongPointerUp: (e) ->
-        pointerUpOnMenu = goog.dom.contains @ref('menu'), e.target
-        return if pointerUpOnMenu
+      onSongUp: (e) ->
+        tapOnMenu = goog.dom.contains @ref('menu'), e.target
+        return if tapOnMenu
         @toggleMenu null, new goog.math.Coordinate e.clientX, e.clientY
 
       onMenuMouseHover: (e) ->
@@ -74,7 +75,7 @@ class app.react.pages.Song
           @hideMenuAfterWhile()
 
       # TODO: Use polymer-gestures once pinch event will be supported.
-      onFontResizeButtonPointerUp: (increase) ->
+      onFontResizeTap: (increase) ->
         if !goog.labs.userAgent.device.isDesktop()
           clearTimeout @hideMenuTimer
           @hideMenuAfterWhile()
@@ -170,7 +171,7 @@ class app.react.pages.Song
         fn()
         songEl.style.visibility = ''
 
-      onSaveToDeviceButtonPointerUp: ->
+      onSaveToDeviceTap: ->
         userStore.savePublishedSongToDevice @props.song
 
   # TODO: Set by platform.

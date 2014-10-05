@@ -4,12 +4,12 @@ class app.react.pages.NotFound
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.Touch} touch
+    @param {app.react.Gesture} gesture
     @constructor
   ###
-  constructor: (routes, touch) ->
+  constructor: (routes, gesture) ->
     {div,h1,p} = React.DOM
-    {a} = touch.none 'a'
+    {a} = gesture.none 'a'
 
     @component = React.createClass
 

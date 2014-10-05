@@ -5,12 +5,12 @@ class app.react.pages.Trash
   ###*
     @param {app.Routes} routes
     @param {app.user.Store} userStore
-    @param {app.react.Touch} touch
+    @param {app.react.Gesture} gesture
     @constructor
   ###
-  constructor: (routes, userStore, touch) ->
+  constructor: (routes, userStore, gesture) ->
     {div,ul,li,nav,button} = React.DOM
-    {a} = touch.scroll 'a'
+    {a} = gesture.scroll 'a'
 
     @component = React.createClass
 

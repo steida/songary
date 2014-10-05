@@ -7,10 +7,10 @@ class app.react.Link
   ###*
     TODO: Move to este-library once api is stabilized.
     @param {app.Routes} routes
-    @param {app.react.Touch} touch
+    @param {app.react.Gesture} gesture
     @constructor
   ###
-  constructor: (@routes, @touch) ->
+  constructor: (@routes, @gesture) ->
 
   ###*
     @typedef {{
@@ -53,5 +53,5 @@ class app.react.Link
     linkProps.className = classNames.join ' '
 
     # "Fast click" anchor.
-    {a} = @touch.none 'a'
+    {a} = @gesture.none 'a'
     a linkProps, text
