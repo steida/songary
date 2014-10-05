@@ -51,6 +51,7 @@ class server.Api
           reportedAt: new Date().toISOString()
           script: req.query.script
           trace: req.body.trace
+          user: req.query.user
           userAgent: req.headers['user-agent']
 
   ###*
