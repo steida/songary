@@ -29,9 +29,9 @@ Read [Este.js](https://github.com/steida/este).
 
 Because [Ember](http://emberjs.com) observers and bindings, or [Backbone model events](http://backbonejs.org/#Events), or [Angular](https:angularjs.org) scope events propagation, mixes app model with app data flow, irreversibly.
 
-Imagine you have two models, A and B. And you would like to change B whenever A is changed. Events and computed properties works well, unless you need to change A without B be also changed. Got it? Flux uses `waitFor` method to explicitly describe what should be changed in which order.
+Imagine you have two models, A and B. And you would like to change B whenever A is changed. Events and bindings work well unless you need to change only A under some condition. Got it? Flux uses `waitFor` method to explicitly describe what should be changed.
 
-There is even more of that. Imagine you have A, B, C, D, E, F, G, H listening each other. Can you tell what happen when A dispatches change event? Without reading whole source code of A, B, C...? Without debugging? Hardly. Flux architecture allows encapsulate flow or flows in one method.
+Or imagine you have A, B, C, D, E, F, G, H listening each other. Can you tell what happen when A dispatches change event? Without reading several source files? Without debugging? Hardly.
 
 #### Why CoffeeScript?
 
