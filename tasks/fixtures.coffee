@@ -1,28 +1,64 @@
-module.exports = ->
-  require '../bower_components/closure-library/closure/goog/bootstrap/nodejs.js'
-  require '../tmp/deps.js'
+elasticsearch = require 'elasticsearch'
 
-  config = require '../app/server/config'
-  elasticsearch = require 'elasticsearch'
+config = require '../app/server/config'
+songs = require '../backup/songs.json'
+
+require '../bower_components/closure-library/closure/goog/bootstrap/nodejs.js'
+require '../tmp/deps.js'
+
+goog.require 'goog.Promise'
+goog.require 'server.songs'
+
+module.exports = ->
 
   client = new elasticsearch.Client host: config['elasticSearch']['host']
+  indices = client.indices
 
-  client.indices.exists index: 'songary'
+  indices.exists index: 'songary'
     .then (exists) ->
       if exists
-        return client.indices.delete index: 'songary'
+        return indices.delete index: 'songary'
     .then ->
-      return client.indices.create index: 'songary'
+      indices.create index: 'songary'
     .then ->
-      return client.indices.putMapping
+      indices.close index: 'songary'
+    .then ->
+      indices.putSettings
+        index: 'songary'
+        body:
+          analysis:
+            analyzer:
+              folding:
+                tokenizer: 'standard'
+                filter: ['lowercase', 'asciifolding']
+    .then ->
+      indices.putMapping
         index: 'songary'
         type: 'song'
         body:
-          song:
-            properties:
-              # http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/_finding_exact_values.html
-              urlName: type: 'string', index: 'not_analyzed'
-              urlArtist: type: 'string', index: 'not_analyzed'
-              publisher: type: 'string', index: 'not_analyzed'
+          properties:
+            # http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/_finding_exact_values.html
+            urlName: type: 'string', index: 'not_analyzed'
+            language: type: 'string', index: 'not_analyzed'
+            urlArtist: type: 'string', index: 'not_analyzed'
+            lyricsForSearch:
+              type: 'string'
+              analyzer: 'standard'
+              fields:
+                folded:
+                  type: 'string'
+                  analyzer: 'folding'
+            publisher: type: 'string', index: 'not_analyzed'
+    .then ->
+      indices.open index: 'songary'
+    .then ->
+      goog.Promise.all songs.map (song) ->
+        id = song.id
+        updatedAt = song.updatedAt
+        delete song.id
+        delete song.updatedAt
+        server.songs.toPublishedJson song, song.updatedAt
+          .then (song) ->
+            client.index index: 'songary', type: 'song', id: id, body: song
     .catch (reason) ->
       console.log reason

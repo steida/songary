@@ -63,7 +63,11 @@ class server.ElasticSearch
       ,
         match: artist: query: query, operator: 'and'
       ,
-        match: lyrics: query: query, operator: 'and'
+        multi_match:
+          fields: ['lyricsForSearch', 'lyricsForSearch.folded']
+          operator: 'and'
+          query: query
+          type: 'most_fields'
       ]
 
   ###*

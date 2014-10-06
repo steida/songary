@@ -35,18 +35,21 @@ class appContactFormMessage
   appContactFormMessage::message
 
 class appSongsSong
-  appSongsSong::id
-  appSongsSong::name
-  appSongsSong::urlName
-  appSongsSong::artist
-  appSongsSong::urlArtist
-  appSongsSong::creator
-  appSongsSong::lyrics
-  appSongsSong::inTrash
-  appSongsSong::publisher
-  appSongsSong::updatedAt
   appSongsSong::album
+  appSongsSong::artist
+  appSongsSong::creator
+  appSongsSong::id
+  appSongsSong::inTrash
+  appSongsSong::lyrics
+  appSongsSong::name
+  appSongsSong::publisher
   appSongsSong::urlAlbum
+  appSongsSong::urlArtist
+  appSongsSong::urlName
+  # For elastic.
+  appSongsSong::language
+  appSongsSong::lyricsForSearch
+  appSongsSong::updatedAt
 
 class serverClientData
   serverClientData::app
@@ -57,6 +60,7 @@ class elasticSearch
   elasticSearch::_source
   elasticSearch::body
   elasticSearch::bool
+  elasticSearch::fields
   elasticSearch::filter
   elasticSearch::filtered
   elasticSearch::hits
@@ -64,6 +68,7 @@ class elasticSearch
   elasticSearch::id
   elasticSearch::index
   elasticSearch::match
+  elasticSearch::multi_match
   elasticSearch::must
   elasticSearch::must_not
   elasticSearch::operator
@@ -96,6 +101,10 @@ class expressjs
   expressjs::headers
   expressjs::urlencoded
   expressjs::extended
+
+class nodeCld
+  nodeCld::detect
+  nodeCld::languages
 
 # TODO: Move to separate externs repo. Use typedef.
 

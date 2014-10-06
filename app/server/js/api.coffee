@@ -1,6 +1,7 @@
 goog.provide 'server.Api'
 
 goog.require 'goog.Promise'
+goog.require 'server.songs'
 
 class server.Api
 
@@ -22,9 +23,11 @@ class server.Api
           .validatePublished()
         if errors.length
           return goog.Promise.reject errors
-        req.body.updatedAt = new Date().toISOString()
-        elastic.index index: 'songary', type: 'song', id: req.params.id, body:
-          req.body
+        server.songs.toPublishedJson req.body
+          .then (song) ->
+            elastic.index index: 'songary', type: 'song', id: req.params.id, body:
+              song
+
       .delete (req) ->
         elastic.delete index: 'songary', type: 'song', id: req.params.id
 

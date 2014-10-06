@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "body-parser": "^1.0.1",
+    "cld": "^2.1.0",
     "coffee-script": "^1.7.1",
     "compression": "^1.0.1",
     "elasticsearch": "^2.4.2",
