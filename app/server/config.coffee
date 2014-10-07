@@ -17,4 +17,3 @@ module.exports =
   elasticSearch:
     host: 'http://101e695cd8f4b826000.qbox.io'
   version: require('../../package.json')['version']
-  clientCompiledAppSource: fs.readFileSync path.resolve(__dirname, '../client/build/app.js'), 'UTF-8'

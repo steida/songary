@@ -9,10 +9,9 @@ class server.Api
     @param {app.Routes} routes
     @param {app.songs.Store} songsStore
     @param {server.ElasticSearch} elastic
-    @param {string} clientCompiledAppSource
     @constructor
   ###
-  constructor: (routes, songsStore, elastic, clientCompiledAppSource) ->
+  constructor: (routes, songsStore, elastic) ->
     api = routes.api
     @handlers = []
 
@@ -45,7 +44,6 @@ class server.Api
 
     @route api.clientErrors
       .post (req) ->
-        # TODO: Use source maps to get source code from clientCompiledAppSource.
         elastic.index index: 'songary',  type: 'clienterror', body:
           # Does not work for some reason, but line is specified in trace.
           # line: req.body['line']

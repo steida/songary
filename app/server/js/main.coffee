@@ -32,10 +32,6 @@ server.main = (config) ->
     with:
       elasticSearch: require 'elasticsearch'
       host: config['elasticSearch']['host']
-  ,
-    resolve: server.Api
-    with:
-      clientCompiledAppSource: config['clientCompiledAppSource']
 
   container.resolveServerApp()
 
