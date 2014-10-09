@@ -12,18 +12,9 @@ class server.ElasticSearch
   ###
   constructor: (elasticSearch, host) ->
     @client = new elasticSearch.Client host: host
-
-    @delete = @toPromise_ @client.delete
-    @index = @toPromise_ @client.index
-    @search = @toPromise_ @client.search
-
-  ###*
-    @param {goog.Promise} promise
-    @return {goog.Promise}
-  ###
-  asSource: (promise) ->
-    promise.then (response) ->
-      response.hits.hits.map (hit) -> hit._source
+    @delete = @toPromise @client.delete
+    @index = @toPromise @client.index
+    @search = @toPromise @client.search
 
   ###*
     @param {Object} body
@@ -36,8 +27,7 @@ class server.ElasticSearch
     @return {goog.Promise}
   ###
   getRecentlyUpdatedSongs: ->
-    @asSource @searchSongarySong
-      sort: updatedAt: order: 'desc'
+    @asList @withoutMetas @searchSongarySong sort: updatedAt: order: 'desc'
 
   ###*
     @param {string} urlArtist
@@ -45,7 +35,7 @@ class server.ElasticSearch
     @return {goog.Promise}
   ###
   getSongsByUrl: (urlArtist, urlName) ->
-    @asSource @searchSongarySong
+    @withoutMetas @searchSongarySong
       query: filtered: filter: bool: must: [
         term: urlName: urlName
       ,
@@ -57,7 +47,7 @@ class server.ElasticSearch
     @return {goog.Promise}
   ###
   searchSongsByQuery: (query) ->
-    @asSource @searchSongarySong
+    @asList @withoutMetas @searchSongarySong
       query: bool: should: [
         match: name: query: query, operator: 'and'
       ,
@@ -71,12 +61,12 @@ class server.ElasticSearch
       ]
 
   ###*
-    Transform ElasticSearch callbacks to goog.Promise since I prefer it.
+    Transform ElasticSearch callbacks into goog.Promise.
     @param {Function} fn
     @return {Function}
     @private
   ###
-  toPromise_: (fn) ->
+  toPromise: (fn) ->
     (params) =>
       new goog.Promise (resolve, reject) =>
         fn.call @client, params, (error, response) ->
@@ -84,3 +74,27 @@ class server.ElasticSearch
             reject error
             return
           resolve response
+
+  ###*
+    Omit ElasticSearch metas.
+    @param {goog.Promise} promise
+    @return {goog.Promise}
+    @private
+  ###
+  withoutMetas: (promise) ->
+    promise.then (response) ->
+      response.hits.hits.map (hit) -> hit._source
+
+  ###*
+    Just props for listing.
+    @param {goog.Promise} promise
+    @return {goog.Promise}
+    @private
+  ###
+  asList: (promise) ->
+    promise.then (songs) ->
+      songs.map (song) ->
+        artist: song.artist
+        name: song.name
+        urlArtist: song.urlArtist
+        urlName: song.urlName

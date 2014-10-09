@@ -14,7 +14,8 @@ class app.react.Songs
     @component = React.createClass
       render: ->
         ul {}, @props.songs.map (song) ->
-          li key: song.id,
+          text = "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
+          li key: text,
             a
               href: routes.song.url song
-            , "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
+            , text
