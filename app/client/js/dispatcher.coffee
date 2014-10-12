@@ -6,53 +6,63 @@ goog.require 'goog.asserts'
 class app.Dispatcher
 
   ###*
-    http://facebook.github.io/flux/docs/todo-list.html#creating-a-dispatcher
-    TODO: Detect circular dependencies.
-    TODO: Move to este-library once finish.
-    @param {app.Error} error
+    Inspired by facebook.github.io/flux/docs/todo-list.html#creating-a-dispatcher
+    and https://github.com/facebook/flux/blob/master/dist/Flux.js.
+    @param {app.ErrorReporter=} errorReporter
     @constructor
     @final
   ###
-  constructor: (@error) ->
+  constructor: (@errorReporter) ->
     ###*
       @type {Array.<Function>}
       @private
     ###
     @callbacks_ = []
 
-    ###*
-      @type {Array.<goog.Promise>}
-      @private
-    ###
-    @promises_ = null
+  ###*
+    @type {boolean}
+    @private
+  ###
+  @isDispatching_: false
 
-    ###*
-      @type {boolean}
-      @private
-    ###
-    @isDispatching_ = false
+  ###*
+    @type {Array.<goog.Promise>}
+    @private
+  ###
+  @resolves_: null
+
+  ###*
+    @type {Array.<goog.Promise>}
+    @private
+  ###
+  @rejects_: null
+
+  ###*
+    @type {Array.<goog.Promise>}
+    @private
+  ###
+  @promises_: null
 
   ###*
     @param {Function} callback
-    @return {number}
+    @return {number} ID of registered callback.
   ###
   register: (callback) ->
     goog.asserts.assertFunction callback
-    @callbacks_.push callback
-    @callbacks_.length - 1
+    @callbacks_.push(callback) - 1
 
   ###*
-    @param {number} index
+    @param {number} id ID of registered callback.
   ###
-  unregister: (index) ->
+  unregister: (id) ->
     # goog.asserts.assertFunction callback
-    goog.asserts.assertFunction @callbacks_[index],
-      "`#{index}` does not map to a registered callback."
-    delete @callbacks_[index]
+    goog.asserts.assertFunction @callbacks_[id],
+      "`#{id}` does not map to a registered callback."
+    delete @callbacks_[id]
 
   ###*
     @param {string} action
-    @param {Object=} payload The data from the action.
+    @param {Object=} payload Data for action.
     @return {!goog.Promise}
   ###
   dispatch: (action, payload) ->
@@ -61,36 +71,60 @@ class app.Dispatcher
     goog.asserts.assertString action
     goog.asserts.assertObject payload
 
-    resolves = []
-    rejects = []
-
-    @promises_ = @callbacks_.map (callback, i) ->
-      new goog.Promise (resolve, reject) ->
-        resolves[i] = resolve
-        rejects[i] = reject
-        return
-
     @isDispatching_ = true
-    @callbacks_.forEach (callback, i) =>
-      goog.Promise.resolve callback action, payload
-        .then (value) =>
-          resolves[i] payload
-        .thenCatch (reason) =>
-          rejects[i] reason
-          @error.handle reason, action
+    @resolves_ = []
+    @rejects_ = []
+    @createPromisesForCallbacks_()
+    @runCallbacks_ action, payload
     @isDispatching_ = false
-
     goog.Promise.all @promises_
 
   ###*
-   @param {Array.<number>} indexes
-   @return {!goog.Promise}
+    @private
   ###
-  waitFor: (indexes) ->
+  createPromisesForCallbacks_: ->
+    @promises_ = @callbacks_.map (callback, i) =>
+      new goog.Promise (resolve, reject) =>
+        @resolves_[i] = resolve
+        @rejects_[i] = reject
+        return
+
+  ###*
+    @param {string} action
+    @param {Object=} payload Data for action.
+    @private
+  ###
+  runCallbacks_: (action, payload) ->
+    @callbacks_.forEach (callback, i) =>
+      # New promise to handle:
+      #   1) sync callback returning nothing
+      #   2) callback throwing error
+      #   3) async callback returing promise
+      new goog.Promise (resolve, reject) =>
+        resolve callback action, payload
+      .then (value) =>
+        @resolves_[i] payload
+      .thenCatch (reason) =>
+        if @errorReporter
+          @errorReporter.report reason, action
+        @rejects_[i] reason
+
+  ###*
+    @param {Array.<number>} ids IDs of register method.
+    @return {!goog.Promise}
+  ###
+  waitFor: (ids) ->
+
+    # co async? smrt, ani nahodou, sileny na debug, proste musim vedet, odkud volam
+    # wait for
+    # a na d, e
+    #
+
     goog.asserts.assert @isDispatching_, 'Must be invoked while dispatching.'
-    goog.asserts.assertArray indexes
-    for index in indexes
-      goog.asserts.assertFunction @callbacks_[index],
-        "`#{index}` does not map to a registered callback."
-    promises = indexes.map (index) => @promises_[index]
-    goog.Promise.all promises
+    goog.asserts.assertArray ids
+
+    goog.Promise.all ids.map (id) =>
+      goog.asserts.assertFunction @callbacks_[id],
+        "`#{id}` does not map to a registered callback."
+      # Circular dependency detected for:
+      @promises_[id]
