@@ -1,7 +1,6 @@
 goog.provide 'app.Dispatcher'
 
 goog.require 'goog.Promise'
-goog.require 'goog.array'
 goog.require 'goog.asserts'
 
 class app.Dispatcher
@@ -39,16 +38,16 @@ class app.Dispatcher
   @rejects_: null
 
   ###*
-    @type {?number}
+    @type {number}
     @private
   ###
-  pendingId_: null
+  pendingId_: 0
 
   ###*
-    @type {Array.<number>}
+    @type {Object}
     @private
   ###
-  pendingIds_: null
+  dependingIds_: null
 
   ###*
     @type {Array.<goog.Promise>}
@@ -94,8 +93,7 @@ class app.Dispatcher
     @isDispatching_ = true
     @resolves_ = []
     @rejects_ = []
-    @pendingId_ = null
-    @pendingIds_ = []
+    @dependingIds_ = {}
     @createPromisesForCallbacks_()
     @runCallbacks_ action, payload
     @isDispatching_ = false
@@ -133,18 +131,35 @@ class app.Dispatcher
         @rejects_[id] reason
 
   ###*
-    @param {Array.<number>} ids IDs of register callbacks.
+    @param {Array.<number>} ids Register callbacks IDs.
     @return {!goog.Promise}
   ###
   waitFor: (ids) ->
     goog.asserts.assert @isDispatching_, 'Must be invoked while dispatching.'
     goog.asserts.assertArray ids
-    # TODO: prejmenovat? hmm
-    goog.array.insert @pendingIds_, @pendingId_
+
+    dependency = @detectCircularDependency_ @pendingId_, ids, []
+    goog.asserts.assert !dependency.length,
+      "Circular dependency detected: #{dependency.join ' - '}"
+    @dependingIds_[@pendingId_] = ids
 
     goog.Promise.all ids.map (id) =>
       @assertCallbackId_ id
-      goog.asserts.assert !goog.array.contains(@pendingIds_, id),
-        "Circular dependency detected: #{@pendingIds_.concat(id).join ' - '}"
-      goog.array.insert @pendingIds_, id
       @promises_[id]
+
+  ###*
+    @param {number} id
+    @param {Array.<number>} deps
+    @param {Array.<number>} list
+    @return {Array.<number>} dependency Detected circular dependency.
+    @private
+  ###
+  detectCircularDependency_: (id, deps, list) ->
+    list.push id
+    for depId in deps || []
+      if depId == @pendingId_
+        return list.concat depId
+      dependency = @detectCircularDependency_ depId, @dependingIds_[depId], list.slice 0
+      if dependency.length
+        return dependency
+    []

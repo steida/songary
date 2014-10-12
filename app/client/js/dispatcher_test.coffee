@@ -111,27 +111,28 @@ suite 'app.Dispatcher', ->
         done()
       dispatcher.dispatch 'action', {}
 
-    test 'should detect circular dependency 0 - 1 - 0', (done) ->
+    test 'should detect circular dependency 1 - 0 - 1', (done) ->
       id0 = dispatcher.register (action, payload) -> dispatcher.waitFor [id1]
       id1 = dispatcher.register (action, payload) -> dispatcher.waitFor [id0]
       dispatcher.dispatch 'action', {}
         .thenCatch (reason) ->
           assert.equal reason.message,
-            'Assertion failed: Circular dependency detected: 0 - 1 - 0'
+            'Assertion failed: Circular dependency detected: 1 - 0 - 1'
           done()
 
-    test 'should detect circular dependency 1 - 2 - 1', (done) ->
-      id0 = dispatcher.register (action, payload) ->
+    test 'should detect circular dependency 3 - 1 - 2 - 3', (done) ->
+      id0 = dispatcher.register (action, payload) -> dispatcher.waitFor [id3]
       id1 = dispatcher.register (action, payload) -> dispatcher.waitFor [id2]
-      id2 = dispatcher.register (action, payload) -> dispatcher.waitFor [id1]
+      id2 = dispatcher.register (action, payload) -> dispatcher.waitFor [id3]
+      id3 = dispatcher.register (action, payload) -> dispatcher.waitFor [id1]
       dispatcher.dispatch 'action', {}
         .thenCatch (reason) ->
           assert.equal reason.message,
-            'Assertion failed: Circular dependency detected: 1 - 2 - 1'
+            'Assertion failed: Circular dependency detected: 3 - 1 - 2 - 3'
           done()
 
   suite 'waitFor', ->
-    test 'should wait', (done) ->
+    test 'should wait for 1', (done) ->
       called = ''
       id0 = dispatcher.register ->
         dispatcher
@@ -144,6 +145,14 @@ suite 'app.Dispatcher', ->
         .then (value) ->
           assert.deepEqual value, [{}, {}]
           assert.equal called, '10'
+          done()
+
+    test 'should not wait for 0', (done) ->
+      id0 = dispatcher.register (action, payload) ->
+      id1 = dispatcher.register (action, payload) -> dispatcher.waitFor [id0]
+      id2 = dispatcher.register (action, payload) -> dispatcher.waitFor [id0]
+      dispatcher.dispatch 'action', {}
+        .then (reason) ->
           done()
 
     test 'should throw error if not called during dispatching', ->
