@@ -17,7 +17,7 @@ suite 'app.Dispatcher', ->
     test 'should throw error if id was not registered', ->
       assert.throws ->
         dispatcher.unregister 123
-      , 'Assertion failed: `123` does not map to a registered callback.'
+      , 'Assertion failed: 123 does not map to a registered callback.'
 
   suite 'dispatch', ->
     test 'should call registered callback with action and payload', (done) ->
@@ -103,33 +103,47 @@ suite 'app.Dispatcher', ->
         done()
       dispatcher.dispatch 'action', {}
 
-    # test 'should detect circular dependency', (done) ->
-    #   indexA = dispatcher.register (action, payload) ->
-    #     dispatcher.waitFor [indexB]
-    #   indexB = dispatcher.register (action, payload) ->
-    #     assert.throws ->
-    #       dispatcher.waitFor [indexA]
-    #     , 'Assertion failed: Circular dependency detected for: '
-    #     done()
-    #   dispatcher.dispatch 'action', {}
-    #     .thenCatch ->
+    test 'should detect circular dependency 0 - 0', (done) ->
+      id0 = dispatcher.register (action, payload) ->
+        assert.throws ->
+          dispatcher.waitFor [id0]
+        , 'Assertion failed: Circular dependency detected: 0 - 0'
+        done()
+      dispatcher.dispatch 'action', {}
 
-    # todo: a na a, a je to ok
+    test 'should detect circular dependency 0 - 1 - 0', (done) ->
+      id0 = dispatcher.register (action, payload) -> dispatcher.waitFor [id1]
+      id1 = dispatcher.register (action, payload) -> dispatcher.waitFor [id0]
+      dispatcher.dispatch 'action', {}
+        .thenCatch (reason) ->
+          assert.equal reason.message,
+            'Assertion failed: Circular dependency detected: 0 - 1 - 0'
+          done()
+
+    test 'should detect circular dependency 1 - 2 - 1', (done) ->
+      id0 = dispatcher.register (action, payload) ->
+      id1 = dispatcher.register (action, payload) -> dispatcher.waitFor [id2]
+      id2 = dispatcher.register (action, payload) -> dispatcher.waitFor [id1]
+      dispatcher.dispatch 'action', {}
+        .thenCatch (reason) ->
+          assert.equal reason.message,
+            'Assertion failed: Circular dependency detected: 1 - 2 - 1'
+          done()
 
   suite 'waitFor', ->
     test 'should wait', (done) ->
       called = ''
-      indexA = dispatcher.register ->
+      id0 = dispatcher.register ->
         dispatcher
-          .waitFor [indexB]
-          .then -> called += 'a'
-      indexB = dispatcher.register ->
-        called += 'b'
+          .waitFor [id1]
+          .then -> called += '0'
+      id1 = dispatcher.register ->
+        called += '1'
       dispatcher
         .dispatch 'action', {}
         .then (value) ->
           assert.deepEqual value, [{}, {}]
-          assert.equal called, 'ba'
+          assert.equal called, '10'
           done()
 
     test 'should throw error if not called during dispatching', ->
@@ -137,7 +151,7 @@ suite 'app.Dispatcher', ->
         dispatcher.waitFor [1]
       , 'Assertion failed: Must be invoked while dispatching.'
 
-    test 'should throw error if indexes is not an array', (done) ->
+    test 'should throw error if ids is not an array', (done) ->
       dispatcher.register (action, payload) ->
         assert.throws ->
           dispatcher.waitFor 123
@@ -149,6 +163,6 @@ suite 'app.Dispatcher', ->
       dispatcher.register (action, payload) ->
         assert.throws ->
           dispatcher.waitFor [123]
-        , 'Assertion failed: `123` does not map to a registered callback'
+        , 'Assertion failed: 123 does not map to a registered callback'
         done()
       dispatcher.dispatch 'action', {}
