@@ -21,6 +21,8 @@ class app.react.Gesture
       When link is tapped and new page is rendered, subsequent click can focus
       form field. I don't know how to suppress it, preventDefault nor
       stopPropagation works. Cover seems to be both simple and reliable.
+      TODO: Wait for https://github.com/Polymer/polymer-gestures/pull/73, then
+      remove.
       @type {Element}
       @private
     ###
