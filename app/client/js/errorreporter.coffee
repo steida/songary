@@ -17,10 +17,10 @@ class app.ErrorReporter
       @reporter = goog.debug.ErrorReporter.install @routes.api.clientErrors.url()
 
   ###*
-    @param {*} reason
     @param {string} action
+    @param {*} reason
   ###
-  report: (reason, action) ->
+  report: (action, reason) ->
     # Cancellation is not considered as a real error. For example, este.Router
     # cancels loading when another route is requested before previous is done.
     if reason instanceof goog.Promise.CancellationError
