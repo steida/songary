@@ -5,7 +5,6 @@
   "private": true,
   "dependencies": {
     "body-parser": "^1.0.1",
-    "cld": "^2.1.0",
     "coffee-script": "^1.7.1",
     "compression": "^1.0.1",
     "elasticsearch": "^2.4.2",
@@ -13,9 +12,10 @@
     "firebase": "^1.0.21",
     "gulp": "^3.6.0",
     "jsdom": "^1.0.0",
+    "cld": "^2.1.0",
     "method-override": "^2.0.2",
     "react": "^0.11.0",
-    "static-favicon": "^1.0.2"
+    "serve-favicon": "^2.1.5"
   },
   "devDependencies": {
     "gulp-este": "^1.0.1",

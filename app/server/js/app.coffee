@@ -4,7 +4,7 @@ goog.require 'goog.labs.userAgent.util'
 
 bodyParser = require 'body-parser'
 compression = (`/** @type {Function} */`) require 'compression'
-favicon = (`/** @type {Function} */`) require 'static-favicon'
+favicon = (`/** @type {Function} */`) require 'serve-favicon'
 methodOverride = (`/** @type {Function} */`) require 'method-override'
 
 class server.App
