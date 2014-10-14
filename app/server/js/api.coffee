@@ -44,7 +44,7 @@ class server.Api
 
     @route api.clientErrors
       .post (req) ->
-        elastic.index index: 'songary',  type: 'clienterror', body:
+        elastic.index index: 'songary', type: 'clienterror', body:
           # Does not work for some reason, but line is specified in trace.
           # line: req.body['line']
           action: req.query.action
