@@ -7,10 +7,9 @@ class app.react.pages.About
 
   ###*
     @param {app.user.Store} userStore
-    @param {app.Firebase} firebase
     @constructor
   ###
-  constructor: (userStore, firebase) ->
+  constructor: (userStore) ->
     {div,p,form,textarea,menu,button,a} = React.DOM
 
     message = ''
@@ -32,7 +31,8 @@ class app.react.pages.About
                   value: message
               button
                 className: 'btn btn-default'
-                disabled: !message.length
+                # disabled: !message.length
+                disabled: true
                 onClick: @onContactFromSubmit
                 type: 'button'
               , About.MSG_SEND_BUTTON_LABEL
@@ -51,7 +51,7 @@ class app.react.pages.About
           alert @getSuspiciousMessageWarning message
           return
         user = userStore.user
-        firebase.sendContactFormMessage user.uid, user.displayName, message
+        # firebase.sendContactFormMessage user.uid, user.displayName, message
         alert About.MSG_THANK_YOU
         message = ''
         @forceUpdate()

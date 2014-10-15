@@ -9,7 +9,6 @@
     "compression": "^1.0.1",
     "elasticsearch": "^2.4.2",
     "express": "^4.0.0",
-    "firebase": "^1.0.21",
     "gulp": "^3.6.0",
     "jsdom": "^1.0.0",
     "cld": "^2.1.0",

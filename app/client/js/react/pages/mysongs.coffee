@@ -6,10 +6,9 @@ class app.react.pages.MySongs
     @param {app.Routes} routes
     @param {app.user.Store} userStore
     @param {app.react.Gesture} gesture
-    @param {app.Firebase} firebase
     @constructor
   ###
-  constructor: (routes, userStore, gesture, firebase) ->
+  constructor: (routes, userStore, gesture) ->
     {div,ul,li,p,nav} = React.DOM
     {a} = gesture.scroll 'a'
 

@@ -6,8 +6,6 @@
     "bootstrap": "^3.2.0",
     "este-library": "git://github.com/steida/este-library.git",
     "react": "^0.11.0",
-    "stylus-nib": "git://github.com/visionmedia/nib.git",
-    "firebase": "^1.0.18",
-    "firebase-simple-login": "^1.6.2"
+    "stylus-nib": "git://github.com/visionmedia/nib.git"
   }
 }

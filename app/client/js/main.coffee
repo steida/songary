@@ -19,9 +19,6 @@ app.main = (data) ->
   container.configure
     resolve: App
     with: element: document.body
-  ,
-    resolve: app.Firebase
-    with: firebase: window.Firebase
 
   container.resolveApp()
 

@@ -16,10 +16,6 @@ server.main = (config) ->
       isDev: config['env']['development']
       port: config['server']['port']
   ,
-    resolve: app.Firebase
-    with:
-      firebase: require 'firebase'
-  ,
     resolve: server.FrontPage
     with:
       isDev: config['env']['development']
