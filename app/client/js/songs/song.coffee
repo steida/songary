@@ -124,6 +124,3 @@ class app.songs.Song
 
   getDisplayLyrics: ->
     @lyrics || Song.MSG_MISSING_LYRICS
-
-  toJson: ->
-    JSON.parse JSON.stringify @
