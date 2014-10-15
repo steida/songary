@@ -71,14 +71,14 @@ class app.songs.Store extends este.labs.Store
     @return {goog.Promise}
   ###
   publish: (song) ->
-    publishedSong = @createPublishedSong_ song
-    errors = publishedSong.validatePublished()
-    if errors.length
-      return goog.Promise.reject errors
-
-    @dispatcher.dispatch Store.Actions.PUBLISH_SONG,
-      song: song
-      json: publishedSong.toJson()
+    # publishedSong = @createPublishedSong_ song
+    # errors = publishedSong.validatePublished()
+    # if errors.length
+    #   return goog.Promise.reject errors
+    #
+    # @dispatcher.dispatch Store.Actions.PUBLISH_SONG,
+    #   song: song
+    #   json: publishedSong.toJson()
 
   ###*
     @param {app.songs.Song} song
@@ -86,10 +86,10 @@ class app.songs.Store extends este.labs.Store
     @private
   ###
   createPublishedSong_: (song) ->
-    json = song.toJson()
-    json.publisher = @userStore.user.uid
-    delete json.inTrash
-    @instanceFromJson app.songs.Song, json
+    # json = song.toJson()
+    # json.publisher = @userStore.user.uid
+    # delete json.inTrash
+    # @instanceFromJson app.songs.Song, json
 
   ###*
     @param {app.songs.Song} song

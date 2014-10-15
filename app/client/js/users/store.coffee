@@ -27,21 +27,13 @@ class app.user.Store extends este.labs.Store
   songs: null
 
   ###*
-    @type {Object.<string,boolean>}
-    @protected
-  ###
-  publishedSongs: null
-
-  ###*
-    @type {Object} Auth user.
+    @type {Object}
   ###
   user: null
 
   setEmpty: ->
     @newSong = new app.songs.Song
     @songs = []
-    @publishedSongs = {}
-    @user = null
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -123,43 +115,37 @@ class app.user.Store extends este.labs.Store
     @override
   ###
   toJson: ->
-    json =
-      newSong: @newSong
-      user: @user
-      publishedSongs: @publishedSongs
-    if @songs.length
-      json.songs = @asObject @songs
-    json
+    newSong: @newSong
+    # user: @user
+    songs: @songs
 
   ###*
     @override
   ###
   fromJson: (json) ->
     @newSong = @instanceFromJson app.songs.Song, json.newSong
-    @songs = @asArray(json.songs || {}).map @instanceFromJson app.songs.Song
-    @user = if json.user then @authUserToAppUser json.user else null
-    @publishedSongs = json.publishedSongs || {}
+    @songs = json.songs.map @instanceFromJson app.songs.Song
 
-  ###*
-    @param {Object} authUser Auth user.
-    @return {Object} user App user.
-  ###
-  authUserToAppUser: (authUser) ->
-    createdAt: authUser.createdAt
-    displayName: authUser.displayName
-    id: authUser.id
-    provider: authUser.provider
-    thirdPartyUserData: authUser.thirdPartyUserData
-    uid: authUser.uid
+  # ###*
+  #   @param {Object} authUser Auth user.
+  #   @return {Object} user App user.
+  # ###
+  # authUserToAppUser: (authUser) ->
+  #   createdAt: authUser.createdAt
+  #   displayName: authUser.displayName
+  #   id: authUser.id
+  #   provider: authUser.provider
+  #   thirdPartyUserData: authUser.thirdPartyUserData
+  #   uid: authUser.uid
 
-  ###*
-    @param {boolean} userWasLogged
-  ###
-  clearOnLogout: (userWasLogged) ->
-    if userWasLogged
-      @setEmpty()
-    else
-      @user = null
+  # ###*
+  #   @param {boolean} userWasLogged
+  # ###
+  # clearOnLogout: (userWasLogged) ->
+  #   if userWasLogged
+  #     @setEmpty()
+  #   else
+  #     @user = null
 
   ###*
     @return {boolean}
@@ -172,20 +158,21 @@ class app.user.Store extends este.labs.Store
     @return {Array.<string>}
   ###
   getSongLyricsLocalHistory: (song) ->
-    seen = {}
-
-    @localHistory
-      .of @
-      .map (store) ->
-        if store.newSong.id == song.id
-          return store.newSong?.lyrics?.trim()
-        store.songs?[song.id]?.lyrics?.trim()
-      .filter (lyrics) ->
-        # Exists and has more than one word.
-        lyrics && lyrics.split(/\s+/).length > 1
-      .filter (lyrics) ->
-        return false if seen[lyrics]
-        seen[lyrics] = true
+    []
+    # seen = {}
+    #
+    # @localHistory
+    #   .of @
+    #   .map (store) ->
+    #     if store.newSong.id == song.id
+    #       return store.newSong?.lyrics?.trim()
+    #     store.songs?[song.id]?.lyrics?.trim()
+    #   .filter (lyrics) ->
+    #     # Exists and has more than one word.
+    #     lyrics && lyrics.split(/\s+/).length > 1
+    #   .filter (lyrics) ->
+    #     return false if seen[lyrics]
+    #     seen[lyrics] = true
 
   ###*
     @param {app.songs.Song} song
@@ -202,13 +189,10 @@ class app.user.Store extends este.labs.Store
     @notify()
 
   ###*
-    @param {app.songs.Song} publishedSong
+    @param {app.songs.Song} song
   ###
-  savePublishedSongToDevice: (publishedSong) ->
-    # Save the same song, but as unpublished.
-    json = publishedSong.toJson()
-    delete json.publisher
-    delete json.updatedAt
-    song = @instanceFromJson app.songs.Song, json
+  savePublishedSongToDevice: (song) ->
+    # Make a clone because it is a clone.
+    song = @instanceFromJson app.songs.Song, song
     @songs.push song
     @notify()
