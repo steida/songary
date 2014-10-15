@@ -1,164 +1,118 @@
 goog.provide 'app.LocalStorage'
 
 goog.require 'goog.array'
-goog.require 'goog.labs.userAgent.browser'
+goog.require 'goog.asserts'
 goog.require 'goog.storage.Storage'
 goog.require 'goog.storage.mechanism.mechanismfactory'
+goog.require 'goog.string'
 
 class app.LocalStorage
 
   ###*
+    @param {goog.labs.pubsub.BroadcastPubSub} pubSub
     @constructor
   ###
-  constructor: ->
-    @tryCreate_()
-    @migrate_()
+  constructor: (@pubSub) ->
+    mechanism = goog.storage.mechanism.mechanismfactory
+      .createHTML5LocalStorage LocalStorage.Key.APP
+
+    # In Safari/iOS private browsing mode, localStorage is not available.
+    if mechanism
+      @isAvailable = true
+      @localStorage = new goog.storage.Storage mechanism
+      @ensureVersion()
+      @contextId = goog.string.getRandomString()
 
   ###*
     @enum {string}
   ###
-  @Keys:
-    STORE_PREFIX: 'store:'
-    USER: 'user'
+  @Key:
+    APP: 'songary'
     VERSION: 'version'
 
   ###*
-    @private
+    @enum {string}
   ###
-  localStorageKey_: 'songary'
+  @Topic:
+    STORE_CHANGE: 'store-change'
 
   ###*
-    @private
+    @type {number}
   ###
-  localStorageVersion_: 1
+  @VERSION: 1
 
   ###*
-    Can be null, Safari in private mode does not allow localStorage object.
+    @type {goog.labs.pubsub.BroadcastPubSub}
+    @protected
+  ###
+  pubSub: null
+
+  ###*
+    @type {boolean}
+    @protected
+  ###
+  isAvailable: false
+
+  ###*
     @type {goog.storage.Storage}
-    @private
+    @protected
   ###
-  localStorage_: null
+  localStorage: null
 
   ###*
-    @private
+    Browsing context id.
+    @type {string}
   ###
-  tryCreate_: ->
-    mechanism = goog.storage.mechanism.mechanismfactory
-      .createHTML5LocalStorage @localStorageKey_
-    return if !mechanism
-    @localStorage_ = new goog.storage.Storage mechanism
-    @ensureVersion_()
+  contextId: ''
 
   ###*
-    @private
+    @protected
   ###
-  ensureVersion_: ->
-    version = @localStorage_.get LocalStorage.Keys.VERSION
+  ensureVersion: ->
+    version = @localStorage.get LocalStorage.Key.VERSION
     return if version
-    @localStorage_.set LocalStorage.Keys.VERSION, @localStorageVersion_
+    @localStorage.set LocalStorage.Key.VERSION, LocalStorage.VERSION
 
   ###*
-    @private
-  ###
-  migrate_: ->
-    return if !@localStorage_
-    storageVersion = Number @localStorage_.get LocalStorage.Keys.VERSION
-    scriptVersion = @localStorageVersion_
-    userOrig = @localStorage_.get LocalStorage.Keys.USER
-    try
-      migrateVersion() for migrateVersion in [
-        =>
-          # Example:
-          # user = @localStorage_.get LocalStorage.Keys.USER
-          # user.songs = user.songs.map (song) ->
-          #   lyrics = song.lyrics
-          #   delete song.lyrics
-          #   song.llyrics = lyrics
-          #   song
-          # @localStorage_.set LocalStorage.Keys.USER, user
-        =>
-          # console.log 'from 2 to 3'
-      ].slice storageVersion - 1, scriptVersion - 1
-    catch e
-      # TODO: Report error to server.
-      @localStorage_.set LocalStorage.Keys.USER, userOrig
-      return
-    @localStorage_.set LocalStorage.Keys.VERSION, scriptVersion
-
-  ###*
+    Sync stores with localStorage across browsing contexts that share the same
+    origin.
     @param {Array.<este.labs.Store>} stores
   ###
-  load: (stores) ->
-    return if !@localStorage_
-    @loadFromJson_ stores
-    @listenWindowStorage_ stores
-
-  ###*
-    @param {Array.<este.labs.Store>} stores
-    @private
-  ###
-  loadFromJson_: (stores) ->
-    stores.forEach (store) =>
-      json = @localStorage_.get @getPrefixedStoreKey_ store
-      return if !json
-      # TODO: Try/Catch in case of error. Report error to server.
-      store.fromJson json
-
-  ###*
-    Sync app state across browser tabs/windows with the same domain origin.
-    @param {Array.<este.labs.Store>} stores
-    @private
-  ###
-  listenWindowStorage_: (stores) ->
-    # IE 9/10/11 implementation of window storage event is broken. Check:
-    # http://stackoverflow.com/a/4679754
-    return if goog.labs.userAgent.browser.isIE()
-
-    goog.events.listen window, 'storage', (e) =>
-      # TODO: Reload if localStorageVersion_ changed.
-      browserEvent = e.getBrowserEvent()
-      store = @tryGetStore browserEvent.key, stores
-      return if !store
-
-      # Because FirebaseSimpleLogin does not propagate login state across
-      # windows/tabs, we need to track change manually.
-      if store instanceof app.user.Store
-        userWasLogged = store.isLogged()
-
-      # TODO: Try/Catch in case of error. Report error to server.
-      json = (`/** @type {Object} */`) JSON.parse browserEvent.newValue
-      store.fromJson json
-      store.notify @
-
-      # Reload window/tab if user login state has changed.
-      if store instanceof app.user.Store
-        userLogged = !userWasLogged && store.isLogged()
-        userLogout = userWasLogged && !store.isLogged()
-        location.reload() if userLogged || userLogout
-
-  ###*
-    @param {string} key
-    @param {Array.<este.labs.Store>} stores
-  ###
-  tryGetStore: (key, stores) ->
-    prefix = @localStorageKey_ + '::' + LocalStorage.Keys.STORE_PREFIX
-    storeName = key.slice prefix.length
-    return null if !storeName
-    goog.array.find stores, (store) ->
-      store.name == storeName
+  sync: (stores) ->
+    return if !@isAvailable
+    for store in stores
+      @fetch store
+      @publishOnChange store
+    @subscribeChange stores
 
   ###*
     @param {este.labs.Store} store
-    @param {Object} json
+    @protected
   ###
-  set: (store, json) ->
-    return if !@localStorage_
-    @localStorage_.set @getPrefixedStoreKey_(store), json
+  fetch: (store) ->
+    json = @localStorage.get store.name
+    return if !json
+    goog.asserts.assertObject json
+    store.fromJson json
 
   ###*
     @param {este.labs.Store} store
-    @return {string}
-    @private
+    @protected
   ###
-  getPrefixedStoreKey_: (store) ->
-    LocalStorage.Keys.STORE_PREFIX + store.name
+  publishOnChange: (store) ->
+    store.listen 'change', (e) =>
+      return if e.target == @
+      @pubSub.publish LocalStorage.Topic.STORE_CHANGE, @contextId, store.name
+
+  ###*
+    @param {Array.<este.labs.Store>} stores
+    @protected
+  ###
+  subscribeChange: (stores) ->
+    @pubSub.subscribe LocalStorage.Topic.STORE_CHANGE, (contextId, name) =>
+      store = goog.array.find stores, (store) -> store.name == name
+      if contextId == @contextId
+        @localStorage.set store.name, store.toJson()
+      else
+        @fetch store
+        store.notify @
