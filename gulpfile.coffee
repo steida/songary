@@ -44,15 +44,11 @@ paths =
   thirdParty:
     development: [
       'thirdparty/polymergestures.min.js'
-      'bower_components/firebase/firebase.js'
-      'bower_components/firebase-simple-login/firebase-simple-login.js'
-      'bower_components/react/react-with-addons.js'
+      'bower_components/react/react.js'
     ]
     production: [
       'thirdparty/polymergestures.min.js'
-      'bower_components/firebase/firebase.js'
-      'bower_components/firebase-simple-login/firebase-simple-login.js'
-      'bower_components/react/react-with-addons.min.js'
+      'bower_components/react/react.min.js'
     ]
 
 dirs =
