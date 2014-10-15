@@ -13,13 +13,14 @@ class App
   ###
   constructor: (element, dispatcher, routes, storage, reactApp, router) ->
 
+    routes.addToEste router, (route, params) ->
+      dispatcher.dispatch 'route-load', route: route, params: params
+
     dispatcher.register (action, payload) ->
-      if action == 'router-load'
+      if action == 'route-load'
         storage.load payload.route, payload.params
           .then -> routes.setActive payload.route, payload.params
           .thenCatch (reason) -> routes.trySetErrorRoute reason
           .then -> React.renderComponent reactApp.component(), element
 
-    routes.addToEste router, (route, params) ->
-      dispatcher.dispatch 'router-load', route: route, params: params
     router.start()
