@@ -14,7 +14,7 @@ Read [Este.js](https://github.com/steida/este).
   - frontend/mobile/offline first
   - isomorphic web app
   - Closure Tools
-  - Facebook React and Flux
+  - Facebook React with Flux
   - one way data flow
   - polymes-gestures
   - global error handling of sync and async code
@@ -24,7 +24,6 @@ Read [Este.js](https://github.com/steida/este).
   - clean code via dependency injection with awesome DI container
   - statically typed code written in CoffeeScript
   - killer React.js HTML syntax
-  - Firebase for realtime collaboration
   - finest [dev stack](https://github.com/steida/gulp-este)
 
 ### Why Facebook [Flux](http://facebook.github.io/flux/) is better than XYZ?
@@ -38,6 +37,3 @@ Or imagine you have A, B, C, D, E, F, G, H listening each other. Can you tell wh
 #### Why CoffeeScript?
 
 I like CoffeeScript and significant whitespace. I'm enjoying CoffeeScript for years and it just works. But I understand that some people doubt about CS future, or simply doesn't like it. I will add gulp task to switch to plain old JavaScript soon. It will just delete `*.coffee` files and update `.gitignore`. Done. Now you have JavaScript version :-) But I would like to do more than that. Yes, ES6 is coming in town. I will add ES6 version once Closure Compiler finish its [work](https://github.com/google/closure-compiler/wiki/ECMAScript6).
-
-
-
