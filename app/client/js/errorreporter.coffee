@@ -2,6 +2,8 @@ goog.provide 'app.ErrorReporter'
 
 goog.require 'goog.Promise'
 goog.require 'goog.debug.ErrorReporter'
+goog.require 'app.Xhr.OfflineError'
+goog.require 'goog.net.HttpStatus'
 
 class app.ErrorReporter
 
@@ -21,30 +23,44 @@ class app.ErrorReporter
     @param {*} reason
   ###
   report: (action, reason) ->
-    # Cancellation is not considered as a real error. For example, este.Router
-    # cancels loading when another route is requested before previous is done.
-    if reason instanceof goog.Promise.CancellationError
-      return
+    return if !@isWorthReport_ reason
 
-    # Don't report already reported reason.
-    reasonAsString = reason.toString()
-    return if @alreadyReported_[reasonAsString]
-    @alreadyReported_[reasonAsString] = true
-
-    if reason instanceof app.Xhr.OfflineError
-      alert reason.message
-      return
-
-    # TODO: Show something more beautiful then alert with a button to reload
-    # app. No, auto-reload isn't a good idea since it can cause looping.
+    # TODO: Show something more beautiful then alert. Add button to reload app.
+    # Auto-reload is bad idea because it can cause reload looping.
     alert 'Application error. Please reload browser.'
 
-    if @reporter
-      @reporter.setAdditionalArguments
+    if !@isAlreadyReported_ reason
+      @reporter?.setAdditionalArguments
         action: action
         user: @userStore?.user?.displayName || ''
 
-    # Don't swallow error since it can be handled by any other promise.
-    # Throw also ensures error is shown in console and therefore catched by
-    # goog.debug.ErrorReporter.
-    throw reason
+      # Propagate error to other promises. It also ensures reason is shown in
+      # console therefore catched and reported by goog.debug.ErrorReporter.
+      throw reason
+
+  ###*
+    @param {*} reason
+    @return {boolean}
+  ###
+  isWorthReport_: (reason) ->
+    # 404 is common.
+    return false if reason == 404
+    # Cancellation is ok. For example este.Router cancels aborted requests.
+    return false if reason instanceof goog.Promise.CancellationError
+    # User is offline. It happens.
+    if reason instanceof app.Xhr.OfflineError
+      alert reason.message
+      return false
+    true
+
+  ###*
+    Don't report already reported reason.
+    @param {*} reason
+    @return {boolean}
+  ###
+  isAlreadyReported_: (reason) ->
+    stringReason = String reason
+    if @alreadyReported_[stringReason]
+      return true
+    @alreadyReported_[stringReason] = true
+    false
