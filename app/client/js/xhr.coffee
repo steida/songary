@@ -1,4 +1,5 @@
 goog.provide 'app.Xhr'
+goog.provide 'app.Xhr.OfflineError'
 
 goog.require 'goog.Promise'
 goog.require 'goog.debug.Error'
