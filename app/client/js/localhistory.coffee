@@ -23,7 +23,7 @@ class app.LocalHistory
   @MAX_ITEMS_IN_ARRAY: 200
 
   ###*
-    @param {este.labs.Store} store
+    @param {este.Store} store
     @param {Object} json
   ###
   update: (store, json) ->
@@ -32,7 +32,7 @@ class app.LocalHistory
 
   ###*
     TODO: Store into LocalStorage once persistent data structure will used.
-    @param {este.labs.Store} store
+    @param {este.Store} store
     @private
   ###
   storePreviousState_: (store) ->
@@ -42,7 +42,7 @@ class app.LocalHistory
     array.shift() if array.length > LocalHistory.MAX_ITEMS_IN_ARRAY
 
   ###*
-    @param {este.labs.Store} store
+    @param {este.Store} store
     @return {Array.<Object>}
   ###
   of: (store) ->

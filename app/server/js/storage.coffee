@@ -1,22 +1,24 @@
 goog.provide 'server.Storage'
 
-goog.require 'este.labs.Storage'
+goog.require 'este.Storage'
 
-class server.Storage extends este.labs.Storage
+class server.Storage extends este.Storage
 
   ###*
     @param {app.Routes} routes
     @param {server.ElasticSearch} elastic
     @param {app.songs.Store} songsStore
     @constructor
-    @extends {este.labs.Storage}
+    @extends {este.Storage}
     @final
   ###
   constructor: (@routes, @elastic, @songsStore) ->
     super()
 
   ###*
-    @override
+    @param {este.Route} route
+    @param {Object} params
+    @return {!goog.Promise}
   ###
   load: (route, params) ->
     switch route

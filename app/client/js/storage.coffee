@@ -1,38 +1,62 @@
 goog.provide 'app.Storage'
 
-goog.require 'este.labs.Storage'
-goog.require 'goog.async.Throttle'
-goog.require 'goog.structs.Set'
+goog.require 'este.Storage'
 
-class app.Storage extends este.labs.Storage
+class app.Storage extends este.Storage
 
   ###*
+    @param {app.Dispatcher} dispatcher
     @param {app.LocalStorage} localStorage
     @param {app.Routes} routes
     @param {app.Xhr} xhr
     @param {app.songs.Store} songsStore
     @param {app.user.Store} userStore
     @constructor
-    @extends {este.labs.Storage}
+    @extends {este.Storage}
     @final
   ###
-  constructor: (@localStorage, @routes, @xhr, @songsStore, @userStore) ->
-    super()
+  constructor: (@dispatcher, @localStorage, @routes, @xhr,
+      @songsStore, @userStore) ->
+
     @localStorage.sync [@userStore]
+    @dispatcher.register @onDispatch_.bind @
 
-    # @stores = [@userStore]
-    # @pendingStores = new goog.structs.Set
-    # @save = new goog.async.Throttle @savePendingStores, Storage.THROTTLE_MS, @
-
-    # @localStorage.load @stores
-    # @listenStores()
-
-  # @THROTTLE_MS: 1000
+  @Actions:
+    ROUTE_LOAD: 'route-load'
 
   ###*
-    @override
+    @param {este.Route} route
+    @param {Object} params
+    @return {!goog.Promise}
   ###
   load: (route, params) ->
+    @dispatcher.dispatch Storage.Actions.ROUTE_LOAD,
+      route: route
+      params: params
+
+  ###*
+    @param {string} action
+    @param {Object} payload
+    @return {goog.Promise|undefined}
+    @private
+  ###
+  onDispatch_: (action, payload) ->
+    switch action
+      when Storage.Actions.ROUTE_LOAD
+        @loadRoute_ payload.route, payload.params
+      when app.songs.Store.Actions.SEARCH
+        @xhr
+          .get @routes.api.songs.search.url null, query: payload.query
+          .then (songs) =>
+            @songsStore.fromJson foundSongs: songs
+
+  ###*
+    @param {este.Route} route
+    @param {Object} params
+    @return {!goog.Promise}
+    @private
+  ###
+  loadRoute_: (route, params) ->
     switch route
       when @routes.about, @routes.home, @routes.newSong, @routes.trash
         @ok()
@@ -57,63 +81,3 @@ class app.Storage extends este.labs.Storage
             @songsStore.fromJson recentlyUpdatedSongs: songs
       else
         @notFound()
-
-  # ###*
-  #   TODO: Handle error.
-  #   @private
-  # ###
-  # savePendingStores: ->
-  #   stores = @pendingStores.getValues()
-  #   @pendingStores.clear()
-  #   for store in stores
-  #     json = @deepCopy store.toJson()
-  #     @saveStoreToClient store, json
-  #     @saveStoreToServer store, json
-  #   return
-  #
-  # ###*
-  #   @param {este.labs.Store} store
-  #   @param {Object} json
-  #   @private
-  # ###
-  # saveStoreToClient: (store, json) ->
-  #   # console.log 'storage.saveStoreToClient' if goog.DEBUG
-  #   @localStorage.set store, json
-  #
-  # ###*
-  #   @param {este.labs.Store} store
-  #   @param {Object} json
-  #   @private
-  # ###
-  # saveStoreToServer: (store, json) ->
-  #   # console.log 'storage.saveStoreToServer' if goog.DEBUG
-  #   if store instanceof app.user.Store
-  #     if @firebase.userRef
-  #       # console.log '@userRef.set json' if goog.DEBUG
-  #       @firebase.sync -> @userRef.set json
-  #
-  # ###*
-  #   @private
-  # ###
-  # listenStores: ->
-  #   @stores.forEach (store) =>
-  #     store.listen 'change', @onStoreChange.bind @, store
-  #
-  # ###*
-  #   @param {este.labs.Store} store
-  #   @param {goog.events.Event} e
-  #   @private
-  # ###
-  # onStoreChange: (store, e) ->
-  #   # Ignore changes from the same origin browser window or tab.
-  #   if e.target instanceof app.LocalStorage
-  #     return
-  #
-  #   # Save changes from Firebase to LocalStorage.
-  #   if e.target instanceof app.Firebase
-  #     @saveStoreToClient store, @deepCopy store.toJson()
-  #     return
-  #
-  #   # Save all changes throttled.
-  #   @pendingStores.add store
-  #   @save.fire()

@@ -18,7 +18,7 @@ class server.Api
     # Publish/Unpublish.
     @route api.songs.id
       .put (req) ->
-        errors = songsStore.instanceFromJson app.songs.Song, req.body
+        errors = new app.songs.Song req.body
           .validatePublished()
         if errors.length
           return goog.Promise.reject errors

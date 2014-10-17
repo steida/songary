@@ -66,6 +66,11 @@ class app.LocalStorage
   contextId: ''
 
   ###*
+    @type {boolean}
+  ###
+  publishOnChange_: true
+
+  ###*
     @protected
   ###
   ensureVersion: ->
@@ -74,19 +79,18 @@ class app.LocalStorage
     @localStorage.set LocalStorage.Key.VERSION, LocalStorage.VERSION
 
   ###*
-    Sync stores with localStorage across browsing contexts that share the same
-    origin.
-    @param {Array.<este.labs.Store>} stores
+    Sync stores with localStorage across browsing contexts with the same origin.
+    @param {Array.<este.Store>} stores
   ###
   sync: (stores) ->
     return if !@isAvailable
     for store in stores
       @fetch store
       @publishOnChange store
-    @subscribeChange stores
+    @subscribeChanges stores
 
   ###*
-    @param {este.labs.Store} store
+    @param {este.Store} store
     @protected
   ###
   fetch: (store) ->
@@ -96,23 +100,24 @@ class app.LocalStorage
     store.fromJson json
 
   ###*
-    @param {este.labs.Store} store
+    @param {este.Store} store
     @protected
   ###
   publishOnChange: (store) ->
     store.listen 'change', (e) =>
-      return if e.target == @
+      return if !@publishOnChange_
       @pubSub.publish LocalStorage.Topic.STORE_CHANGE, @contextId, store.name
 
   ###*
-    @param {Array.<este.labs.Store>} stores
+    @param {Array.<este.Store>} stores
     @protected
   ###
-  subscribeChange: (stores) ->
+  subscribeChanges: (stores) ->
     @pubSub.subscribe LocalStorage.Topic.STORE_CHANGE, (contextId, name) =>
       store = goog.array.find stores, (store) -> store.name == name
       if contextId == @contextId
         @localStorage.set store.name, store.toJson()
       else
+        @publishOnChange_ = false
         @fetch store
-        store.notify @
+        @publishOnChange_ = true

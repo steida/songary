@@ -1,19 +1,20 @@
 goog.provide 'app.user.Store'
 
 goog.require 'app.songs.Song'
-goog.require 'este.labs.Store'
+goog.require 'este.Store'
 goog.require 'goog.array'
 
-class app.user.Store extends este.labs.Store
+class app.user.Store extends este.Store
 
   ###*
     TODO: Split to more stores.
     @param {app.LocalHistory} localHistory
     @constructor
-    @extends {este.labs.Store}
+    @extends {este.Store}
   ###
   constructor: (@localHistory) ->
-    super 'user'
+    super()
+    @name = 'user'
     @setEmpty()
 
   ###*
@@ -123,8 +124,9 @@ class app.user.Store extends este.labs.Store
     @override
   ###
   fromJson: (json) ->
-    @newSong = @instanceFromJson app.songs.Song, json.newSong
-    @songs = json.songs.map @instanceFromJson app.songs.Song
+    @newSong = new app.songs.Song json.newSong
+    @songs = json.songs.map (json) -> new app.songs.Song json
+    @notify()
 
   # ###*
   #   @param {Object} authUser Auth user.
@@ -192,7 +194,7 @@ class app.user.Store extends este.labs.Store
     @param {app.songs.Song} song
   ###
   savePublishedSongToDevice: (song) ->
-    # Make a clone because it is a clone.
-    song = @instanceFromJson app.songs.Song, song
+    # Make a clone.
+    song = new app.songs.Song song
     @songs.push song
     @notify()

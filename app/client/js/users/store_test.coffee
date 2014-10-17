@@ -74,7 +74,7 @@ suite 'app.user.Store', ->
 
   suite 'contains', ->
     test 'should check if song with the same name and artist is in store', ->
-      song = store.newSong = store.instanceFromJson app.songs.Song,
+      song = store.newSong = new app.songs.Song
         name: 'a'
         artist: 'b'
         lyrics: 'c'

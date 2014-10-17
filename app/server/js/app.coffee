@@ -62,6 +62,7 @@ class server.App
     routes.addToExpress app, (route, req, res) ->
       params = req['params']
 
+      # TODO: Leverage este.Dispatcher.
       storage.load route, params
         .then -> routes.setActive route, params
         .thenCatch (reason) -> routes.trySetErrorRoute reason
