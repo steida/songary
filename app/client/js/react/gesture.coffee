@@ -145,6 +145,7 @@ class app.react.Gesture
 
        showCoverTemporarily_: ->
         # Seems to be more reliable then display block/none.
+        return if cover.parentNode == document.body
         document.body.appendChild cover
         clearTimeout @coverHideTimer
         @coverHideTimer = setTimeout ->
