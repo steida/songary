@@ -9,7 +9,7 @@ class app.react.Gesture
     TODO: Move to este-library. Check if tap can safely stop scroll momentum.
 
     Example:
-    {a,span,button} = touch.none 'a', 'span', 'button'
+    {a, span, button} = touch.none 'a', 'span', 'button'
 
     @param {este.events.RoutingClickHandler} routingClickHandler
     @constructor
@@ -17,11 +17,30 @@ class app.react.Gesture
   ###
   constructor: (@routingClickHandler) ->
 
+    ###*
+      Prevent "ghost click" phenomenon. Ghost clicks occur when an element
+      is removed before the 300ms delayed click event is fired, but the
+      click event is still sent. This click event will be sent to whatever
+      is now on top at that coordinate.
+      This PR is trying to fix it, but it does not work in iOS Chrome.
+      https://github.com/Polymer/polymer-gestures/pull/73
+      TODO: Wait for polymer-gestures fix.
+      @type {Element}
+      @private
+    ###
+    @cover_ = document.createElement 'div'
+    @cover_.style.cssText = 'position: fixed; top: 0; left: 0; background-color: #000; opacity: 0; width: 100%; height: 100%; z-index: 2147483647;'
+
   ###*
     Used for removing touch-hover before iOS callout is shown.
     @type {number}
   ###
   @CALLOUT_DELAY: 750
+
+  ###*
+    @type {number}
+  ###
+  @COVER_DELAY: 350
 
   ###*
     @param {...string} var_args
@@ -67,6 +86,7 @@ class app.react.Gesture
     @return {function(): React.ReactComponent}
   ###
   createTouchableComponent: (tag, touchAction) ->
+    cover = @cover_
     gestures = window['PolymerGestures']
     routingClickHandler = @routingClickHandler
 
@@ -116,8 +136,20 @@ class app.react.Gesture
       onTap: (e) ->
         @props.onTap e if @props.onTap
         if e.target.tagName == 'A'
+          # Routing can change whole UI, therefore we have to ignore
+          # subsequent click on any shown element to prevent accidental
+          # action like focus.
+          @showCoverTemporarily_()
           @delegateAnchorTapToRoutingClickHandler_ e
         return
+
+       showCoverTemporarily_: ->
+        # Seems to be more reliable then display block/none.
+        document.body.appendChild cover
+        clearTimeout @coverHideTimer
+        @coverHideTimer = setTimeout ->
+          document.body.removeChild cover
+        , Gesture.COVER_DELAY
 
       delegateAnchorTapToRoutingClickHandler_: (e) ->
         routingClickHandler.onCustomClick e
