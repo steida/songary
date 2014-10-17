@@ -6,10 +6,12 @@ goog.require 'este.string'
 class app.songs.Song
 
   ###*
+    @param {Object=} json
     @constructor
   ###
-  constructor: ->
+  constructor: (json) ->
     @id = goog.string.getRandomString()
+    goog.mixin @, json if json
 
   @MSG_MISSING_LYRICS: goog.getMsg 'missing lyrics'
   @MSG_NOT_PUBLISHED: goog.getMsg 'Song must be published.'
