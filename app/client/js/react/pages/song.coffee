@@ -75,7 +75,8 @@ class app.react.pages.Song
           @hideMenuAfterWhile()
 
       # TODO: Use polymer-gestures once pinch event will be supported.
-      onFontResizeTap: (increase) ->
+      onFontResizeTap: (increase, e) ->
+        e.stopPropagation()
         if !goog.labs.userAgent.device.isDesktop()
           clearTimeout @hideMenuTimer
           @hideMenuAfterWhile()
