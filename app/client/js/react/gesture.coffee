@@ -97,8 +97,12 @@ class app.react.Gesture
       componentDidMount: ->
         # Undefined on server side, so do nothing.
         return if !gestures
+
         # React doesn't support this non standard attribute, so add it manually.
         @getDOMNode().setAttribute 'touch-action', touchAction
+        if tag == 'a'
+          routingClickHandler.enableCustomClick @getDOMNode()
+
         gestures.addEventListener @getDOMNode(), 'down', @onDown
         gestures.addEventListener @getDOMNode(), 'up', @onUp
         gestures.addEventListener @getDOMNode(), 'tap', @onTap
