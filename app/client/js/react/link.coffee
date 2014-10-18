@@ -48,6 +48,8 @@ class app.react.Link
     classNames = (linkProps.className || '').match(/\S+/g) || []
     if activeFor.indexOf(@routes.active) != -1
       classNames.push 'active'
+    if @routes.active != route
+      classNames.push 'clickable'
     linkProps.className = classNames.join ' '
 
     # "Fast click" anchor.
