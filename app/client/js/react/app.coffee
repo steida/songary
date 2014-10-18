@@ -43,34 +43,34 @@ class app.react.App
           footer.component()
 
       getActivePage: (props) ->
-        switch routes.active
+        page = switch routes.active
           when routes.home then mySongs
           when routes.newSong then editSongPage
           when routes.songs then songsPage
           when routes.recentlyUpdatedSongs then recentlyUpdatedSongsPage
-          when routes.song
-            # TODO: Show all song versions, not just first.
-            # /beatles/let-it-be -> All songs published under this url.
-            # /beatles/let-it-be/yz525kwxli9s -> One song.
-            props.song = songsStore.songsByUrl[0]
-            songPage
-          when routes.mySong, routes.editSong
-            @getLocalSongPage props
+          when routes.song then @getPublishedSongPage props
+          when routes.mySong, routes.editSong then @getLocalSongPage props
           when routes.trash then trashPage
           when routes.about then aboutPage
-          when routes.me
-            return notFoundPage if !userStore.isLogged()
-            mePage
-          else notFoundPage
+          when routes.me then userStore.isLogged() && mePage
+        # 404 is handled in two places for a good reason.
+        # app.Storage can return 404, which is used by router, but app data can
+        # be changed anytime later, so that's why render has to check it again.
+        page || notFoundPage
+
+      getPublishedSongPage: (props) ->
+        # TODO: Show all song versions, not just first.
+        # /beatles/let-it-be -> All songs published under this url.
+        # /beatles/let-it-be/yz525kwxli9s -> One song.
+        props.song = songsStore.songsByUrl[0]
+        songPage
 
       getLocalSongPage: (props) ->
         song = userStore.songByRoute routes.active
         # Local song can be removed anytime, for example from different tab.
-        return notFoundPage if !song
+        return if !song
         props.song = song
-        switch routes.active
-          when routes.mySong then songPage
-          when routes.editSong then editSongPage
+        if routes.active == routes.mySong then songPage else editSongPage
 
       getPageClassName: (page) ->
         switch page
