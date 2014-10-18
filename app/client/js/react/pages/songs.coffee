@@ -15,7 +15,7 @@ class app.react.pages.Songs
     {div,input,p} = React.DOM
     searchQuery = ''
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       render: ->
         div className: 'page',

@@ -11,7 +11,7 @@ class app.react.Login
   constructor: (routes, gesture, userStore) ->
     {button} = React.DOM
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       render: ->
         null

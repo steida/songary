@@ -12,7 +12,7 @@ class app.react.pages.Trash
     {div,ul,li,nav,button} = React.DOM
     {a} = gesture.scroll 'a'
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       render: ->
         allSongs = userStore.songsSortedByName()

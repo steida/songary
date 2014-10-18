@@ -19,6 +19,6 @@ class App
         # Try set error route for known errors. Only 404 for now.
         .thenCatch (reason) -> routes.trySetErrorRoute reason
         # Everything is ok, rerender view.
-        .then -> React.renderComponent reactApp.component(), element
+        .then -> React.render reactApp.component(), element
 
     router.start()

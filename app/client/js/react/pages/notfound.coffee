@@ -11,7 +11,7 @@ class app.react.pages.NotFound
     {div,h1,p} = React.DOM
     {a} = gesture.none 'a'
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       render: ->
         div className: 'page',

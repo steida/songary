@@ -10,7 +10,7 @@ class app.react.Footer
   constructor: (userStore, login) ->
     {footer,p} = React.DOM
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
       render: ->
         footer {},
           login.component {} if !userStore.isLogged()

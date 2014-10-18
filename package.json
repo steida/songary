@@ -1,6 +1,6 @@
 {
   "name": "Songary",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Daniel Steigerwald <daniel@steigerwald.cz>",
   "private": true,
   "dependencies": {
@@ -13,7 +13,7 @@
     "jsdom": "^1.0.0",
     "cld": "^2.1.0",
     "method-override": "^2.0.2",
-    "react": "^0.11.0",
+    "react": "0.12.0-rc1",
     "serve-favicon": "^2.1.5"
   },
   "devDependencies": {

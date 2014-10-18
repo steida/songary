@@ -11,7 +11,7 @@ class app.react.Songs
     {ul,li} = React.DOM
     {a} = gesture.scroll 'a'
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
       render: ->
         ul {}, @props.songs.map (song) ->
           text = "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"

@@ -12,7 +12,7 @@ class app.react.pages.MySongs
     {div,ul,li,p,nav} = React.DOM
     {a} = gesture.scroll 'a'
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       render: ->
         # TODO: Add byName sort option.

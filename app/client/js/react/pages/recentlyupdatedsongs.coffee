@@ -10,7 +10,7 @@ class app.react.pages.RecentlyUpdatedSongs
   constructor: (songs, songsStore) ->
     {div,p} = React.DOM
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       render: ->
         div className: 'page',

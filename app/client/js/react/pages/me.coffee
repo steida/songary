@@ -13,7 +13,7 @@ class app.react.pages.Me
     {div,p,img,ul,li,nav} = React.DOM
     {a,button} = gesture.scroll 'a', 'button'
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       render: ->
         publishedSongs = userStore.songs.filter (song) -> song.isPublished()

@@ -11,7 +11,7 @@ class app.react.Header
   constructor: (routes, link, userStore) ->
     {header,nav} = React.DOM
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
       render: ->
         header {},
           nav {},

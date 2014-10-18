@@ -29,7 +29,7 @@ class app.react.pages.EditSong
     previousLyricsHistory = null
     song = null
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       render: ->
         song = @props.song ? userStore.newSong

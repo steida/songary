@@ -90,10 +90,10 @@ class app.react.Gesture
     gestures = window['PolymerGestures']
     routingClickHandler = @routingClickHandler
 
-    React.createClass
+    React.createFactory React.createClass
 
       render: ->
-        @transferPropsTo React.DOM[tag] null, @props.children
+        React.createElement tag, @props
 
       componentDidMount: ->
         # Undefined at server side, so do nothing.

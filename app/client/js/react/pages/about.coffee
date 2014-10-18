@@ -14,7 +14,7 @@ class app.react.pages.About
 
     message = ''
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       render: ->
         div className: 'page',

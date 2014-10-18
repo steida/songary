@@ -31,7 +31,7 @@ class app.react.App
 
     {div} = React.DOM
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       render: ->
         pageProps = {}

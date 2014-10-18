@@ -21,7 +21,7 @@ class app.react.pages.Song
     {article,menu} = React.DOM
     {a,menuitem} = gesture.none 'a', 'menuitem'
 
-    @component = React.createClass
+    @component = React.createFactory React.createClass
 
       viewportMonitor: null
 
