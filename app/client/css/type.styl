@@ -1,19 +1,30 @@
+// Lord vader's former handle anakin.
 a
   color linkColor
   text-decoration none
-  &:hover, &:focus
+  &:focus
     color linkHoverColor
     text-decoration underline
-  &.active
-    color linkHoverColor !important
-    text-decoration none
-    cursor default
+  // Use :hover only for desktop, because on touch devices it's janky as hell.
+  // Use custom hover via polymer-gestures for touch devices.
+  html.is-desktop &:hover,
+  html:not(.is-desktop) &.touch-hover
+    color linkHoverColor
+    text-decoration underline
   &:focus
     // Default
     outline thin dotted
     // WebKit
     outline 5px auto -webkit-focus-ring-color
     outline-offset -2px
+  &.active
+    color linkHoverColor
+    text-decoration none !important
+    cursor default
+    text-shadow 1px 2px 3px rgba(80,80,80,0.3)
+    html.is-desktop &.clickable:hover,
+    html:not(.is-desktop) &.clickable.touch-hover
+      text-decoration underline !important
 
 nav
   inline-block-container()
