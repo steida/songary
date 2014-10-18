@@ -128,7 +128,16 @@ class app.react.Gesture
         , Gesture.CALLOUT_DELAY
 
       onUp: (e) ->
-        goog.dom.classlist.remove @getDOMNode(), 'touch-hover'
+        node = @getDOMNode()
+        # Give React time to update view without blinking on slow mobile.
+        # .active css state is not applied immediately.
+        # TODO: Instead of hover or touch-hover, router should control link
+        # active style. 
+        setTimeout =>
+          try
+            goog.dom.classlist.remove node, 'touch-hover'
+          catch e
+        , 10
         clearTimeout @touchHoverHideTimer
         @props.onUp e if @props.onUp
         return
