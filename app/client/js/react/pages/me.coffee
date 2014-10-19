@@ -16,11 +16,14 @@ class app.react.pages.Me
     @component = React.createFactory React.createClass
 
       render: ->
+        fid = userStore.user.providers.facebook.id
         publishedSongs = userStore.songs.filter (song) -> song.isPublished()
 
         div className: 'page',
           p {}, @getWelcomeMessage userStore.user.name
-          # img className: 'user-picture', src: user.thirdPartyUserData.picture.data.url
+          img
+            className: 'user-picture'
+            src: "http://graph.facebook.com/#{fid}/picture?type=normal"
           nav {},
             login.component {}
             button
