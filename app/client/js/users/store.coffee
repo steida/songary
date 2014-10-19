@@ -1,5 +1,6 @@
 goog.provide 'app.user.Store'
 
+goog.require 'app.User'
 goog.require 'app.songs.Song'
 goog.require 'este.Store'
 goog.require 'goog.array'
@@ -7,7 +8,6 @@ goog.require 'goog.array'
 class app.user.Store extends este.Store
 
   ###*
-    TODO: Split to more stores.
     @param {app.LocalHistory} localHistory
     @constructor
     @extends {este.Store}
@@ -28,13 +28,14 @@ class app.user.Store extends este.Store
   songs: null
 
   ###*
-    @type {Object}
+    @type {app.User}
   ###
   user: null
 
   setEmpty: ->
     @newSong = new app.songs.Song
     @songs = []
+    @user = null
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -117,37 +118,33 @@ class app.user.Store extends este.Store
   ###
   toJson: ->
     newSong: @newSong
-    # user: @user
     songs: @songs
+    user: @user
 
   ###*
     @override
   ###
   fromJson: (json) ->
-    @newSong = new app.songs.Song json.newSong
-    @songs = json.songs.map (json) -> new app.songs.Song json
+    if json.newSong
+      @newSong = new app.songs.Song json.newSong
+    if json.songs
+      @songs = json.songs.map (json) => new app.songs.Song json
+    if json.user
+      @user = new app.User json.user
     @notify()
 
-  # ###*
-  #   @param {Object} authUser Auth user.
-  #   @return {Object} user App user.
-  # ###
-  # authUserToAppUser: (authUser) ->
-  #   createdAt: authUser.createdAt
-  #   displayName: authUser.displayName
-  #   id: authUser.id
-  #   provider: authUser.provider
-  #   thirdPartyUserData: authUser.thirdPartyUserData
-  #   uid: authUser.uid
+  ###*
+    @param {Object} json
+  ###
+  loginFacebookUser: (json) ->
+    @fromJson user: app.User.fromFacebook json
 
-  # ###*
-  #   @param {boolean} userWasLogged
-  # ###
-  # clearOnLogout: (userWasLogged) ->
-  #   if userWasLogged
-  #     @setEmpty()
-  #   else
-  #     @user = null
+  ###*
+    It's important to delete all user data on logout.
+  ###
+  logout: ->
+    @setEmpty()
+    @notify()
 
   ###*
     @return {boolean}
@@ -180,15 +177,15 @@ class app.user.Store extends este.Store
     @param {app.songs.Song} song
   ###
   setSongPublisher: (song) ->
-    song.publisher = @user.uid
-    @notify()
+    # song.publisher = @user.uid
+    # @notify()
 
   ###*
     @param {app.songs.Song} song
   ###
   removeSongPublisher: (song) ->
-    song.publisher = null
-    @notify()
+    # song.publisher = null
+    # @notify()
 
   ###*
     @param {app.songs.Song} song

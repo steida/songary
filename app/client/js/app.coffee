@@ -4,13 +4,14 @@ class App
 
   ###*
     @param {Element} element
+    @param {app.Facebook} facebook
     @param {app.Routes} routes
     @param {app.Storage} storage
     @param {app.react.App} reactApp
     @param {este.Router} router
     @constructor
   ###
-  constructor: (element, routes, storage, reactApp, router) ->
+  constructor: (element, facebook, routes, storage, reactApp, router) ->
 
     routes.addToEste router, (route, params) ->
       storage.load route, params
@@ -22,3 +23,4 @@ class App
         .then -> React.render reactApp.component(), element
 
     router.start()
+    facebook.init()

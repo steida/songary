@@ -11,17 +11,16 @@ class app.react.pages.Me
   ###
   constructor: (routes, login, gesture, userStore) ->
     {div,p,img,ul,li,nav} = React.DOM
-    {a,button} = gesture.scroll 'a', 'button'
+    {a,button} = gesture.none 'a', 'button'
 
     @component = React.createFactory React.createClass
 
       render: ->
         publishedSongs = userStore.songs.filter (song) -> song.isPublished()
-        user = userStore.user
 
         div className: 'page',
-          p {}, @getWelcomeMessage user.displayName
-          img className: 'user-picture', src: user.thirdPartyUserData.picture.data.url
+          p {}, @getWelcomeMessage userStore.user.name
+          # img className: 'user-picture', src: user.thirdPartyUserData.picture.data.url
           nav {},
             login.component {}
             button
@@ -37,9 +36,9 @@ class app.react.pages.Me
                 li key: song.id,
                   a href: href, location.host + href
 
-      getWelcomeMessage: (displayName) ->
-        Me.MSG_WELCOME_MESSAGE = goog.getMsg 'Hi, {$displayName}.',
-          displayName: displayName
+      getWelcomeMessage: (name) ->
+        Me.MSG_WELCOME_MESSAGE = goog.getMsg 'Hi, {$name}.',
+          name: name
 
       onBackupTap: ->
         data = JSON.stringify userStore.songs
