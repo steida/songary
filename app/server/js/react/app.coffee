@@ -15,8 +15,7 @@ class server.react.App
         html lang: 'en', className: @getHtmlClassName(),
           head {},
             meta charSet: 'utf-8'
-            # http://www.mobilexweb.com/blog/ios-7-1-safari-minimal-ui-bugs
-            meta name: 'viewport', content: 'width=device-width, initial-scale=1.0, minimal-ui, maximum-scale=1.0, user-scalable=no'
+            meta name: 'viewport', content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'
             title {}, this.props.title
             link href: '/app/client/img/favicon.ico?v=' + this.props.version, rel: 'shortcut icon'
             link href: '/app/client/build/app.css?v=' + this.props.version, rel: 'stylesheet'
