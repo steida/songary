@@ -32,7 +32,7 @@ class app.ErrorReporter
     if !@isAlreadyReported_ reason
       @reporter?.setAdditionalArguments
         action: action
-        user: @userStore?.user?.displayName || ''
+        user: @userStore?.user?.name || ''
 
       # Propagate error to other promises. It also ensures reason is shown in
       # console therefore catched and reported by goog.debug.ErrorReporter.
