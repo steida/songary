@@ -35,7 +35,7 @@ class app.user.Store extends este.Store
   setEmpty: ->
     @newSong = new app.songs.Song
     @songs = []
-    @user = null
+    @user = new app.User
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -150,7 +150,7 @@ class app.user.Store extends este.Store
     @return {boolean}
   ###
   isLogged: ->
-    return !!@user
+    return !!@user.email
 
   ###*
     @param {app.songs.Song} song
