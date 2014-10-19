@@ -26,11 +26,6 @@ class app.Facebook
         'version': 'v2.1'
         'xfbml': false
 
-    # Fix for "The "fb-root" div has not been created, auto-creating"
-    fbRoot = document.createElement 'div'
-    fbRoot.id = 'fb-root'
-    document.body.appendChild fbRoot
-
     # Load the SDK asynchronously.
     ((d, s, id) ->
       fjs = d.getElementsByTagName(s)[0]

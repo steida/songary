@@ -41,6 +41,8 @@ class app.react.App
           header.component()
           page.component pageProps
           footer.component()
+          # Fix for "The "fb-root" div has not been created, auto-creating"
+          div id: 'fb-root'
 
       getActivePage: (props) ->
         page = switch routes.active
