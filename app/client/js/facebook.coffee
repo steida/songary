@@ -22,7 +22,7 @@ class app.Facebook
       @fb_ = window.FB
       @fb_.init
         'appId': '1458272837757905'
-        'cookie': false
+        'cookie': true
         'version': 'v2.1'
         'xfbml': false
 
