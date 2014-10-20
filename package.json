@@ -1,5 +1,6 @@
 {
   "name": "Songary",
+  "description": "Your personal song book. Demo app for Este.js",
   "version": "0.1.1",
   "author": "Daniel Steigerwald <daniel@steigerwald.cz>",
   "private": true,
