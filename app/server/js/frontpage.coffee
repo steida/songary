@@ -37,7 +37,7 @@ class server.FrontPage
       '/bower_components/closure-library/closure/goog/base.js'
       '/tmp/deps.js'
       '/app/client/js/main.js'
-      'http://localhost:35729/livereload.js'
+      '//localhost:35729/livereload.js'
     ]...
     html = scripts
       .map (script) -> """<script src="#{script}"></script>"""

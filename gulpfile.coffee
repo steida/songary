@@ -1,10 +1,11 @@
 gulp = require 'gulp'
 
 GulpEste = require 'gulp-este'
+config = require './app/server/config'
 runSequence = require 'run-sequence'
 taskBackup = require './tasks/backup.coffee'
-# taskFixtures = require './tasks/fixtures.coffee'
 yargs = require 'yargs'
+# taskFixtures = require './tasks/fixtures.coffee'
 
 args = yargs
   .alias 'p', 'production'
@@ -136,7 +137,7 @@ gulp.task 'env', ->
   este.setNodeEnv()
 
 gulp.task 'livereload-server', ->
-  este.liveReloadServer()
+  este.liveReloadServer config.httpsOptions
 
 gulp.task 'watch', ->
   este.watch dirs.watch,
