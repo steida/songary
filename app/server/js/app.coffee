@@ -89,5 +89,5 @@ class server.App
 
     # http://googlewebmastercentral.blogspot.cz/2014/08/https-as-ranking-signal.html
     # fok if isDev 8000 else 443
-    require('https').createServer(httpsOptions, app).listen port
+    require('https').createServer(httpsOptions, app).listen 443
     console.log 'Express server listening on port ' + port
