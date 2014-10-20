@@ -11,6 +11,7 @@ class server.App
 
   ###*
     @param {Function} express
+    @param {Object} httpsOptions
     @param {app.Routes} routes
     @param {boolean} isDev
     @param {number} port
@@ -19,7 +20,7 @@ class server.App
     @param {server.Storage} storage
     @constructor
   ###
-  constructor: (express, routes, isDev, port, api, frontPage, storage) ->
+  constructor: (express, httpsOptions, routes, isDev, port, api, frontPage, storage) ->
 
     app = express()
 
@@ -60,14 +61,14 @@ class server.App
 
     # FrontPage rendering.
     routes.addToExpress app, (route, req, res) ->
-      params = req['params']
+      params = req.params
 
       # TODO: Leverage este.Dispatcher.
       storage.load route, params
         .then -> routes.setActive route, params
         .thenCatch (reason) -> routes.trySetErrorRoute reason
         .then ->
-          goog.labs.userAgent.util.setUserAgent req['headers']['user-agent']
+          goog.labs.userAgent.util.setUserAgent req.headers['user-agent']
           frontPage.render()
         .then (html) ->
           status = if routes.active == routes.notFound then 404 else 200
@@ -77,5 +78,16 @@ class server.App
           # TODO: Show something more beautiful, with static content only.
           res.status(500).send 'Server error.'
 
-    app.listen port, ->
-      console.log 'Express server listening on port ' + port
+    # https://www.nodejitsu.com/documentation/faq/#how-do-i-force-my-clients-to-use-https-with-my-application
+    server = require('http').createServer (req, res) ->
+      res.setHeader 'Strict-Transport-Security', 'max-age=8640000; includeSubDomains'
+      if req.headers['x-forwarded-proto'] != 'https'
+        url = 'https://' + req.headers.host + '/'
+        res.writeHead 301, location: url
+        res.end "Redirecting to <a href=\"#{url}\">#{url}</a>."
+    .listen port
+
+    # http://googlewebmastercentral.blogspot.cz/2014/08/https-as-ranking-signal.html
+    # fok if isDev 8000 else 443
+    require('https').createServer(httpsOptions, app).listen port
+    console.log 'Express server listening on port ' + port

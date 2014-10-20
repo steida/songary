@@ -15,6 +15,7 @@ server.main = (config) ->
       express: require 'express'
       isDev: config['env']['development']
       port: config['server']['port']
+      httpsOptions: config['httpsOptions']
   ,
     resolve: server.FrontPage
     with:
@@ -27,7 +28,7 @@ server.main = (config) ->
     resolve: server.ElasticSearch
     with:
       elasticSearch: require 'elasticsearch'
-      host: config['elasticSearch']['host']
+      host: config['elasticSearch'].host
 
   container.resolveServerApp()
 
