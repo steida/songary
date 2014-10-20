@@ -79,15 +79,16 @@ class server.App
           res.status(500).send 'Server error.'
 
     # https://www.nodejitsu.com/documentation/faq/#how-do-i-force-my-clients-to-use-https-with-my-application
-    server = require('http').createServer (req, res) ->
-      res.setHeader 'Strict-Transport-Security', 'max-age=8640000; includeSubDomains'
-      if req.headers['x-forwarded-proto'] != 'https'
-        url = 'https://' + req.headers.host + '/'
-        res.writeHead 301, location: url
-        res.end "Redirecting to <a href=\"#{url}\">#{url}</a>."
-    .listen port
+    # server = require('http').createServer (req, res) ->
+    #   res.setHeader 'Strict-Transport-Security', 'max-age=8640000; includeSubDomains'
+    #   if req.headers['x-forwarded-proto'] != 'https'
+    #     url = 'https://' + req.headers.host + '/'
+    #     res.writeHead 301, location: url
+    #     res.end "Redirecting to <a href=\"#{url}\">#{url}</a>."
+    # .listen port
 
     # http://googlewebmastercentral.blogspot.cz/2014/08/https-as-ranking-signal.html
-    # fok if isDev 8000 else 443
-    require('https').createServer(httpsOptions, app).listen 443
+    # require('https').createServer(httpsOptions, app).listen 443
+
+    app.listen port
     console.log 'Express server listening on port ' + port
