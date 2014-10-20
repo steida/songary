@@ -11,11 +11,7 @@ server.main = (config) ->
 
   container.configure
     resolve: server.App
-    with:
-      express: require 'express'
-      isDev: config['env']['development']
-      port: config['server']['port']
-      httpsOptions: config['httpsOptions']
+    with: config: config 
   ,
     resolve: server.FrontPage
     with:

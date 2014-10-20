@@ -6,21 +6,22 @@ bodyParser = require 'body-parser'
 compression = (`/** @type {Function} */`) require 'compression'
 favicon = (`/** @type {Function} */`) require 'serve-favicon'
 methodOverride = (`/** @type {Function} */`) require 'method-override'
+express = (`/** @type {Function} */`) require 'express'
 
 class server.App
 
   ###*
-    @param {Function} express
-    @param {Object} httpsOptions
+    @param {Object} config
     @param {app.Routes} routes
-    @param {boolean} isDev
-    @param {number} port
     @param {server.Api} api
     @param {server.FrontPage} frontPage
     @param {server.Storage} storage
     @constructor
   ###
-  constructor: (express, httpsOptions, routes, isDev, port, api, frontPage, storage) ->
+  constructor: (config, routes, api, frontPage, storage) ->
+    # httpsOptions = config['httpsOptions']
+    isDev = config['env']['development']
+    port = config['server']['port']
 
     app = express()
 
