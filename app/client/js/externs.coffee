@@ -101,18 +101,23 @@ class elasticSearchClientError
   elasticSearchClientError::userAgent
 
 class expressjs
-  expressjs::status
-  expressjs::send
+  expressjs::body
+  expressjs::createServer
+  expressjs::end
+  expressjs::extended
+  expressjs::headers
   expressjs::json
   expressjs::listen
-  expressjs::use
-  expressjs::static
+  expressjs::location
   expressjs::params
-  expressjs::body
   expressjs::query
-  expressjs::headers
+  expressjs::send
+  expressjs::setHeader
+  expressjs::static
+  expressjs::status
   expressjs::urlencoded
-  expressjs::extended
+  expressjs::use
+  expressjs::writeHead
 
 class nodeCld
   nodeCld::detect
