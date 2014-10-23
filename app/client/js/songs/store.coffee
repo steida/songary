@@ -25,20 +25,6 @@ class app.songs.Store extends este.Store
     ###* @type {Array.<app.songs.Song>} ###
     @foundSongs = []
 
-    # @dispatcherId = @dispatcher.register @handleAction_.bind @
-
-  # TODO: Move to app.Storage.
-  # handleAction_: (action, payload) ->
-  #   switch action
-  #     when Store.Actions.PUBLISH_SONG
-  #       @xhr
-  #         .put @routes.api.songs.id.url(id: payload.song.id), payload.json
-  #         .then => @userStore.setSongPublisher payload.song
-  #     when Store.Actions.UNPUBLISH_SONG
-  #       @xhr
-  #         .delete @routes.api.songs.id.url(id: payload.song.id)
-  #         .then => @userStore.removeSongPublisher payload.song
-
   ###*
     @override
   ###
