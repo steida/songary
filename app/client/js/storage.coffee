@@ -13,26 +13,13 @@ class app.Storage extends este.Storage
     @param {app.user.Store} userStore
     @constructor
     @extends {este.Storage}
-    @final
   ###
   constructor: (@dispatcher, @localStorage, @routes, @xhr,
       @songsStore, @userStore) ->
 
+  init: ->
     @localStorage.sync [@userStore]
     @dispatcher.register @onDispatch_.bind @
-
-  @Actions:
-    ROUTE_LOAD: 'route-load'
-
-  ###*
-    @param {este.Route} route
-    @param {Object} params
-    @return {!goog.Promise}
-  ###
-  load: (route, params) ->
-    @dispatcher.dispatch Storage.Actions.ROUTE_LOAD,
-      route: route
-      params: params
 
   ###*
     @param {string} action
@@ -42,7 +29,7 @@ class app.Storage extends este.Storage
   ###
   onDispatch_: (action, payload) ->
     switch action
-      when Storage.Actions.ROUTE_LOAD
+      when app.Actions.LOAD_ROUTE
         @loadRoute_ payload.route, payload.params
       when app.songs.Store.Actions.SEARCH
         @xhr
