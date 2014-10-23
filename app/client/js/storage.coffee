@@ -19,23 +19,16 @@ class app.Storage extends este.Storage
 
   init: ->
     @localStorage.sync [@userStore]
-    @dispatcher.register @onDispatch_.bind @
 
-  ###*
-    @param {string} action
-    @param {Object} payload
-    @return {goog.Promise|undefined}
-    @private
-  ###
-  onDispatch_: (action, payload) ->
-    switch action
-      when app.Actions.LOAD_ROUTE
-        @loadRoute_ payload.route, payload.params
-      when app.songs.Store.Actions.SEARCH
-        @xhr
-          .get @routes.api.songs.search.url null, query: payload.query
-          .then (songs) =>
-            @songsStore.fromJson foundSongs: songs
+    @dispatcher.register (action, payload) =>
+      switch action
+        when app.Actions.LOAD_ROUTE
+          @loadRoute_ payload.route, payload.params
+        when app.Actions.SEARCH_SONG
+          @xhr
+            .get @routes.api.songs.search.url null, query: payload.query
+            .then (songs) =>
+              @songsStore.fromJson foundSongs: songs
 
   ###*
     @param {este.Route} route

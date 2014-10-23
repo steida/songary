@@ -9,28 +9,33 @@ class app.Actions
   constructor: (@dispatcher) ->
 
   @LOAD_ROUTE: 'load-route'
+  @LOGIN: 'login'
+  @LOGOUT: 'logout'
+  @SEARCH_SONG: 'search-song'
 
   ###*
     @param {este.Route} route
     @param {Object} params
+    @return {goog.Promise}
   ###
   loadRoute: (route, params) ->
-    @dispatcher.dispatch Actions.LOAD_ROUTE,
-      route: route
-      params: params
+    @dispatcher.dispatch Actions.LOAD_ROUTE, route: route, params: params
 
-# @Actions:
-#   LOGIN: 'login'
-#   LOGOUT: 'logout'
-# ###*
-#   @return {!goog.Promise}
-# ###
-# login: ->
-#   @dispatcher.dispatch Store.Actions.LOGIN
-#
-# ###*
-#   @return {!goog.Promise}
-# ###
-# logout: ->
-#   @dispatcher.dispatch Store.Actions.LOGOUT
-#
+  ###*
+    @return {goog.Promise}
+  ###
+  login: ->
+    @dispatcher.dispatch Actions.LOGIN
+
+  ###*
+    @return {goog.Promise}
+  ###
+  logout: ->
+    @dispatcher.dispatch Actions.LOGOUT
+
+  ###*
+    @param {string} query
+    @return {goog.Promise}
+  ###
+  searchSong: (query) ->
+    @dispatcher.dispatch Actions.SEARCH_SONG, query: query

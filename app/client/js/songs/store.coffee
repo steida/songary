@@ -27,11 +27,7 @@ class app.songs.Store extends este.Store
 
     # @dispatcherId = @dispatcher.register @handleAction_.bind @
 
-  @Actions:
-    # PUBLISH_SONG: 'publishsong'
-    SEARCH: 'searchsongs'
-    # UNPUBLISH_SONG: 'unpublishsong'
-
+  # TODO: Move to app.Storage.
   # handleAction_: (action, payload) ->
   #   switch action
   #     when Store.Actions.PUBLISH_SONG
@@ -88,10 +84,3 @@ class app.songs.Store extends este.Store
   unpublish: (song) ->
     # @dispatcher.dispatch Store.Actions.UNPUBLISH_SONG,
     #   song: song
-
-  ###*
-    @param {string} query
-    @return {goog.Promise}
-  ###
-  search: (query) ->
-    @dispatcher.dispatch Store.Actions.SEARCH, query: query
