@@ -3,32 +3,34 @@ goog.provide 'app.react.Login'
 class app.react.Login
 
   ###*
-    @param {app.Facebook} facebook
+    @param {app.Actions} actions
     @param {app.Routes} routes
     @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (facebook, routes, userStore) ->
+  constructor: (actions, routes, userStore) ->
     {button} = React.DOM
 
     @component = React.createFactory React.createClass
 
+      getInitialState: ->
+        disabled: false
+
       render: ->
-        null
+        button
+          className: 'btn btn-default'
+          onClick: @onClick
+          disabled: @state.disabled
+        , if userStore.isLogged() then Login.MSG_LOGOUT else Login.MSG_LOGIN
 
-        # button
-        #   className: 'btn btn-default'
-        #   # Always native click, because most modern browsers block pop-up
-        #   # windows unless they are invoked by direct user action.
-        #   onClick: @onClick
-        # , if userStore.isLogged() then Login.MSG_LOGOUT else Login.MSG_LOGIN
-
+      # Always native click, because most modern browsers block pop-up
+      # windows unless they are invoked by direct user action.
       onClick: ->
-        # actions.login()
-        # if userStore.isLogged()
-        #   userStore.logout().then -> routes.home.redirect()
-        # else
-        #   userStore.login()
+        @setState disabled: true
+        if userStore.isLogged()
+          actions.logout().then -> routes.home.redirect()
+        else
+          actions.login()
 
   @MSG_LOGOUT: goog.getMsg 'Log Out'
   @MSG_LOGIN: goog.getMsg 'Login with Facebook'

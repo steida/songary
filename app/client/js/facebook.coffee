@@ -3,11 +3,17 @@ goog.provide 'app.Facebook'
 class app.Facebook
 
   ###*
+    @param {app.Dispatcher} dispatcher
     @param {app.user.Store} userStore
     @constructor
   ###
-  constructor: (@userStore) ->
-
+  constructor: (dispatcher, @userStore) ->
+    dispatcher.register (action, payload) =>
+      switch action
+        when app.Actions.LOGIN
+          @login_()
+        when app.Actions.LOGOUT
+          @logout_()
   ###*
     @type {Object}
     @private
@@ -37,17 +43,38 @@ class app.Facebook
       return
     ) document, 'script', 'facebook-jssdk'
 
-  login: ->
+  ###*
+    TODO: Use FB.login with promise.
+    @private
+  ###
+  login_: ->
     if !@fb_
       alert 'Facebook API not ready yet. Click again please.'
       return
-    @fb_.getLoginStatus (response) =>
-      if response.status == 'connected'
-        @onConnected_()
-      else if response.status == 'not_authorized'
-        alert 'Please log into this app.'
-      else
-        alert 'Please log into Facebook.'
+    @getLoginStatus_()
+      .then => @onConnected_()
+
+  ###*
+    @private
+  ###
+  getLoginStatus_: ->
+    new goog.Promise (resolve, reject) =>
+      @fb_.getLoginStatus (response) =>
+        if response.status == 'connected'
+          resolve()
+        else if response.status == 'not_authorized'
+          alert 'Please log into this app.'
+          reject()
+        else
+          alert 'Please log into Facebook.'
+          reject()
+
+  ###*
+    @private
+  ###
+  logout_: ->
+    # The FB.logout log the person out of Facebook, which is not we want.
+    @userStore.logout()
 
   ###*
     @private
@@ -55,7 +82,3 @@ class app.Facebook
   onConnected_: ->
     @fb_.api '/me', (response) =>
       @userStore.loginFacebookUser response
-
-  logout: ->
-    # The FB.logout log the person out of Facebook, which is not we want.
-    # @userStore.logout()
