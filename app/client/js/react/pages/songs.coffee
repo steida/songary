@@ -5,15 +5,16 @@ goog.require 'goog.async.Delay'
 class app.react.pages.Songs
 
   ###*
+    @param {app.Actions} actions
     @param {app.Routes} routes
     @param {app.react.Link} link
     @param {app.react.Songs} songs
     @param {app.songs.Store} songsStore
     @constructor
   ###
-  constructor: (routes, link, songs, songsStore) ->
+  constructor: (actions, routes, link, songs, songsStore) ->
     {div,input,p} = React.DOM
-    searchQuery = ''
+    query = ''
 
     @component = React.createFactory React.createClass
 
@@ -25,7 +26,7 @@ class app.react.pages.Songs
               className: 'form-control'
               onChange: @onSearchChange
               placeholder: Songs.MSG_SEARCH_FIELD_PLACEHOLDER
-              value: searchQuery
+              value: query
           songs.component songs: songsStore.foundSongs
           p {},
             link.to routes.recentlyUpdatedSongs, Songs.MSG_RECENTLY_UPDATED_SONGS
@@ -34,13 +35,13 @@ class app.react.pages.Songs
         @delay = new goog.async.Delay @onDelayAction, 300
 
       onDelayAction: ->
-        songsStore.search searchQuery
+        actions.searchSong query
 
       componentWillUnmount: ->
         @delay.dispose()
 
       onSearchChange: (e) ->
-        searchQuery = e.target.value.slice 0, Songs.SEARCH_QUERY_MAX_LENGTH
+        query = e.target.value.slice 0, Songs.SEARCH_QUERY_MAX_LENGTH
         @forceUpdate()
         @delay.start()
 
