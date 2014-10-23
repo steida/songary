@@ -19,7 +19,6 @@ class app.Storage extends este.Storage
 
   init: ->
     @localStorage.sync [@userStore]
-
     @dispatcher.register (action, payload) =>
       switch action
         when app.Actions.LOAD_ROUTE
@@ -61,3 +60,12 @@ class app.Storage extends este.Storage
             @songsStore.fromJson recentlyUpdatedSongs: songs
       else
         @notFound()
+
+#     when actions.PUBLISH_SONG
+#       @xhr
+#         .put @routes.api.songs.id.url(id: payload.song.id), payload.json
+#         .then => @userStore.setSongPublisher payload.song
+#     when actions.UNPUBLISH_SONG
+#       @xhr
+#         .delete @routes.api.songs.id.url(id: payload.song.id)
+#         .then => @userStore.removeSongPublisher payload.song
