@@ -94,21 +94,21 @@ class app.react.pages.EditSong
                 button
                   className: 'btn btn-default'
                 , EditSong.MSG_ADD_NEW_SONG
-              if editMode && !song.inTrash then [
-                button
-                  className: 'btn btn-default'
-                  key: 'publish'
-                  onTap: @onPublishTap
-                  type: 'button'
-                , EditSong.MSG_PUBLISH
-                if song.isPublished()
-                  button
-                    className: 'btn btn-default'
-                    key: 'unpublish'
-                    onTap: @onUnpublishTap
-                    type: 'button'
-                  , EditSong.MSG_UNPUBLISH
-              ]
+              # if editMode && !song.inTrash then [
+              #   button
+              #     className: 'btn btn-default'
+              #     key: 'publish'
+              #     onTap: @onPublishTap
+              #     type: 'button'
+              #   , EditSong.MSG_PUBLISH
+              #   if song.isPublished()
+              #     button
+              #       className: 'btn btn-default'
+              #       key: 'unpublish'
+              #       onTap: @onUnpublishTap
+              #       type: 'button'
+              #     , EditSong.MSG_UNPUBLISH
+              # ]
               if editMode
                 button
                   className: "btn btn-#{if song.inTrash then 'default' else 'danger'}"
