@@ -2,38 +2,26 @@ goog.provide 'server.App'
 
 goog.require 'goog.labs.userAgent.util'
 
-bodyParser = require 'body-parser'
-compression = (`/** @type {Function} */`) require 'compression'
-favicon = (`/** @type {Function} */`) require 'serve-favicon'
-methodOverride = (`/** @type {Function} */`) require 'method-override'
-express = (`/** @type {Function} */`) require 'express'
-
 class server.App
 
   ###*
+    @param {Function} express
     @param {Object} config
     @param {app.Routes} routes
     @param {server.Api} api
     @param {server.FrontPage} frontPage
+    @param {server.Middleware} middleware
+    @param {server.Passport} passport
     @param {server.Storage} storage
     @constructor
   ###
-  constructor: (config, routes, api, frontPage, storage) ->
-    # httpsOptions = config['httpsOptions']
-    isDev = config['env']['development']
-    port = config['server']['port']
+  constructor: (express, config, routes, api, frontPage, middleware, passport, storage) ->
 
     app = express()
+    middleware.use app
+    passport.use app
 
-    # Middleware must be first.
-    app.use compression()
-    app.use favicon 'app/client/img/favicon.ico'
-    app.use bodyParser.urlencoded extended: false
-    app.use bodyParser.json()
-    app.use methodOverride()
-
-    # Static assets.
-    if isDev
+    if config['env']['development']
       app.use '/bower_components', express.static 'bower_components'
       app.use '/app', express.static 'app'
       app.use '/tmp', express.static 'tmp'
@@ -52,7 +40,6 @@ class server.App
       else
         console.log reason
 
-    # API.
     api.addToExpress app, (route, req, res, promise) ->
       promise
         .then (json) -> res.json json
@@ -60,7 +47,6 @@ class server.App
           onError route, reason
           res.status(500).json {}
 
-    # FrontPage rendering.
     routes.addToExpress app, (route, req, res) ->
       params = req.params
 
@@ -91,5 +77,6 @@ class server.App
     # http://googlewebmastercentral.blogspot.cz/2014/08/https-as-ranking-signal.html
     # require('https').createServer(httpsOptions, app).listen 443
 
+    port = config['server']['port']
     app.listen port
     console.log 'Express server listening on port ' + port
