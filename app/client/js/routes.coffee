@@ -28,3 +28,6 @@ class app.Routes extends este.Routes
         id: '/:id'
         recentlyUpdated: '/recently-updated'
         search: '/search'
+      user: @routes '/user',
+        login: '/login'
+        logout: '/logout'
