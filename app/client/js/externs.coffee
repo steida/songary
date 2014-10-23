@@ -63,6 +63,13 @@ class facebookApi
   facebookApi::init
   facebookApi::status
 
+class passportWithLocalStrategy
+  passportWithLocalStrategy::Strategy
+  passportWithLocalStrategy::deserializeUser
+  passportWithLocalStrategy::initialize
+  passportWithLocalStrategy::serializeUser
+  passportWithLocalStrategy::session
+
 class serverClientData
   serverClientData::app
   serverClientData::version
@@ -118,6 +125,11 @@ class expressjs
   expressjs::urlencoded
   expressjs::use
   expressjs::writeHead
+
+class expressSession
+  expressSession::resave
+  expressSession::saveUninitialized
+  expressSession::secret
 
 class nodeCld
   nodeCld::detect
