@@ -139,12 +139,17 @@ class app.user.Store extends este.Store
   loginFacebookUser: (json) ->
     @fromJson user: app.User.fromFacebook json
 
-  ###*
-    It's important to delete all user data on logout.
-  ###
-  logout: ->
-    @setEmpty()
-    @notify()
+  # ###*
+  #   It's important to delete all user data on logout.
+  # ###
+  # logout: ->
+
+  # ###*
+  #   It's important to delete all user data on logout.
+  # ###
+  # logout: ->
+  #   @setEmpty()
+  #   @notify()
 
   ###*
     @return {boolean}

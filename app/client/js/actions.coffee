@@ -19,6 +19,9 @@ class app.Actions
       route: route
       params: params
 
+# @Actions:
+#   LOGIN: 'login'
+#   LOGOUT: 'logout'
 # ###*
 #   @return {!goog.Promise}
 # ###
