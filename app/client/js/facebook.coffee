@@ -15,7 +15,7 @@ class app.Facebook
   fb_: null
 
   ###*
-    Enable Facebook api.
+    Load Facebook api async.
   ###
   init: ->
     window.fbAsyncInit = =>
@@ -58,4 +58,4 @@ class app.Facebook
 
   logout: ->
     # The FB.logout log the person out of Facebook, which is not we want.
-    @userStore.logout()
+    # @userStore.logout()
