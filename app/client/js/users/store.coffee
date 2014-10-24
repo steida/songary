@@ -134,6 +134,15 @@ class app.user.Store extends este.Store
     @notify()
 
   ###*
+    How user authentication works:
+      - User login/logout status is defined by localStoraged userStore.
+      - FB api is loaded only if user is not logged.
+      - After user login, user auth is sent to server.
+      - User identity is verified on server, then user is lazy created.
+      - Server issues cookie, no session.
+      - This cookie is used for server user authentication.
+      - Once cookie is expired, server returns UNAUTHORIZED http status.
+      - Unauthorized status sets client user as logged out.
     @param {Object} json
   ###
   loginFacebookUser: (json) ->
@@ -145,6 +154,7 @@ class app.user.Store extends este.Store
   logout: ->
     @setEmpty()
     @notify()
+    # TODO: load api
 
   ###*
     @return {boolean}
