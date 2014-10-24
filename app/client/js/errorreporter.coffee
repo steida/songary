@@ -18,6 +18,9 @@ class app.ErrorReporter
     if !goog.DEBUG
       @reporter = goog.debug.ErrorReporter.install @routes.api.clientErrors.url()
 
+  @APP_ERROR_MSG: goog.getMsg 'Application error. Please reload browser.'
+  @CONNECTION_ERROR_MSG: goog.getMsg 'Connection error. Check your connection please.'
+
   ###*
     @param {string} action
     @param {*} reason
@@ -27,7 +30,7 @@ class app.ErrorReporter
 
     # TODO: Show something more beautiful then alert. Add button to reload app.
     # Auto-reload is bad idea because it can cause reload looping.
-    alert 'Application error. Please reload browser.'
+    alert ErrorReporter.APP_ERROR_MSG
 
     if !@isAlreadyReported_ reason
       @reporter?.setAdditionalArguments
@@ -43,13 +46,18 @@ class app.ErrorReporter
     @return {boolean}
   ###
   isWorthReport_: (reason) ->
-    # 404 is common.
-    return false if reason == 404
-    # Cancellation is ok. For example este.Router cancels aborted requests.
-    return false if reason instanceof goog.Promise.CancellationError
+    # 404 is common
+    if reason == 404
+      return false
+    # Cancellation is ok. For example este.Router can cancel pending request.
+    if reason instanceof goog.Promise.CancellationError
+      return false
     # User is offline. It happens.
     if reason instanceof app.Xhr.OfflineError
       alert reason.message
+      return false
+    if reason instanceof goog.labs.net.xhr.Error
+      alert ErrorReporter.CONNECTION_ERROR_MSG
       return false
     true
 
