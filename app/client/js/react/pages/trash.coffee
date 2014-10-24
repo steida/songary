@@ -4,18 +4,18 @@ class app.react.pages.Trash
 
   ###*
     @param {app.Routes} routes
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @param {app.react.Gesture} gesture
     @constructor
   ###
-  constructor: (routes, userStore, gesture) ->
+  constructor: (routes, usersStore, gesture) ->
     {div,ul,li,nav,button} = React.DOM
     {a} = gesture.scroll 'a'
 
     @component = React.createFactory React.createClass
 
       render: ->
-        allSongs = userStore.songsSortedByName()
+        allSongs = usersStore.songsSortedByName()
         deletedSongs = allSongs.filter (song) -> song.inTrash
 
         div className: 'page',
@@ -31,7 +31,7 @@ class app.react.pages.Trash
 
       onEmptyTrashClick: ->
         if confirm Trash.MSG_ARE_YOU_SURE
-          userStore.deleteSongsInTrash()
+          usersStore.deleteSongsInTrash()
           routes.home.redirect()
           return
 

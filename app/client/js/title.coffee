@@ -5,11 +5,11 @@ class app.Title
   ###*
     Isomorphic app title.
     @param {app.Routes} routes
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @param {app.songs.Store} songsStore
     @constructor
   ###
-  constructor: (@routes, @userStore, @songsStore) ->
+  constructor: (@routes, @usersStore, @songsStore) ->
 
   @MSG_ABOUT: goog.getMsg 'About'
   @MSG_EDIT: goog.getMsg 'Edit: '
@@ -30,7 +30,7 @@ class app.Title
       when @routes.me then Title.MSG_ME
       when @routes.song then @getSongTitle @songsStore.songsByUrl[0]
       when @routes.mySong, @routes.editSong
-        song = @userStore.songByRoute @routes.active
+        song = @usersStore.songByRoute @routes.active
         return Title.MSG_NOT_FOUND if !song
         title = @getSongTitle song
         switch @routes.active

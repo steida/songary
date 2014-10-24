@@ -1,11 +1,11 @@
-goog.provide 'app.user.Store'
+goog.provide 'app.users.Store'
 
-goog.require 'app.User'
+goog.require 'app.users.User'
 goog.require 'app.songs.Song'
 goog.require 'este.Store'
 goog.require 'goog.array'
 
-class app.user.Store extends este.Store
+class app.users.Store extends este.Store
 
   ###*
     @param {app.LocalHistory} localHistory
@@ -28,14 +28,14 @@ class app.user.Store extends este.Store
   songs: null
 
   ###*
-    @type {app.User}
+    @type {app.users.User}
   ###
   user: null
 
   setEmpty: ->
     @newSong = new app.songs.Song
     @songs = []
-    @user = new app.User
+    @user = new app.users.User
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -130,7 +130,7 @@ class app.user.Store extends este.Store
     if json.songs
       @songs = json.songs.map (json) => new app.songs.Song json
     if json.user
-      @user = new app.User json.user
+      @user = new app.users.User json.user
     @notify()
 
   ###*
@@ -146,7 +146,7 @@ class app.user.Store extends este.Store
     @param {Object} json
   ###
   loginFacebookUser: (json) ->
-    @fromJson user: app.User.fromFacebook json
+    @fromJson user: app.users.User.fromFacebook json
 
   ###*
     It's important to delete all user data on logout.

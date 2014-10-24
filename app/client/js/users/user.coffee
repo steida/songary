@@ -1,6 +1,6 @@
-goog.provide 'app.User'
+goog.provide 'app.users.User'
 
-class app.User
+class app.users.User
 
   ###*
     @param {Object=} json
@@ -11,10 +11,10 @@ class app.User
 
   ###*
     @param {Object} json
-    @return {app.User}
+    @return {app.users.User}
   ###
   @fromFacebook: (json) ->
-    new app.User
+    new app.users.User
       email: json.email
       id: 'facebook:' + json.id
       name: json.name

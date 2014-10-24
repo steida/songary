@@ -1,6 +1,6 @@
-suite 'app.user.Store', ->
+suite 'app.users.Store', ->
 
-  Store = app.user.Store
+  Store = app.users.Store
   store = null
 
   setup ->

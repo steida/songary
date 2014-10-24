@@ -15,10 +15,10 @@ class app.react.pages.EditSong
     @param {app.react.Gesture} gesture
     @param {app.react.YellowFade} yellowFade
     @param {app.songs.Store} songsStore
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (routes, gesture, yellowFade, songsStore, userStore) ->
+  constructor: (routes, gesture, yellowFade, songsStore, usersStore) ->
     {div,form,input,textarea,p,nav,ol,li,br} = React.DOM
     {a,span,button} = gesture.none 'a', 'span', 'button'
 
@@ -32,7 +32,7 @@ class app.react.pages.EditSong
     @component = React.createFactory React.createClass
 
       render: ->
-        song = @props.song ? userStore.newSong
+        song = @props.song ? usersStore.newSong
         editMode = !!@props.song
 
         div className: 'page',
@@ -65,7 +65,7 @@ class app.react.pages.EditSong
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
                 value: song.lyrics
-              if userStore.isLogged()
+              if usersStore.isLogged()
                 @renderLocalHistory song
               if !song.inTrash
                 p className: 'help',
@@ -169,14 +169,14 @@ class app.react.pages.EditSong
         @chordproTextarea_.dispose()
 
       onFieldChange: (e) ->
-        userStore.updateSong song, e.target.name, e.target.value
+        usersStore.updateSong song, e.target.name, e.target.value
 
       onFormSubmit: (e) ->
         e.preventDefault()
         @saveSong()
 
       saveSong: ->
-        errors = userStore.addNewSong()
+        errors = usersStore.addNewSong()
         # TODO: Reusable helper/mixin/whatever.
         if errors.length
           alert errors[0].message
@@ -186,16 +186,16 @@ class app.react.pages.EditSong
         routes.home.redirect()
 
       onToggleDeleteTap: ->
-        userStore.trashSong song, !song.inTrash
+        usersStore.trashSong song, !song.inTrash
         if song.inTrash
           routes.home.redirect()
 
       getLyricsHistory: (song) ->
-        userStore.getSongLyricsLocalHistory song
+        usersStore.getSongLyricsLocalHistory song
           .filter (lyrics) -> lyrics != song.lyrics
 
       onPublishTap: ->
-        if !userStore.isLogged()
+        if !usersStore.isLogged()
           # TODO: remove alert.
           alert EditSong.MSG_LOGIN_TO_PUBLISH
           return
@@ -227,7 +227,7 @@ class app.react.pages.EditSong
         before = target.value.substr 0, endPoints[0]
         after = target.value.substr endPoints[1]
         lyrics = before + text + after
-        userStore.updateSong song, 'lyrics', lyrics
+        usersStore.updateSong song, 'lyrics', lyrics
         # Give a React time to update, setCursorPosition is not destructive so
         # it's ok to use timeout.
         setTimeout ->

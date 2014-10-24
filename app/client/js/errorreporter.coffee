@@ -9,10 +9,10 @@ class app.ErrorReporter
 
   ###*
     @param {app.Routes} routes
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (@routes, @userStore) ->
+  constructor: (@routes, @usersStore) ->
     @alreadyReported_ = Object.create null
 
     if !goog.DEBUG
@@ -35,7 +35,7 @@ class app.ErrorReporter
     if !@isAlreadyReported_ reason
       @reporter?.setAdditionalArguments
         action: action
-        user: @userStore?.user?.name || ''
+        user: @usersStore?.user?.name || ''
 
       # Propagate error to other promises. It also ensures reason is shown in
       # console therefore catched and reported by goog.debug.ErrorReporter.

@@ -8,11 +8,11 @@ class app.songs.Store extends este.Store
   ###*
     @param {app.Dispatcher} dispatcher
     @param {app.Routes} routes
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @constructor
     @extends {este.Store}
   ###
-  constructor: (@dispatcher, @routes, @userStore) ->
+  constructor: (@dispatcher, @routes, @usersStore) ->
     super()
     @name = 'songs'
 
@@ -59,7 +59,7 @@ class app.songs.Store extends este.Store
   ###
   createPublishedSong_: (song) ->
     # json = song.toJson()
-    # json.publisher = @userStore.user.uid
+    # json.publisher = @usersStore.user.uid
     # delete json.inTrash
     # @instanceFromJson app.songs.Song, json
 

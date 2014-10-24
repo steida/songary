@@ -13,10 +13,10 @@ class app.react.pages.Song
   ###*
     @param {app.Routes} routes
     @param {app.react.Gesture} gesture
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (routes, gesture, userStore) ->
+  constructor: (routes, gesture, usersStore) ->
     {div} = gesture.scroll 'div'
     {article,menu} = React.DOM
     {a,menuitem} = gesture.none 'a', 'menuitem'
@@ -46,7 +46,7 @@ class app.react.pages.Song
             menuitem
               onTap: @onFontResizeTap.bind @, false
             , '-'
-            if userStore.songById song.id
+            if usersStore.songById song.id
               a href: routes.editSong.url(song), Song.MSG_EDIT
             else
               menuitem
@@ -173,7 +173,7 @@ class app.react.pages.Song
         songEl.style.visibility = ''
 
       onSaveToDeviceTap: ->
-        userStore.savePublishedSongToDevice @props.song
+        usersStore.savePublishedSongToDevice @props.song
 
   # TODO: Set by platform.
   @HIDE_MENU_DELAY: 2000

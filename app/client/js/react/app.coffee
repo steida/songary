@@ -8,7 +8,7 @@ class app.react.App
   ###*
     @param {app.Routes} routes
     @param {app.Title} appTitle
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @param {app.songs.Store} songsStore
     @param {app.react.Header} header
     @param {app.react.Footer} footer
@@ -24,7 +24,7 @@ class app.react.App
     @constructor
   ###
   constructor: (routes, appTitle,
-      userStore, songsStore,
+      usersStore, songsStore,
       header, footer,
       aboutPage, editSongPage, mePage, mySongs, notFoundPage,
       recentlyUpdatedSongsPage, songsPage, songPage, trashPage) ->
@@ -54,7 +54,7 @@ class app.react.App
           when routes.mySong, routes.editSong then @getLocalSongPage props
           when routes.trash then trashPage
           when routes.about then aboutPage
-          when routes.me then userStore.isLogged() && mePage
+          when routes.me then usersStore.isLogged() && mePage
         # 404 is handled in two places for a good reason.
         # app.Storage can return 404, which is used by router, but app data can
         # be changed anytime later, so that's why render has to check it again.
@@ -68,7 +68,7 @@ class app.react.App
         songPage
 
       getLocalSongPage: (props) ->
-        song = userStore.songByRoute routes.active
+        song = usersStore.songByRoute routes.active
         # Local song can be removed anytime, for example from different tab.
         return if !song
         props.song = song
@@ -87,7 +87,7 @@ class app.react.App
       componentDidMount: ->
         goog.events.listen window, 'orientationchange', @onOrientationChange
         songsStore.listen 'change', @updateUI
-        userStore.listen 'change', @updateUI
+        usersStore.listen 'change', @updateUI
 
       onOrientationChange: ->
         goog.dom.getDocumentScrollElement().scrollTop = 0

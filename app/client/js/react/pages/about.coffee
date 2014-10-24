@@ -6,10 +6,10 @@ goog.require 'goog.ui.Textarea'
 class app.react.pages.About
 
   ###*
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (userStore) ->
+  constructor: (usersStore) ->
     {div,p,form,textarea,menu,button,a} = React.DOM
 
     message = ''
@@ -19,7 +19,7 @@ class app.react.pages.About
       render: ->
         div className: 'page',
           p {}, About.MSG_ABOUT
-          if userStore.isLogged()
+          if usersStore.isLogged()
             form className: 'contact-form',
               div className: 'form-group',
                 textarea
@@ -50,7 +50,7 @@ class app.react.pages.About
         if message.length < 9
           alert @getSuspiciousMessageWarning message
           return
-        user = userStore.user
+        user = usersStore.user
         # firebase.sendContactFormMessage user.uid, user.displayName, message
         alert About.MSG_THANK_YOU
         message = ''

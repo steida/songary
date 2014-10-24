@@ -4,10 +4,10 @@ class app.Facebook
 
   ###*
     @param {app.Dispatcher} dispatcher
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (dispatcher, @userStore) ->
+  constructor: (dispatcher, @usersStore) ->
     dispatcher.register (action, payload) =>
       switch action
         when app.Actions.LOGIN
@@ -74,11 +74,11 @@ class app.Facebook
   ###
   logout_: ->
     # The FB.logout log the person out of Facebook, which is not we want.
-    @userStore.logout()
+    @usersStore.logout()
 
   ###*
     @private
   ###
   onConnected_: ->
     @fb_.api '/me', (response) =>
-      @userStore.loginFacebookUser response
+      @usersStore.loginFacebookUser response

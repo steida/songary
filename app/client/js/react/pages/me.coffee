@@ -6,21 +6,21 @@ class app.react.pages.Me
     @param {app.Routes} routes
     @param {app.react.Login} login
     @param {app.react.Gesture} gesture
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (routes, login, gesture, userStore) ->
+  constructor: (routes, login, gesture, usersStore) ->
     {div,p,img,ul,li,nav} = React.DOM
     {a,button} = gesture.none 'a', 'button'
 
     @component = React.createFactory React.createClass
 
       render: ->
-        fid = userStore.user.providers.facebook.id
-        publishedSongs = userStore.songs.filter (song) -> song.isPublished()
+        fid = usersStore.user.providers.facebook.id
+        publishedSongs = usersStore.songs.filter (song) -> song.isPublished()
 
         div className: 'page',
-          p {}, @getWelcomeMessage userStore.user.name
+          p {}, @getWelcomeMessage usersStore.user.name
           img
             className: 'user-picture'
             src: "http://graph.facebook.com/#{fid}/picture?type=normal"
@@ -44,7 +44,7 @@ class app.react.pages.Me
           name: name
 
       onBackupTap: ->
-        data = JSON.stringify userStore.songs
+        data = JSON.stringify usersStore.songs
         anchor = document.createElement 'a'
         href = 'data:text/plain;charset=utf-8,' + encodeURIComponent data
         anchor.setAttribute 'href', href

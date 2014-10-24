@@ -10,15 +10,15 @@ class app.Storage extends este.Storage
     @param {app.Routes} routes
     @param {app.Xhr} xhr
     @param {app.songs.Store} songsStore
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @constructor
     @extends {este.Storage}
   ###
   constructor: (@dispatcher, @localStorage, @routes, @xhr,
-      @songsStore, @userStore) ->
+      @songsStore, @usersStore) ->
 
   init: ->
-    @localStorage.sync [@userStore]
+    @localStorage.sync [@usersStore]
     @dispatcher.register (action, payload) =>
       switch action
         when app.Actions.LOAD_ROUTE
@@ -40,10 +40,10 @@ class app.Storage extends este.Storage
       when @routes.about, @routes.home, @routes.newSong, @routes.trash
         @ok()
       when @routes.me
-        return @notFound() if !@userStore.isLogged()
+        return @notFound() if !@usersStore.isLogged()
         @ok()
       when @routes.mySong, @routes.editSong
-        return @notFound() if !@userStore.songById params.id
+        return @notFound() if !@usersStore.songById params.id
         @ok()
       when @routes.song
         @xhr
@@ -64,8 +64,8 @@ class app.Storage extends este.Storage
 #     when actions.PUBLISH_SONG
 #       @xhr
 #         .put @routes.api.songs.id.url(id: payload.song.id), payload.json
-#         .then => @userStore.setSongPublisher payload.song
+#         .then => @usersStore.setSongPublisher payload.song
 #     when actions.UNPUBLISH_SONG
 #       @xhr
 #         .delete @routes.api.songs.id.url(id: payload.song.id)
-#         .then => @userStore.removeSongPublisher payload.song
+#         .then => @usersStore.removeSongPublisher payload.song

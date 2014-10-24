@@ -4,11 +4,11 @@ class app.react.pages.MySongs
 
   ###*
     @param {app.Routes} routes
-    @param {app.user.Store} userStore
+    @param {app.users.Store} usersStore
     @param {app.react.Gesture} gesture
     @constructor
   ###
-  constructor: (routes, userStore, gesture) ->
+  constructor: (routes, usersStore, gesture) ->
     {div,ul,li,p,nav} = React.DOM
     {a} = gesture.scroll 'a'
 
@@ -16,7 +16,7 @@ class app.react.pages.MySongs
 
       render: ->
         # TODO: Add byName sort option.
-        songs = userStore.songsSortedByUpdatedAt()
+        songs = usersStore.songsSortedByUpdatedAt()
         visibleSongs = songs.filter (song) -> !song.inTrash
         deletedSongs = songs.filter (song) -> song.inTrash
 
