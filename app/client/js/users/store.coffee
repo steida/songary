@@ -23,6 +23,7 @@ class app.users.Store extends este.Store
   newSong: null
 
   ###*
+    User songs persisted in localStorage.
     @type {Array.<app.songs.Song>}
   ###
   songs: null
