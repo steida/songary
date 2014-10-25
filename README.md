@@ -1,4 +1,5 @@
 # Songary [![Build Status](https://secure.travis-ci.org/steida/songary.png?branch=master)](http://travis-ci.org/steida/songary) [![Dependency Status](https://david-dm.org/steida/songary.png)](https://david-dm.org/steida/songary) [![devDependency Status](https://david-dm.org/steida/songary/dev-status.png)](https://david-dm.org/steida/songary#info=devDependencies)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/steida/songary?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Your personal song book. [Demo](http://songary.jit.su/).
 
