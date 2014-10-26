@@ -17,10 +17,6 @@ class app.Xhr
     headers:
       'Content-Type': 'application/json;charset=utf-8'
 
-  @MSG_MUST_BE_ONLINE: goog.getMsg '
-    For this action you have to be online. Check your internet connection please.
-  '
-
   createHttpMethods_: ->
     @delete = @send.bind @, 'DELETE'
     @get = @send.bind @, 'GET'
@@ -50,7 +46,10 @@ class app.Xhr.OfflineError extends goog.debug.Error
     @final
   ###
   constructor: ->
-    super app.Xhr.MSG_MUST_BE_ONLINE
+    super OfflineError.MSG_MUST_BE_ONLINE
+
+  @MSG_MUST_BE_ONLINE: goog.getMsg 'For this action you have to be connected.
+    Check your internet connection please.'
 
   ###*
     @override
