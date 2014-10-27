@@ -16,19 +16,19 @@ class server.Api
     @handlers = []
 
     # Publish/Unpublish.
-    @route api.songs.id
-      .put (req) ->
-        errors = new app.songs.Song req.body
-          .validatePublished()
-        if errors.length
-          return goog.Promise.reject errors
-        server.songs.toPublishedJson req.body
-          .then (song) ->
-            elastic.index index: 'songary', type: 'song', id: req.params.id, body:
-              song
-
-      .delete (req) ->
-        elastic.delete index: 'songary', type: 'song', id: req.params.id
+    # @route api.songs.id
+    #   .put (req) ->
+    #     errors = new app.songs.Song req.body
+    #       .validatePublished()
+    #     if errors.length
+    #       return goog.Promise.reject errors
+    #     server.songs.toPublishedJson req.body
+    #       .then (song) ->
+    #         elastic.index index: 'songary', type: 'song', id: req.params.id, body:
+    #           song
+    #
+    #   .delete (req) ->
+    #     elastic.delete index: 'songary', type: 'song', id: req.params.id
 
     @route api.songs.recentlyUpdated
       .get ->
