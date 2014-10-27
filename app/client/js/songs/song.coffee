@@ -6,6 +6,7 @@ goog.require 'este.string'
 class app.songs.Song
 
   ###*
+    TODO: Create base este.Model.
     @param {Object=} json
     @constructor
   ###
@@ -82,10 +83,11 @@ class app.songs.Song
     @return {goog.Promise}
   ###
   validate: ->
+    @computeProps()
     errors = ['name', 'artist', 'lyrics']
       .filter (prop) => !@[prop].trim()
       .map (prop) ->
-        msg: "Please fill out #{prop}"
+        msg: "Please fill out #{prop}."
         props: [prop]
     app.ValidationError.toPromise errors
 
@@ -98,7 +100,11 @@ class app.songs.Song
   #     errors.push new app.ValidationError 'publisher', Song.MSG_NOT_PUBLISHED
   #   errors
 
-  update: ->
+  ###*
+    Compute props. Add new or restrict existing. Props can be in invalid state,
+    for example after deserialization, hence use this method to the rescue.
+  ###
+  computeProps: ->
     @name = @name.slice 0, 100
     @artist = @artist.slice 0, 100
     @album = @album.slice 0, 100

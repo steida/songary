@@ -118,7 +118,7 @@ class app.users.Store extends este.Store
   ###
   updateSong: (song, prop, value) ->
     song[prop] = value
-    song.update()
+    song.computeProps()
     @notify()
 
   deleteSongsInTrash: ->

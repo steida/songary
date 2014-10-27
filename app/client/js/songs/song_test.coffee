@@ -3,54 +3,43 @@ suite 'app.songs.Song', ->
   Song = app.songs.Song
   song = null
 
-  # createSong = (name, artist, lyrics) ->
-  #   song = new Song
-  #   song.name = name
-  #   song.artist = artist
-  #   song.lyrics = lyrics
-  #   song.update()
-  #   song
+  createSong = (name, artist, album, lyrics) ->
+    new Song
+      name: name
+      artist: artist
+      album: album
+      lyrics: lyrics
 
   suite 'validate', ->
-    test 'should return empty array for valid song', ->
-      # song = createSong 'Name', 'Artist', 'Bla [Ami]'
-      # assert.deepEqual song.validate(), []
-#
-#     test 'should validate empty name', ->
-#       song = createSong ' ', 'Artist', 'Bla [Ami]'
-#       assert.deepEqual song.validate(), [
-#         prop: 'name'
-#         message: 'Please fill out name.'
-#       ]
-#
-#     test 'should validate invalid name', ->
-#       song = createSong '..', 'Artist', 'Bla [Ami]'
-#       assert.deepEqual song.validate(), [
-#         prop: 'name'
-#         message: 'Please fill out name.'
-#       ]
-#
-#     test 'should validate invalid artist', ->
-#       song = createSong 'Hey Jude', ' ', '..'
-#       assert.deepEqual song.validate(), [
-#         prop: 'artist'
-#         message: 'Please fill out artist.'
-#       ]
-#
-#     test 'should validate invalid lyrics', ->
-#       song = createSong 'Hey Jude', 'Beatles', ''
-#       assert.deepEqual song.validate(), [
-#         prop: 'lyrics'
-#         message: 'Please fill out lyrics.'
-#       ]
-#
-#   suite 'update', ->
-#     test 'should ensure model state', ->
-#       song = new Song
-#       song.name = new Array(101).join 'a'
-#       song.artist = new Array(101).join 'a'
-#       song.lyrics = new Array(32001).join 'a'
-#       song.update()
-#       assert.equal song.urlName.length, 100
-#       assert.equal song.urlArtist.length, 100
-#       assert.equal song.lyrics.length, 32000
+    test 'should return resolved promise for valid model', (done) ->
+      song = createSong 'Name', 'Artist', 'Album', 'Lyrics'
+      song.validate().then -> done()
+
+    test 'should return rejected promise for invalid model with errors', (done) ->
+      # Album is optional.
+      song = createSong '..', ' ', '', ' '
+      song.validate().thenCatch (reason) ->
+        assert.deepEqual reason.errors, [
+          msg: 'Please fill out name.'
+          props: ['name']
+        ,
+          msg: 'Please fill out artist.'
+          props: ['artist']
+        ,
+          msg: 'Please fill out lyrics.'
+          props: ['lyrics']
+        ]
+        done()
+
+  suite 'computeProps', ->
+    test 'should compute model properties', ->
+      song = new Song
+      song.name = new Array(101).join 'a'
+      song.artist = new Array(101).join 'a'
+      song.album = new Array(101).join 'a'
+      song.lyrics = new Array(32001).join 'a'
+      song.computeProps()
+      assert.equal song.urlName.length, 100
+      assert.equal song.urlArtist.length, 100
+      assert.equal song.urlAlbum.length, 100
+      assert.equal song.lyrics.length, 32000
