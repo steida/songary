@@ -9,10 +9,9 @@ class app.ErrorReporter
 
   ###*
     @param {app.Routes} routes
-    @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (@routes, @usersStore) ->
+  constructor: (@routes) ->
     @alreadyReported_ = Object.create null
 
     if !goog.DEBUG
@@ -22,11 +21,16 @@ class app.ErrorReporter
   @MSG_CONNECTION_ERROR: goog.getMsg 'Connection error. Check your connection please.'
 
   ###*
+    @type {string}
+  ###
+  userDisplayName: ''
+
+  ###*
     @param {string} action
     @param {*} reason
   ###
   report: (action, reason) ->
-    return if !@isWorthReport_ reason
+    return if !@isWorthReporting_ reason
 
     # TODO: Show something more beautiful then alert. Add button to reload app.
     # Auto-reload is bad idea because it can cause reload looping.
@@ -35,7 +39,8 @@ class app.ErrorReporter
     if !@isAlreadyReported_ reason
       @reporter?.setAdditionalArguments
         action: action
-        user: @usersStore?.user?.name || ''
+        user: @userDisplayName
+        # user: @usersStore?.user?.name || ''
 
       # Propagate error to other promises. It also ensures reason is shown in
       # console therefore catched and reported by goog.debug.ErrorReporter.
@@ -45,20 +50,22 @@ class app.ErrorReporter
     @param {*} reason
     @return {boolean}
   ###
-  isWorthReport_: (reason) ->
-    # 404 is common
-    if reason == 404
-      return false
-    # Cancellation is ok. For example este.Router can cancel pending request.
-    if reason instanceof goog.Promise.CancellationError
-      return false
-    # User is offline. It happens.
+  isWorthReporting_: (reason) ->
+    # No need to report these rejected reasons.
+    isInnocuous =
+      reason == 404 ||
+      reason instanceof app.ValidationError ||
+      reason instanceof goog.Promise.CancellationError
+    return false if isInnocuous
+
     if reason instanceof app.Xhr.OfflineError
       alert reason.message
       return false
+
     if reason instanceof goog.labs.net.xhr.Error
       alert ErrorReporter.MSG_CONNECTION_ERROR
       return false
+
     true
 
   ###*
