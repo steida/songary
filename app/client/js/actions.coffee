@@ -8,10 +8,17 @@ class app.Actions
   ###
   constructor: (@dispatcher) ->
 
+  @ADD_NEW_SONG: 'add-new-song'
   @LOAD_ROUTE: 'load-route'
   @LOGIN: 'login'
   @LOGOUT: 'logout'
   @SEARCH_SONG: 'search-song'
+
+  ###*
+    @return {goog.Promise}
+  ###
+  addNewSong: ->
+    @dispatcher.dispatch Actions.ADD_NEW_SONG
 
   ###*
     @param {este.Route} route
