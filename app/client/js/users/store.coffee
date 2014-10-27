@@ -1,23 +1,31 @@
 goog.provide 'app.users.Store'
 
-goog.require 'app.users.User'
+goog.require 'app.ValidationError'
 goog.require 'app.songs.Song'
+goog.require 'app.users.User'
 goog.require 'este.Store'
 goog.require 'goog.array'
 
 class app.users.Store extends este.Store
 
   ###*
+    @param {app.Dispatcher} dispatcher
     @param {app.LocalHistory} localHistory
     @constructor
     @extends {este.Store}
   ###
-  constructor: (@localHistory) ->
+  constructor: (dispatcher, @localHistory) ->
     super()
     @name = 'user'
     @setEmpty()
 
+    dispatcher.register (action, payload) =>
+      switch action
+        when app.Actions.ADD_NEW_SONG
+          @addNewSong_()
+
   ###*
+    Not yet added new song, persisted in localStorage.
     @type {app.songs.Song}
   ###
   newSong: null
@@ -32,6 +40,23 @@ class app.users.Store extends este.Store
     @type {app.users.User}
   ###
   user: null
+
+  ###*
+    @return {goog.Promise}
+    @private
+  ###
+  addNewSong_: ->
+    @newSong.validate()
+      .then =>
+        return if !@contains @newSong
+        throw new app.ValidationError [
+          msg: "Song #{@newSong.name}, #{@newSong.artist} already exists."
+          props: ['name', 'artist']
+        ]
+      .then =>
+        @songs.push @newSong
+        @newSong = new app.songs.Song
+        @notify()
 
   setEmpty: ->
     @newSong = new app.songs.Song
@@ -53,20 +78,6 @@ class app.users.Store extends este.Store
     songs = @songs.slice 0
     songs.sort (a, b) -> new Date(b.updatedAt) - new Date(a.updatedAt)
     songs
-
-  ###*
-    @return {Array.<app.ValidationError>}
-  ###
-  addNewSong: ->
-    errors = @newSong.validate()
-    if @contains @newSong
-      errors.push new app.ValidationError 'name',
-        'Song with such name and artist already exists.'
-    return errors if errors.length
-    @songs.push @newSong
-    @newSong = new app.songs.Song
-    @notify()
-    []
 
   ###*
     @param {app.songs.Song} song

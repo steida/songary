@@ -79,24 +79,24 @@ class app.songs.Song
   updatedAt: null
 
   ###*
-    @return {Array.<app.ValidationError>}
+    @return {goog.Promise}
   ###
   validate: ->
-    @update()
-    ['name', 'artist', 'lyrics']
+    errors = ['name', 'artist', 'lyrics']
       .filter (prop) => !@[prop].trim()
-      .map (prop) =>
-        Song.MSG_FILL_OUT = goog.getMsg 'Please fill out {$prop}.', prop: prop
-        new app.ValidationError prop, Song.MSG_FILL_OUT
+      .map (prop) ->
+        msg: "Please fill out #{prop}"
+        props: [prop]
+    app.ValidationError.toPromise errors
 
-  ###*
-    @return {Array.<app.ValidationError>}
-  ###
-  validatePublished: ->
-    errors = @validate()
-    if !@publisher
-      errors.push new app.ValidationError 'publisher', Song.MSG_NOT_PUBLISHED
-    errors
+  # ###
+  #   @return {Array.<app.ValidationError>}
+  # ###
+  # validatePublished: ->
+  #   errors = @validate()
+  #   if !@publisher
+  #     errors.push new app.ValidationError 'publisher', Song.MSG_NOT_PUBLISHED
+  #   errors
 
   update: ->
     @name = @name.slice 0, 100

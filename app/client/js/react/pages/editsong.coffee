@@ -11,14 +11,14 @@ goog.require 'goog.ui.Textarea'
 class app.react.pages.EditSong
 
   ###*
+    @param {app.Actions} actions
     @param {app.Routes} routes
     @param {app.react.Gesture} gesture
     @param {app.react.YellowFade} yellowFade
-    @param {app.songs.Store} songsStore
     @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (routes, gesture, yellowFade, songsStore, usersStore) ->
+  constructor: (actions, routes, gesture, yellowFade, usersStore) ->
     {div,form,input,textarea,p,nav,ol,li,br} = React.DOM
     {a,span,button} = gesture.none 'a', 'span', 'button'
 
@@ -169,21 +169,23 @@ class app.react.pages.EditSong
         @chordproTextarea_.dispose()
 
       onFieldChange: (e) ->
+        # actions.
         usersStore.updateSong song, e.target.name, e.target.value
 
       onFormSubmit: (e) ->
         e.preventDefault()
-        @saveSong()
+        @addNewSong()
 
-      saveSong: ->
-        errors = usersStore.addNewSong()
-        # TODO: Reusable helper/mixin/whatever.
-        if errors.length
-          alert errors[0].message
-          field = @refs['form'].getDOMNode().elements[errors[0].prop]
-          field.focus() if field
-          return
-        routes.home.redirect()
+      addNewSong: ->
+        return if editMode
+        actions.addNewSong()
+          .then -> routes.home.redirect()
+          .thenCatch (validationError) =>
+            # TODO: Reusable helper/mixin/whatever.
+            error = validationError.errors[0]
+            alert error.msg
+            field = @refs['form'].getDOMNode().elements[error.props[0]]
+            field.focus() if field
 
       onToggleDeleteTap: ->
         usersStore.trashSong song, !song.inTrash
@@ -195,17 +197,17 @@ class app.react.pages.EditSong
           .filter (lyrics) -> lyrics != song.lyrics
 
       onPublishTap: ->
-        if !usersStore.isLogged()
-          # TODO: remove alert.
-          alert EditSong.MSG_LOGIN_TO_PUBLISH
-          return
-        songsStore
-          .publish song
-          .then => yellowFade.on @refs['published-song-link']
+        # if !usersStore.isLogged()
+        #   # TODO: remove alert.
+        #   alert EditSong.MSG_LOGIN_TO_PUBLISH
+        #   return
+        # songsStore
+        #   .publish song
+        #   .then => yellowFade.on @refs['published-song-link']
 
       onUnpublishTap: ->
-        return if !confirm EditSong.MSG_ARE_YOU_SURE_UNPUBLISH
-        songsStore.unpublish song
+        # return if !confirm EditSong.MSG_ARE_YOU_SURE_UNPUBLISH
+        # songsStore.unpublish song
 
       onLyricsPaste: (e) ->
         @tryParsePastedHtmlWithChordsAndAllThatStuff e
