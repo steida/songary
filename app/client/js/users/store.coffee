@@ -25,6 +25,8 @@ class app.users.Store extends este.Store
           @addNewSong_()
         when app.Actions.SET_SONG_PROP
           @setSongProp_ payload
+        when app.Actions.SET_SONG_INTRASH
+          @trashSong_ payload.song, payload.inTrash
 
   ###*
     Not yet added new song, persisted in localStorage.
@@ -78,6 +80,14 @@ class app.users.Store extends este.Store
     @notify()
 
   ###*
+    @param {app.songs.Song} song
+    @param {boolean} inTrash
+  ###
+  trashSong_: (song, inTrash) ->
+    song.inTrash = inTrash
+    @notify()
+
+  ###*
     @return {Array.<app.songs.Song>}
   ###
   songsSortedByName: ->
@@ -92,14 +102,6 @@ class app.users.Store extends este.Store
     songs = @songs.slice 0
     songs.sort (a, b) -> new Date(b.updatedAt) - new Date(a.updatedAt)
     songs
-
-  ###*
-    @param {app.songs.Song} song
-    @param {boolean} inTrash
-  ###
-  trashSong: (song, inTrash) ->
-    song.inTrash = inTrash
-    @notify()
 
   ###*
     @param {string} id

@@ -13,6 +13,7 @@ class app.Actions
   @LOGIN: 'login'
   @LOGOUT: 'logout'
   @SEARCH_SONG: 'search-song'
+  @SET_SONG_INTRASH: 'set-song-intrash'
   @SET_SONG_PROP: 'set-song-prop'
 
   addNewSong: ->
@@ -35,7 +36,17 @@ class app.Actions
     @param {string} query
   ###
   searchSong: (query) ->
+    # TODO: Just query.
     @dispatcher.dispatch Actions.SEARCH_SONG, query: query
+
+  ###*
+    @param {app.songs.Song} song
+    @param {boolean} inTrash
+  ###
+  setSongInTrash: (song, inTrash) ->
+    @dispatcher.dispatch Actions.SET_SONG_INTRASH,
+      song: song
+      inTrash: inTrash
 
   ###*
     @param {app.songs.Song} song

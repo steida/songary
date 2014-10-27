@@ -112,7 +112,7 @@ class app.react.pages.EditSong
               if editMode
                 button
                   className: "btn btn-#{if song.inTrash then 'default' else 'danger'}"
-                  onTap: @onToggleDeleteTap
+                  onTap: @onSongToggleDeleteTap
                   type: 'button'
                 , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
             if editMode && song.isPublished()
@@ -183,10 +183,10 @@ class app.react.pages.EditSong
             field = @refs['form'].getDOMNode().elements[error.props[0]]
             field.focus() if field
 
-      onToggleDeleteTap: ->
-        usersStore.trashSong song, !song.inTrash
-        if song.inTrash
-          routes.home.redirect()
+      onSongToggleDeleteTap: ->
+        actions.setSongInTrash song, !song.inTrash
+          .then ->
+            if song.inTrash then routes.home.redirect()
 
       getLyricsHistory: (song) ->
         usersStore.getSongLyricsLocalHistory song
