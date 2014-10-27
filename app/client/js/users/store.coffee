@@ -17,7 +17,7 @@ class app.users.Store extends este.Store
   constructor: (dispatcher, @localHistory) ->
     super()
     @name = 'user'
-    @setEmpty()
+    @setEmpty_()
 
     dispatcher.register (action, payload) =>
       switch action
@@ -42,6 +42,14 @@ class app.users.Store extends este.Store
   user: null
 
   ###*
+    @private
+  ###
+  setEmpty_: ->
+    @newSong = new app.songs.Song
+    @songs = []
+    @user = new app.users.User
+
+  ###*
     @return {goog.Promise}
     @private
   ###
@@ -57,11 +65,6 @@ class app.users.Store extends este.Store
         @songs.push @newSong
         @newSong = new app.songs.Song
         @notify()
-
-  setEmpty: ->
-    @newSong = new app.songs.Song
-    @songs = []
-    @user = new app.users.User
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -164,7 +167,7 @@ class app.users.Store extends este.Store
     It's important to delete all user data on logout.
   ###
   logout: ->
-    @setEmpty()
+    @setEmpty_()
     @notify()
     # TODO: load api
 
