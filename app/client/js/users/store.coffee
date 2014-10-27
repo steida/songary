@@ -23,6 +23,8 @@ class app.users.Store extends este.Store
       switch action
         when app.Actions.ADD_NEW_SONG
           @addNewSong_()
+        when app.Actions.SET_SONG_PROP
+          @setSongProp_ payload
 
   ###*
     Not yet added new song, persisted in localStorage.
@@ -65,6 +67,15 @@ class app.users.Store extends este.Store
         @songs.push @newSong
         @newSong = new app.songs.Song
         @notify()
+
+  ###*
+    @param {Object} payload
+  ###
+  setSongProp_: (payload) ->
+    {song, name, value} = payload
+    song[name] = value
+    song.computeProps()
+    @notify()
 
   ###*
     @return {Array.<app.songs.Song>}
@@ -113,16 +124,6 @@ class app.users.Store extends este.Store
       return false if item.inTrash
       item.name == song.name &&
       item.artist == song.artist
-
-  ###*
-    @param {app.songs.Song} song
-    @param {string} prop
-    @param {string} value
-  ###
-  updateSong: (song, prop, value) ->
-    song[prop] = value
-    song.computeProps()
-    @notify()
 
   deleteSongsInTrash: ->
     goog.array.removeAllIf @songs, (song) -> song.inTrash

@@ -169,19 +169,15 @@ class app.react.pages.EditSong
         @chordproTextarea_.dispose()
 
       onFieldChange: (e) ->
-        # actions.
-        usersStore.updateSong song, e.target.name, e.target.value
+        actions.setSongProp song, e.target.name, e.target.value
 
       onFormSubmit: (e) ->
         e.preventDefault()
-        @addNewSong()
-
-      addNewSong: ->
         return if editMode
         actions.addNewSong()
           .then -> routes.home.redirect()
           .thenCatch (validationError) =>
-            # TODO: Reusable helper/mixin/whatever.
+            # TODO: Add reusable helper/mixin/whatever.
             error = validationError.errors[0]
             alert error.msg
             field = @refs['form'].getDOMNode().elements[error.props[0]]
@@ -196,18 +192,18 @@ class app.react.pages.EditSong
         usersStore.getSongLyricsLocalHistory song
           .filter (lyrics) -> lyrics != song.lyrics
 
-      onPublishTap: ->
-        # if !usersStore.isLogged()
-        #   # TODO: remove alert.
-        #   alert EditSong.MSG_LOGIN_TO_PUBLISH
-        #   return
-        # songsStore
-        #   .publish song
-        #   .then => yellowFade.on @refs['published-song-link']
-
-      onUnpublishTap: ->
-        # return if !confirm EditSong.MSG_ARE_YOU_SURE_UNPUBLISH
-        # songsStore.unpublish song
+      # onPublishTap: ->
+      #   if !usersStore.isLogged()
+      #     # TODO: remove alert.
+      #     alert EditSong.MSG_LOGIN_TO_PUBLISH
+      #     return
+      #   songsStore
+      #     .publish song
+      #     .then => yellowFade.on @refs['published-song-link']
+      #
+      # onUnpublishTap: ->
+      #   return if !confirm EditSong.MSG_ARE_YOU_SURE_UNPUBLISH
+      #   songsStore.unpublish song
 
       onLyricsPaste: (e) ->
         @tryParsePastedHtmlWithChordsAndAllThatStuff e
@@ -229,7 +225,7 @@ class app.react.pages.EditSong
         before = target.value.substr 0, endPoints[0]
         after = target.value.substr endPoints[1]
         lyrics = before + text + after
-        usersStore.updateSong song, 'lyrics', lyrics
+        actions.setSongProp song, 'lyrics', lyrics
         # Give a React time to update, setCursorPosition is not destructive so
         # it's ok to use timeout.
         setTimeout ->
