@@ -14,7 +14,7 @@ class App
   ###
   constructor: (element, actions, facebook, routes, storage, reactApp, router) ->
 
-    storage.init()
+    storage.sync()
 
     routes.addToEste router, (route, params) ->
       actions.loadRoute route, params
