@@ -9,6 +9,7 @@ class app.Actions
   constructor: (@dispatcher) ->
 
   @ADD_NEW_SONG: 'add-new-song'
+  @EMPTY_SONGS_TRASH: 'empty-songs-trash'
   @LOAD_ROUTE: 'load-route'
   @LOGIN: 'login'
   @LOGOUT: 'logout'
@@ -18,6 +19,9 @@ class app.Actions
 
   addNewSong: ->
     @dispatcher.dispatch Actions.ADD_NEW_SONG
+
+  emptySongsTrash: ->
+    @dispatcher.dispatch Actions.EMPTY_SONGS_TRASH
 
   ###*
     @param {este.Route} route

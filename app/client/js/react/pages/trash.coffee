@@ -3,12 +3,13 @@ goog.provide 'app.react.pages.Trash'
 class app.react.pages.Trash
 
   ###*
+    @param {app.Actions} actions
     @param {app.Routes} routes
-    @param {app.users.Store} usersStore
     @param {app.react.Gesture} gesture
+    @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (routes, usersStore, gesture) ->
+  constructor: (actions, routes, gesture, usersStore) ->
     {div,ul,li,nav,button} = React.DOM
     {a} = gesture.scroll 'a'
 
@@ -30,10 +31,9 @@ class app.react.pages.Trash
             , Trash.MSG_EMPTY_TRASH
 
       onEmptyTrashClick: ->
-        if confirm Trash.MSG_ARE_YOU_SURE
-          usersStore.deleteSongsInTrash()
-          routes.home.redirect()
-          return
+        return if !confirm Trash.MSG_ARE_YOU_SURE
+        actions.emptySongsTrash()
+          .then -> routes.home.redirect()
 
   @MSG_EMPTY_TRASH: goog.getMsg 'Empty Trash'
   @MSG_ARE_YOU_SURE: goog.getMsg 'Are you sure you want to permanently erase all songs in trash?'

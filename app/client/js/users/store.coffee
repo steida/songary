@@ -27,6 +27,8 @@ class app.users.Store extends este.Store
           @setSongProp_ payload
         when app.Actions.SET_SONG_INTRASH
           @trashSong_ payload.song, payload.inTrash
+        when app.Actions.EMPTY_SONGS_TRASH
+          @emptySongsTrash_()
 
   ###*
     Not yet added new song, persisted in localStorage.
@@ -87,6 +89,10 @@ class app.users.Store extends este.Store
     song.inTrash = inTrash
     @notify()
 
+  emptySongsTrash_: ->
+    goog.array.removeAllIf @songs, (song) -> song.inTrash
+    @notify()
+
   ###*
     @return {Array.<app.songs.Song>}
   ###
@@ -126,10 +132,6 @@ class app.users.Store extends este.Store
       return false if item.inTrash
       item.name == song.name &&
       item.artist == song.artist
-
-  deleteSongsInTrash: ->
-    goog.array.removeAllIf @songs, (song) -> song.inTrash
-    @notify()
 
   ###*
     @override
