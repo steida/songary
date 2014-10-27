@@ -19,7 +19,8 @@ class app.react.pages.About
       render: ->
         div className: 'page',
           p {}, About.MSG_ABOUT
-          if usersStore.isLogged()
+          # TODO: Migrate to Elastic Search.
+          if false && usersStore.isLogged()
             form className: 'contact-form',
               div className: 'form-group',
                 textarea
@@ -31,8 +32,7 @@ class app.react.pages.About
                   value: message
               button
                 className: 'btn btn-default'
-                # disabled: !message.length
-                disabled: true
+                disabled: !message.trim().length
                 onClick: @onContactFromSubmit
                 type: 'button'
               , About.MSG_SEND_BUTTON_LABEL
