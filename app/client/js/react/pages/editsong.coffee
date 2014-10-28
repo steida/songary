@@ -65,8 +65,8 @@ class app.react.pages.EditSong
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
                 ref: 'lyrics'
                 value: song.lyrics
-              if usersStore.isLogged()
-                @renderLocalHistory song
+              # if usersStore.isLogged()
+              #   @renderLocalHistory song
               if !song.inTrash
                 p className: 'help',
                   a
