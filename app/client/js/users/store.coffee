@@ -10,11 +10,12 @@ class app.users.Store extends este.Store
 
   ###*
     @param {app.Dispatcher} dispatcher
+    @param {app.ErrorReporter} errorReporter
     @param {app.LocalHistory} localHistory
     @constructor
     @extends {este.Store}
   ###
-  constructor: (dispatcher, @localHistory) ->
+  constructor: (dispatcher, @errorReporter, @localHistory) ->
     super()
     @name = 'user'
     @setEmpty_()
@@ -163,18 +164,21 @@ class app.users.Store extends este.Store
       - This cookie is used for server user authentication.
       - Once cookie is expired, server returns UNAUTHORIZED http status.
       - Unauthorized status sets client user as logged out.
+    TODO: Rename and add more providers.
     @param {Object} json
   ###
   loginFacebookUser: (json) ->
     @fromJson user: app.users.User.fromFacebook json
+    @errorReporter.userName = @user.name
 
   ###*
     It's important to delete all user data on logout.
   ###
   logout: ->
     @setEmpty_()
+    @errorReporter.userName = ''
     @notify()
-    # TODO: load api
+    # TODO: Load api lazily.
 
   ###*
     @return {boolean}

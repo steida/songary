@@ -23,13 +23,14 @@ class app.ErrorReporter
   ###*
     @type {string}
   ###
-  userDisplayName: ''
+  userName: ''
 
   ###*
     @param {string} action
     @param {*} reason
   ###
   report: (action, reason) ->
+    console.log action, reason, @userName
     return if !@isWorthReporting_ reason
 
     # TODO: Show something more beautiful then alert. Add button to reload app.
@@ -39,8 +40,7 @@ class app.ErrorReporter
     if !@isAlreadyReported_ reason
       @reporter?.setAdditionalArguments
         action: action
-        user: @userDisplayName
-        # user: @usersStore?.user?.name || ''
+        user: @userName
 
       # Propagate error to other promises. It also ensures reason is shown in
       # console therefore catched and reported by goog.debug.ErrorReporter.
