@@ -5,6 +5,7 @@ class App
   ###*
     @param {Element} element
     @param {app.Actions} actions
+    @param {app.Dispatcher} dispatcher
     @param {app.Facebook} facebook
     @param {app.Routes} routes
     @param {app.Storage} storage
@@ -12,18 +13,20 @@ class App
     @param {este.Router} router
     @constructor
   ###
-  constructor: (element, actions, facebook, routes, storage, reactApp, router) ->
+  constructor: (element, actions, dispatcher, facebook, routes, storage, reactApp, router) ->
 
     storage.sync()
 
+    dispatcher.register (action, payload) =>
+      switch action
+        when app.Actions.SYNC_VIEW
+          React.render reactApp.component(), element
+
     routes.addToEste router, (route, params) ->
       actions.loadRoute route, params
-        # Set active route if everything is fine.
         .then -> routes.setActive route, params
-        # Try set error route for known errors. Only 404 for now.
         .thenCatch (reason) -> routes.trySetErrorRoute reason
-        # Everything is ok, rerender view.
-        .then -> React.render reactApp.component(), element
+        .then -> actions.syncView()
     router.start()
 
     facebook.init()

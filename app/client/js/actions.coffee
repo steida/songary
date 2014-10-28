@@ -16,6 +16,7 @@ class app.Actions
   @SEARCH_SONG: 'search-song'
   @SET_SONG_INTRASH: 'set-song-intrash'
   @SET_SONG_PROP: 'set-song-prop'
+  @SYNC_VIEW: 'sync-view'
 
   addNewSong: ->
     @dispatcher.dispatch Actions.ADD_NEW_SONG
@@ -62,3 +63,6 @@ class app.Actions
       song: song
       name: name
       value: value
+
+  syncView: ->
+    @dispatcher.dispatch Actions.SYNC_VIEW
