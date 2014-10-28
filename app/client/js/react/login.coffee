@@ -30,7 +30,7 @@ class app.react.Login
         if usersStore.isLogged()
           actions.logout().then -> routes.home.redirect()
         else
-          actions.login()
+          actions.login().then => @setState disabled: false
 
   @MSG_LOGOUT: goog.getMsg 'Log Out'
   @MSG_LOGIN: goog.getMsg 'Login with Facebook'
