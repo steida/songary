@@ -189,8 +189,8 @@ class app.react.pages.EditSong
             if song.inTrash then routes.home.redirect()
 
       getLyricsHistory: (song) ->
-        usersStore.getSongLyricsLocalHistory song
-          .filter (lyrics) -> lyrics != song.lyrics
+        # usersStore.getSongLyricsLocalHistory song
+        #   .filter (lyrics) -> lyrics != song.lyrics
 
       # onPublishTap: ->
       #   if !usersStore.isLogged()
