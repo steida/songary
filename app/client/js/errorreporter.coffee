@@ -30,7 +30,6 @@ class app.ErrorReporter
     @param {*} reason
   ###
   report: (action, reason) ->
-    console.log action, reason, @userName
     return if !@isWorthReporting_ reason
 
     # TODO: Show something more beautiful then alert. Add button to reload app.
