@@ -124,33 +124,33 @@ class app.react.pages.EditSong
                 , location.host + routes.song.url song
                 '.'
 
-      renderLocalHistory: (song) ->
-        lyricsHistory = @getLyricsHistory song
-
-        if previousLyricsHistory
-          lyricsHistoryChanged = previousLyricsHistory.join() != lyricsHistory.join()
-        previousLyricsHistory = lyricsHistory
-
-        return null if !lyricsHistory.length
-
-        lyrics = lyricsHistory.map (lyrics) -> li key: lyrics, lyrics
-        lyrics.reverse()
-
-        span className: 'lyrics-history',
-          button
-            ref: 'lyrics-history-button'
-            className: 'btn btn-default ' + if lyricsHistoryShown then 'active' else ''
-            onTap: @onLyricsHistoryUp
-            type: 'button'
-          , EditSong.MSG_LYRICS_HISTORY
-          if lyricsHistoryShown
-            div {},
-              ol {}, lyrics
-              p {}, EditSong.MSG_LYRICS_HISTORY_P
-
-      onLyricsHistoryUp: ->
-        lyricsHistoryShown = !lyricsHistoryShown
-        @forceUpdate()
+      # renderLocalHistory: (song) ->
+      #   lyricsHistory = @getLyricsHistory song
+      #
+      #   if previousLyricsHistory
+      #     lyricsHistoryChanged = previousLyricsHistory.join() != lyricsHistory.join()
+      #   previousLyricsHistory = lyricsHistory
+      #
+      #   return null if !lyricsHistory.length
+      #
+      #   lyrics = lyricsHistory.map (lyrics) -> li key: lyrics, lyrics
+      #   lyrics.reverse()
+      #
+      #   span className: 'lyrics-history',
+      #     button
+      #       ref: 'lyrics-history-button'
+      #       className: 'btn btn-default ' + if lyricsHistoryShown then 'active' else ''
+      #       onTap: @onLyricsHistoryUp
+      #       type: 'button'
+      #     , EditSong.MSG_LYRICS_HISTORY
+      #     if lyricsHistoryShown
+      #       div {},
+      #         ol {}, lyrics
+      #         p {}, EditSong.MSG_LYRICS_HISTORY_P
+      #
+      # onLyricsHistoryUp: ->
+      #   lyricsHistoryShown = !lyricsHistoryShown
+      #   @forceUpdate()
 
       componentDidMount: ->
         @chordproTextarea_ = new goog.ui.Textarea ''
