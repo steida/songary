@@ -11,29 +11,25 @@ Still under development.
 
 Read [Este.js](https://github.com/steida/este).
 
-## Demonstrated Techniques
+## Techniques
   - frontend/mobile/offline first
   - isomorphic web app
-  - Closure Tools
+  - Closure Library and Closure Compiler
   - Facebook React with Flux
   - one way data flow
   - polymes-gestures
-  - global error handling of sync and async code
-  - Promises
-  - app state persisted in localStorage
+  - global error handling both for sync and async code
+  - Promises based apis
+  - app state persisted in localStorage and synced across browsing contexts
   - pending navigation and other [SPA UX patterns](https://medium.com/joys-of-javascript/beyond-pushstate-building-single-page-applications-4353246f4480)
   - clean code via dependency injection with awesome DI container
   - statically typed code written in CoffeeScript
-  - killer React.js HTML syntax
+  - killer React JSX-less syntax
   - finest [dev stack](https://github.com/steida/gulp-este)
 
 ### Why Facebook [Flux](http://facebook.github.io/flux/) is better than XYZ?
 
-Because [Ember](http://emberjs.com) observers and bindings, or [Backbone model events](http://backbonejs.org/#Events), or [Angular](https:angularjs.org) scope events propagation, mixes app model with app data flow, irreversibly.
-
-Imagine you have two models, A and B. And you would like to change B whenever A is changed. Events and bindings work well unless you need to change only A under some condition. Got it? Flux uses `waitFor` method to explicitly describe what should be changed.
-
-Or imagine you have A, B, C, D, E, F, G, H listening each other. Can you tell what happen when A dispatches change event? Without reading several source files? Without debugging? Hardly.
+Because [Ember](http://emberjs.com) and [Backbone](http://backbonejs.org/#Events) and [Angular](https:angularjs.org) mixes app model definition with app data flow, irreversibly. 
 
 #### Why CoffeeScript?
 
