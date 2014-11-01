@@ -92,7 +92,7 @@ class app.songs.Song
     app.ValidationError.toPromise errors
 
   # ###
-  #   @return {Array.<app.ValidationError>}
+  #   @return {Array<app.ValidationError>}
   # ###
   # validatePublished: ->
   #   errors = @validate()

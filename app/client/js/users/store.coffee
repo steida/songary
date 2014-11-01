@@ -39,7 +39,7 @@ class app.users.Store extends este.Store
 
   ###*
     User songs persisted in localStorage.
-    @type {Array.<app.songs.Song>}
+    @type {Array<app.songs.Song>}
   ###
   songs: null
 
@@ -95,7 +95,7 @@ class app.users.Store extends este.Store
     @notify()
 
   ###*
-    @return {Array.<app.songs.Song>}
+    @return {Array<app.songs.Song>}
   ###
   songsSortedByName: ->
     songs = @songs.slice 0
@@ -103,7 +103,7 @@ class app.users.Store extends este.Store
     songs
 
   ###*
-    @return {Array.<app.songs.Song>}
+    @return {Array<app.songs.Song>}
   ###
   songsSortedByUpdatedAt: ->
     songs = @songs.slice 0
@@ -188,7 +188,7 @@ class app.users.Store extends este.Store
 
   ###*
     @param {app.songs.Song} song
-    @return {Array.<string>}
+    @return {Array<string>}
   ###
   getSongLyricsLocalHistory: (song) ->
     []

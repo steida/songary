@@ -18,7 +18,7 @@ class app.react.Link
       text: string,
       params: (Object|undefined),
       props: (Object|undefined),
-      activeFor: (Array.<este.Route>|undefined)
+      activeFor: (Array<este.Route>|undefined)
     }}
   ###
   @Options: null
@@ -28,7 +28,7 @@ class app.react.Link
     @param {string=} text
     @param {Object=} params Url params.
     @param {Object=} props React props.
-    @param {Array.<este.Route>=} activeFor Additional active routes.
+    @param {Array<este.Route>=} activeFor Additional active routes.
   ###
   to: (routeOrOptions, text, params, props, activeFor) ->
     if arguments.length == 1

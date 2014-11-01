@@ -7,7 +7,7 @@ goog.require 'goog.debug.Error'
 class app.ValidationError extends goog.debug.Error
 
   ###*
-    @param {Array.<app.ValidationError.Error>} errors
+    @param {Array<app.ValidationError.Error>} errors
     @constructor
     @extends {goog.debug.Error}
     @final
@@ -18,13 +18,13 @@ class app.ValidationError extends goog.debug.Error
   ###*
     @typedef {{
       msg: (string),
-      props: (Array.<string>|undefined)
+      props: (Array<string>|undefined)
     }}
   ###
   @Error: null
 
   ###*
-    @param {Array.<app.ValidationError.Error>} errors
+    @param {Array<app.ValidationError.Error>} errors
     @return {goog.Promise}
   ###
   @toPromise: (errors) ->
@@ -34,7 +34,7 @@ class app.ValidationError extends goog.debug.Error
       goog.Promise.resolve()
 
   ###*
-    @type {Array.<app.ValidationError.Error>}
+    @type {Array<app.ValidationError.Error>}
   ###
   errors: null
 

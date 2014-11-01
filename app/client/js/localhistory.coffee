@@ -16,7 +16,7 @@ class app.LocalHistory
   constructor: ->
 
     ###*
-      @type {Object.<string, Array.<Object>>}
+      @type {Object<string, Array<Object>>}
     ###
     @history = {}
 
@@ -43,7 +43,7 @@ class app.LocalHistory
 
   ###*
     @param {este.Store} store
-    @return {Array.<Object>}
+    @return {Array<Object>}
   ###
   of: (store) ->
     @history[store.name] || []

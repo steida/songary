@@ -16,13 +16,13 @@ class app.songs.Store extends este.Store
     super()
     @name = 'songs'
 
-    ###* @type {Array.<app.songs.Song>} ###
+    ###* @type {Array<app.songs.Song>} ###
     @recentlyUpdatedSongs = []
 
-    ###* @type {Array.<app.songs.Song>} ###
+    ###* @type {Array<app.songs.Song>} ###
     @songsByUrl = []
 
-    ###* @type {Array.<app.songs.Song>} ###
+    ###* @type {Array<app.songs.Song>} ###
     @foundSongs = []
 
   ###*

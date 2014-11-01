@@ -80,7 +80,7 @@ class app.LocalStorage
 
   ###*
     Sync stores with localStorage across browsing contexts with the same origin.
-    @param {Array.<este.Store>} stores
+    @param {Array<este.Store>} stores
   ###
   sync: (stores) ->
     return if !@isAvailable
@@ -109,7 +109,7 @@ class app.LocalStorage
       @pubSub.publish LocalStorage.Topic.STORE_CHANGE, @contextId, store.name
 
   ###*
-    @param {Array.<este.Store>} stores
+    @param {Array<este.Store>} stores
     @protected
   ###
   subscribeChanges: (stores) ->
