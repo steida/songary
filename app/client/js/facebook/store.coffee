@@ -1,6 +1,6 @@
-goog.provide 'app.Facebook'
+goog.provide 'app.facebook.Store'
 
-class app.Facebook
+class app.facebook.Store
 
   ###*
     @param {app.Dispatcher} dispatcher
@@ -24,24 +24,24 @@ class app.Facebook
     Load Facebook api async.
   ###
   init: ->
-    window.fbAsyncInit = =>
-      @fb_ = window.FB
-      @fb_.init
-        'appId': '1458272837757905'
-        'cookie': true
-        'version': 'v2.1'
-        'xfbml': false
-
-    # Load the SDK asynchronously.
-    ((d, s, id) ->
-      fjs = d.getElementsByTagName(s)[0]
-      return if d.getElementById id
-      js = d.createElement s
-      js.id = id
-      js.src = '//connect.facebook.net/en_US/sdk.js'
-      fjs.parentNode.insertBefore js, fjs
-      return
-    ) document, 'script', 'facebook-jssdk'
+    # window.fbAsyncInit = =>
+    #   @fb_ = window.FB
+    #   @fb_.init
+    #     'appId': '1458272837757905'
+    #     'cookie': true
+    #     'version': 'v2.1'
+    #     'xfbml': false
+    #
+    # # Load the SDK asynchronously.
+    # ((d, s, id) ->
+    #   fjs = d.getElementsByTagName(s)[0]
+    #   return if d.getElementById id
+    #   js = d.createElement s
+    #   js.id = id
+    #   js.src = '//connect.facebook.net/en_US/sdk.js'
+    #   fjs.parentNode.insertBefore js, fjs
+    #   return
+    # ) document, 'script', 'facebook-jssdk'
 
   ###*
     TODO: Use FB.login with promise.
