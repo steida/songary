@@ -1,6 +1,6 @@
 goog.provide 'app.Xhr'
-goog.provide 'app.Xhr.OfflineError'
 
+goog.require 'app.errors.InnocuousError'
 goog.require 'goog.Promise'
 goog.require 'goog.debug.Error'
 goog.require 'goog.labs.net.xhr'
@@ -17,6 +17,9 @@ class app.Xhr
     headers:
       'Content-Type': 'application/json;charset=utf-8'
 
+  @MSG_MUST_BE_ONLINE: goog.getMsg 'For this action you have to be connected.
+    Check your internet connection please.'
+
   createHttpMethods_: ->
     @delete = @send.bind @, 'DELETE'
     @get = @send.bind @, 'GET'
@@ -32,26 +35,8 @@ class app.Xhr
   ###
   send: (method, url, json) ->
     if !navigator.onLine
-      return goog.Promise.reject new app.Xhr.OfflineError
+      return goog.Promise.reject new app.errors.InnocuousError Xhr.MSG_MUST_BE_ONLINE
 
     goog.labs.net.xhr
       .send method, url, JSON.stringify(json), Xhr.XHR_OPTIONS
       .then (xhr) -> JSON.parse xhr.responseText
-
-class app.Xhr.OfflineError extends goog.debug.Error
-
-  ###*
-    @constructor
-    @extends {goog.debug.Error}
-    @final
-  ###
-  constructor: ->
-    super OfflineError.MSG_MUST_BE_ONLINE
-
-  @MSG_MUST_BE_ONLINE: goog.getMsg 'For this action you have to be connected.
-    Check your internet connection please.'
-
-  ###*
-    @override
-  ###
-  name: 'offline'

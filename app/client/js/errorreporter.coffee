@@ -1,9 +1,10 @@
 goog.provide 'app.ErrorReporter'
 
-goog.require 'app.Xhr.OfflineError'
+goog.require 'app.errors.SilentError'
 goog.require 'goog.Promise'
 goog.require 'goog.async.throwException'
 goog.require 'goog.debug.ErrorReporter'
+goog.require 'goog.labs.net.xhr'
 goog.require 'goog.net.HttpStatus'
 
 # Disable default error rethrowing.
@@ -54,14 +55,13 @@ class app.ErrorReporter
     @return {boolean}
   ###
   isWorthReporting_: (reason) ->
-    # Ignore innocuous reasons.
-    isInnocuous =
+    isSilent =
       reason == 404 ||
-      reason instanceof app.ValidationError ||
+      reason instanceof app.errors.SilentError ||
       reason instanceof goog.Promise.CancellationError
-    return false if isInnocuous
+    return false if isSilent
 
-    if reason instanceof app.Xhr.OfflineError
+    if reason instanceof app.errors.InnocuousError
       alert reason.message
       return false
 
