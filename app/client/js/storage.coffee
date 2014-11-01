@@ -22,11 +22,7 @@ class app.Storage extends este.Storage
         when app.Actions.LOAD_ROUTE
           @loadRoute_ payload.route, payload.params
         when app.Actions.SEARCH_SONG
-          # TODO: To method.
-          @xhr
-            .get @routes.api.songs.search.url null, query: payload.query
-            .then (songs) =>
-              @songsStore.fromJson foundSongs: songs
+          @searchSong_ payload.query
 
   init: ->
     @localStorage.sync [@usersStore]
@@ -62,6 +58,17 @@ class app.Storage extends este.Storage
             @songsStore.fromJson recentlyUpdatedSongs: songs
       else
         @notFound()
+
+  ###*
+    @param {string} query
+    @return {!goog.Promise}
+    @private
+  ###
+  searchSong_: (query) ->
+    @xhr
+      .get @routes.api.songs.search.url null, query: query
+      .then (songs) =>
+        @songsStore.fromJson foundSongs: songs
 
 #     when actions.PUBLISH_SONG
 #       @xhr
