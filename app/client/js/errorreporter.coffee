@@ -1,9 +1,13 @@
 goog.provide 'app.ErrorReporter'
 
-goog.require 'goog.Promise'
-goog.require 'goog.debug.ErrorReporter'
 goog.require 'app.Xhr.OfflineError'
+goog.require 'goog.Promise'
+goog.require 'goog.async.throwException'
+goog.require 'goog.debug.ErrorReporter'
 goog.require 'goog.net.HttpStatus'
+
+# Disable default error rethrowing.
+goog.Promise.setUnhandledRejectionHandler ->
 
 class app.ErrorReporter
 
@@ -43,14 +47,14 @@ class app.ErrorReporter
 
       # Propagate error to other promises. It also ensures reason is shown in
       # console therefore catched and reported by goog.debug.ErrorReporter.
-      throw reason
+      goog.async.throwException reason
 
   ###*
     @param {*} reason
     @return {boolean}
   ###
   isWorthReporting_: (reason) ->
-    # No need to report these rejected reasons.
+    # Ignore innocuous reasons.
     isInnocuous =
       reason == 404 ||
       reason instanceof app.ValidationError ||
