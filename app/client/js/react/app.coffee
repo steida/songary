@@ -82,6 +82,7 @@ class app.react.App
           when mySongs then 'home'
           when notFoundPage then 'notfound'
           when songPage then 'song'
+          when songsPage, recentlyUpdatedSongsPage then 'songs'
           when trashPage then 'trash'
 
       componentDidMount: ->
