@@ -19,7 +19,10 @@ class app.react.Header
               route: routes.home
               text: Header.MSG_MY_SONGS
               activeFor: [routes.editSong, routes.newSong, routes.trash]
-            link.to routes.songs, Header.MSG_SONGS
+            link.to
+              route: routes.songs
+              text: Header.MSG_SONGS
+              activeFor: [routes.recentlyUpdatedSongs]
             link.to routes.about, Header.MSG_ABOUT
             if usersStore.isLogged()
               link.to routes.me, Header.MSG_ME
