@@ -61,6 +61,9 @@ class facebookApi
   facebookApi::fbAsyncInit
   facebookApi::getLoginStatus
   facebookApi::init
+  facebookApi::login
+  facebookApi::logout
+  facebookApi::scope
   facebookApi::status
 
 class passportWithLocalStrategy

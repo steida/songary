@@ -11,7 +11,7 @@ class app.FrontPage
   constructor: (@element, @dispatcher, @reactApp) ->
 
   init: ->
-    @dispatcher.register (action, payload) =>
+    @dispatcherId = @dispatcher.register (action, payload) =>
       switch action
         when app.Actions.SYNC_VIEW
           React.render @reactApp.component(), @element

@@ -17,7 +17,7 @@ class app.Storage extends este.Storage
   constructor: (dispatcher, @localStorage, @routes, @xhr,
       @songsStore, @usersStore) ->
 
-    dispatcher.register (action, payload) =>
+    @dispatcherId = dispatcher.register (action, payload) =>
       switch action
         when app.Actions.LOAD_ROUTE
           @loadRoute_ payload.route, payload.params

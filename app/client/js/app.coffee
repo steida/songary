@@ -7,18 +7,19 @@ class App
     @param {app.FrontPage} frontPage
     @param {app.Routes} routes
     @param {app.Storage} storage
+    @param {app.facebook.Store} facebookStore
     @param {este.Router} router
     @constructor
   ###
-  constructor: (actions, frontPage, routes, storage, router) ->
+  constructor: (actions, frontPage, routes, storage, facebookStore, router) ->
 
-    storage.init()
     frontPage.init()
+    storage.init()
+    facebookStore.init()
 
     routes.addToEste router, (route, params) ->
       actions.loadRoute route, params
         .then -> routes.setActive route, params
         .thenCatch (reason) -> routes.trySetErrorRoute reason
         .then -> actions.syncView()
-
     router.start()

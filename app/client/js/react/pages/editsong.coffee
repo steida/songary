@@ -177,7 +177,7 @@ class app.react.pages.EditSong
         actions.addNewSong()
           .then -> routes.home.redirect()
           .thenCatch (validationError) =>
-            # TODO: Add reusable helper/mixin/whatever.
+            # TODO: Add beautiful reusable helper/mixin/whatever.
             error = validationError.errors[0]
             alert error.msg
             field = @refs['form'].getDOMNode().elements[error.props[0]]

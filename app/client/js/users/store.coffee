@@ -1,6 +1,6 @@
 goog.provide 'app.users.Store'
 
-goog.require 'app.ValidationError'
+goog.require 'app.errors.ValidationError'
 goog.require 'app.songs.Song'
 goog.require 'app.users.User'
 goog.require 'este.Store'
@@ -12,24 +12,23 @@ class app.users.Store extends este.Store
     @param {app.Dispatcher} dispatcher
     @param {app.ErrorReporter} errorReporter
     @param {app.LocalHistory} localHistory
+    @param {app.facebook.Store} facebookStore
     @constructor
     @extends {este.Store}
   ###
-  constructor: (dispatcher, @errorReporter, @localHistory) ->
+  constructor: (@dispatcher, @errorReporter, @localHistory, @facebookStore) ->
     super()
     @name = 'user'
     @setEmpty_()
 
-    dispatcher.register (action, payload) =>
+    @dispatcherId = @dispatcher.register (action, payload) =>
       switch action
-        when app.Actions.ADD_NEW_SONG
-          @addNewSong_()
-        when app.Actions.SET_SONG_PROP
-          @setSongProp_ payload
-        when app.Actions.SET_SONG_INTRASH
-          @trashSong_ payload.song, payload.inTrash
-        when app.Actions.EMPTY_SONGS_TRASH
-          @emptySongsTrash_()
+        when app.Actions.ADD_NEW_SONG then @addNewSong_()
+        when app.Actions.EMPTY_SONGS_TRASH then @emptySongsTrash_()
+        when app.Actions.LOGIN then @login_()
+        when app.Actions.LOGOUT then @logout_()
+        when app.Actions.SET_SONG_INTRASH then @trashSong_ payload
+        when app.Actions.SET_SONG_PROP then @setSongProp_ payload
 
   ###*
     Not yet added new song, persisted in localStorage.
@@ -64,7 +63,7 @@ class app.users.Store extends este.Store
     @newSong.validate()
       .then =>
         return if !@contains @newSong
-        throw new app.ValidationError [
+        throw new app.errors.ValidationError [
           msg: "Song #{@newSong.name}, #{@newSong.artist} already exists."
           props: ['name', 'artist']
         ]
@@ -73,6 +72,37 @@ class app.users.Store extends este.Store
         @newSong = new app.songs.Song
         @notify()
 
+  emptySongsTrash_: ->
+    goog.array.removeAllIf @songs, (song) -> song.inTrash
+    @notify()
+
+  ###*
+    @private
+  ###
+  login_: ->
+    @dispatcher
+      .waitFor [@facebookStore.dispatcherId]
+      .then =>
+        @fromJson user: app.users.User.fromFacebook @facebookStore.me
+        @errorReporter.userName = @user.name
+
+  ###*
+    It's important to delete all user data on logout.
+    @private
+  ###
+  logout_: ->
+    @setEmpty_()
+    @errorReporter.userName = ''
+    @notify()
+
+  ###*
+    @param {Object} payload
+  ###
+  trashSong_: (payload) ->
+    {song, inTrash} = payload
+    song.inTrash = inTrash
+    @notify()
+
   ###*
     @param {Object} payload
   ###
@@ -80,18 +110,6 @@ class app.users.Store extends este.Store
     {song, name, value} = payload
     song[name] = value
     song.computeProps()
-    @notify()
-
-  ###*
-    @param {app.songs.Song} song
-    @param {boolean} inTrash
-  ###
-  trashSong_: (song, inTrash) ->
-    song.inTrash = inTrash
-    @notify()
-
-  emptySongsTrash_: ->
-    goog.array.removeAllIf @songs, (song) -> song.inTrash
     @notify()
 
   ###*
@@ -153,32 +171,6 @@ class app.users.Store extends este.Store
     if json.user
       @user = new app.users.User json.user
     @notify()
-
-  ###*
-    How user authentication works:
-      - User login/logout status is defined by localStoraged userStore.
-      - FB api is loaded only if user is not logged.
-      - After user login, user auth is sent to server.
-      - User identity is verified on server, then user is lazy created.
-      - Server issues cookie, no session.
-      - This cookie is used for server user authentication.
-      - Once cookie is expired, server returns UNAUTHORIZED http status.
-      - Unauthorized status sets client user as logged out.
-    TODO: Rename and add more providers.
-    @param {Object} json
-  ###
-  loginFacebookUser: (json) ->
-    @fromJson user: app.users.User.fromFacebook json
-    @errorReporter.userName = @user.name
-
-  ###*
-    It's important to delete all user data on logout.
-  ###
-  logout: ->
-    @setEmpty_()
-    @errorReporter.userName = ''
-    @notify()
-    # TODO: Load api lazily.
 
   ###*
     @return {boolean}
