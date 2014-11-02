@@ -23,7 +23,7 @@ class app.react.pages.Me
           p {}, @getWelcomeMessage usersStore.user.name
           img
             className: 'user-picture'
-            src: "http://graph.facebook.com/#{fid}/picture?type=normal"
+            src: "http://graph.facebook.com/#{fid}/picture?type=normal&height=100"
           nav {},
             login.component {}
             button
