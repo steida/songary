@@ -6,9 +6,11 @@ goog.require 'app.errors.InnocuousError'
 class app.facebook.Store
 
   ###*
-    Note FB.logout is not used, because it logout user out of Facebook entirely.
-    Also FB.getLoginStatus is not used, because loginStatus is handled by app.
-    User login status is persisted in localStorage via usersStore.
+    FB account is used for login. Note FB.logout is not used, because it logout
+    user out of Facebook entirely, which is not what we want.FB.getLoginStatus
+    isn't used too, because loginStatus is handled by app itself. After login,
+    login status is persisted in localStorage via usersStore and sent to server.
+    Server issues session cookie via FB confirmed identity.
     @param {app.Dispatcher} dispatcher
     @constructor
   ###
