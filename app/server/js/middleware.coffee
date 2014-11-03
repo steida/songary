@@ -26,8 +26,6 @@ class server.Middleware
     app.use @bodyParser.json()
     app.use @methodOverride()
     app.use @expressSession
-      resave: false
-      saveUninitialized: false
-      # https://github.com/sahat/hackathon-starter/issues/169#issuecomment-59042128
-      # TODO: Use external configuration.
-      secret: 'songarydemo'
+      # # https://github.com/sahat/hackathon-starter/issues/169#issuecomment-59042128
+      # resave: false
+      # saveUninitialized: false
