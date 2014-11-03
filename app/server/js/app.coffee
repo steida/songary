@@ -40,6 +40,7 @@ class server.App
       else
         console.log reason
 
+    # TODO: Simplify.
     api.addToExpress app, (route, req, res, promise) ->
       promise
         .then (json) -> res.json json
