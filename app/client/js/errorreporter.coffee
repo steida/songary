@@ -1,5 +1,6 @@
 goog.provide 'app.ErrorReporter'
 
+goog.require 'app.errors.InnocuousError'
 goog.require 'app.errors.SilentError'
 goog.require 'goog.Promise'
 goog.require 'goog.async.throwException'
