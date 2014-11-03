@@ -5,13 +5,14 @@ class server.Middleware
   ###*
     @param {Function} compression
     @param {Function} cookieParser
+    @param {Function} cookieSecret
     @param {Function} expressSession
     @param {Function} favicon
     @param {Function} methodOverride
     @param {Object} bodyParser
     @constructor
   ###
-  constructor: (@compression, @cookieParser, @expressSession, @favicon,
+  constructor: (@compression, @cookieParser, @cookieSecret, @expressSession, @favicon,
     @methodOverride, @bodyParser) ->
 
   ###*
@@ -20,7 +21,7 @@ class server.Middleware
   use: (app) ->
     app.use @compression()
     app.use @favicon 'app/client/img/favicon.ico'
-    app.use @cookieParser()
+    app.use @cookieParser @cookieSecret
     app.use @bodyParser.urlencoded extended: false
     app.use @bodyParser.json()
     app.use @methodOverride()

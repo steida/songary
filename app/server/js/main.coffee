@@ -20,6 +20,7 @@ server.main = (config) ->
       bodyParser: require 'body-parser'
       compression: require 'compression'
       cookieParser: require 'cookie-parser'
+      cookieSecret: config['cookie']['secret']
       expressSession: require 'express-session'
       favicon: require 'serve-favicon'
       methodOverride: require 'method-override'
@@ -33,7 +34,7 @@ server.main = (config) ->
     resolve: server.ElasticSearch
     with:
       elasticSearch: require 'elasticsearch'
-      host: config['elasticSearch'].host
+      host: config['elasticSearch']['host']
   ,
     resolve: server.Passport
     with:
