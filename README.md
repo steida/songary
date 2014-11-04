@@ -15,7 +15,7 @@ Read [Este.js](https://github.com/steida/este).
   - frontend/mobile/offline first
   - isomorphic web app
   - Closure Library and Closure Compiler
-  - Facebook React with Flux
+  - Facebook [React](http://facebook.github.io/react/) and [Flux](http://facebook.github.io/flux/)
   - one way data flow
   - polymes-gestures
   - global error handling both for sync and async code
@@ -26,10 +26,6 @@ Read [Este.js](https://github.com/steida/este).
   - statically typed code written in CoffeeScript
   - killer React JSX-less syntax
   - finest [dev stack](https://github.com/steida/gulp-este)
-
-### Why Facebook [Flux](http://facebook.github.io/flux/) is better than XYZ?
-
-Because [Ember](http://emberjs.com) and [Backbone](http://backbonejs.org/#Events) and [Angular](https:angularjs.org) mixes app model definition with app data flow, irreversibly. 
 
 #### Why CoffeeScript?
 
