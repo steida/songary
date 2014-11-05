@@ -19,8 +19,8 @@ class app.react.Login
       render: ->
         button
           className: 'btn btn-default'
-          onClick: @onClick
           disabled: @state.disabled
+          onClick: @onClick
         , if usersStore.isLogged() then Login.MSG_LOGOUT else Login.MSG_LOGIN
 
       # Always native click, because most modern browsers block pop-up windows
