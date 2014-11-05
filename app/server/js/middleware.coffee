@@ -21,11 +21,11 @@ class server.Middleware
   use: (app) ->
     app.use @compression()
     app.use @favicon 'app/client/img/favicon.ico'
-    app.use @cookieParser @cookieSecret
+    # app.use @cookieParser @cookieSecret
     app.use @bodyParser.urlencoded extended: false
     app.use @bodyParser.json()
     app.use @methodOverride()
-    app.use @expressSession
-      # # https://github.com/sahat/hackathon-starter/issues/169#issuecomment-59042128
-      # resave: false
-      # saveUninitialized: false
+    # app.use @expressSession
+    # # https://github.com/sahat/hackathon-starter/issues/169#issuecomment-59042128
+    # resave: false
+    # saveUninitialized: false

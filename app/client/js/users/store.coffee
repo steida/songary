@@ -84,6 +84,7 @@ class app.users.Store extends este.Store
       .waitFor [@facebookStore.dispatcherId]
       .then =>
         @fromJson user: app.users.User.fromFacebook @facebookStore.me
+        # TODO: Use waitFor in error reporter imho.
         @errorReporter.userName = @user.name
 
   ###*
