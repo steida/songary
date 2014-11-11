@@ -94,6 +94,7 @@ gulp.task 'compile-clientapp', ->
       define: [
         'goog.array.ASSUME_NATIVE_FUNCTIONS=true'
         'goog.dom.ASSUME_STANDARDS_MODE=true'
+        'goog.dom.classlist.ALWAYS_USE_DOM_TOKEN_LIST=true'
         'goog.json.USE_NATIVE_JSON=true'
         'goog.net.XmlHttpDefines.ASSUME_NATIVE_XHR=true'
         'goog.style.GET_BOUNDING_CLIENT_RECT_ALWAYS_EXISTS=true'
