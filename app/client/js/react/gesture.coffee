@@ -16,13 +16,6 @@ class app.react.Gesture
   constructor: (@routingClickHandler) ->
 
     ###*
-      Prevent "ghost click" phenomenon. Ghost clicks occur when an element
-      is removed before the 300ms delayed click event is fired, but the
-      click event is still sent. This click event will be sent to whatever
-      is now on top at that coordinate.
-      This PR is trying to fix it, but it does not work in iOS Chrome.
-      https://github.com/Polymer/polymer-gestures/pull/73
-      TODO: Wait for polymer-gestures fix.
       @type {Element}
       @private
     ###
@@ -97,8 +90,10 @@ class app.react.Gesture
           onKeyUp e if onKeyUp
           # Ignore unfocusable tab index.
           return if @getDOMNode().tabIndex == -1
-          # Enter/backspace to dispatch tap, because native click is bypassed.
-          @onTap e if e.key in ['Enter', ' ']
+          # Enter/backspace to dispatch tap.
+          # TODO: Wait for polymer-gestures fix.
+          if e.key in ['Enter', ' ']
+            @onTap e
         React.createElement tag, props
 
       componentDidMount: ->
@@ -155,8 +150,14 @@ class app.react.Gesture
           @delegateAnchorTapToRoutingClickHandler_ e
         return
 
-       showCoverTemporarily_: ->
-        # Seems to be more reliable then display block/none.
+      ###*
+        Prevent "ghost click" phenomenon. Ghost clicks occur when an element
+        is removed before the 300ms delayed click event is fired, but the
+        click event is still sent. This click event will be sent to whatever
+        is now on top at that coordinate.
+        TODO: Wait for polymer-gestures fix.
+      ###
+      showCoverTemporarily_: ->
         return if cover.parentNode == document.body
         document.body.appendChild cover
         clearTimeout @coverHideTimer
