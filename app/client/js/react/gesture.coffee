@@ -1,16 +1,14 @@
 goog.provide 'app.react.Gesture'
 
 goog.require 'goog.dom.classlist'
+goog.require 'goog.object'
 
 class app.react.Gesture
 
   ###*
     Helper for github.com/Polymer/polymer-gestures.
+    Example: {a, span, button} = gesture.none 'a', 'span', 'button'
     TODO: Move to este-library. Check if tap can safely stop scroll momentum.
-
-    Example:
-    {a, span, button} = touch.none 'a', 'span', 'button'
-
     @param {este.events.RoutingClickHandler} routingClickHandler
     @constructor
     @final
@@ -93,7 +91,15 @@ class app.react.Gesture
     React.createFactory React.createClass
 
       render: ->
-        React.createElement tag, @props
+        props = goog.object.clone @props
+        onKeyUp = props.onKeyUp
+        props.onKeyUp = (e) =>
+          onKeyUp e if onKeyUp
+          # Ignore unfocusable tab index.
+          return if @getDOMNode().tabIndex == -1
+          # Enter/backspace to dispatch tap, because native click is bypassed.
+          @onTap e if e.key in ['Enter', ' ']
+        React.createElement tag, props
 
       componentDidMount: ->
         # Undefined at server side, so do nothing.
@@ -132,7 +138,7 @@ class app.react.Gesture
         # Give React time to update view without blinking on slow mobile.
         # .active css state is not applied immediately.
         # TODO: Instead of hover or touch-hover, router should control link
-        # active style. 
+        # active style.
         setTimeout =>
           try
             goog.dom.classlist.remove node, 'touch-hover'
@@ -144,11 +150,8 @@ class app.react.Gesture
 
       onTap: (e) ->
         @props.onTap e if @props.onTap
-        if e.target.tagName == 'A'
-          # Routing can change whole UI, therefore we have to ignore
-          # subsequent click on any shown element to prevent accidental
-          # action like focus.
-          @showCoverTemporarily_()
+        @showCoverTemporarily_()
+        if @getDOMNode().tagName == 'A'
           @delegateAnchorTapToRoutingClickHandler_ e
         return
 
