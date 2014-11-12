@@ -17,15 +17,15 @@ class app.react.Header
           nav {},
             link.to
               route: routes.home
-              text: Header.MSG_MY_SONGS
               activeFor: [routes.editSong, routes.newSong, routes.trash]
+            , Header.MSG_MY_SONGS
             link.to
               route: routes.songs
-              text: Header.MSG_SONGS
               activeFor: [routes.recentlyUpdatedSongs]
-            link.to routes.about, Header.MSG_ABOUT
+            , Header.MSG_SONGS
+            link.to route: routes.about, Header.MSG_ABOUT
             if usersStore.isLogged()
-              link.to routes.me, Header.MSG_ME
+              link.to route: routes.me, Header.MSG_ME
 
   @MSG_ABOUT: goog.getMsg 'About'
   @MSG_ME: goog.getMsg 'Me'

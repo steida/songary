@@ -13,9 +13,9 @@ class app.react.Link
   constructor: (@routes, @gesture) ->
 
   ###*
+    TODO: Add none, panX, panY, scroll options.
     @typedef {{
       route: este.Route,
-      text: string,
       params: (Object|undefined),
       props: (Object|undefined),
       activeFor: (Array<este.Route>|undefined)
@@ -24,27 +24,23 @@ class app.react.Link
   @Options: null
 
   ###*
-    @param {(este.Route|app.react.Link.Options)} routeOrOptions
-    @param {string=} text
-    @param {Object=} params Url params.
-    @param {Object=} props React props.
-    @param {Array<este.Route>=} activeFor Additional active routes.
+    @param {app.react.Link.Options} options
+    @param {...*} var_args Link content.
   ###
-  to: (routeOrOptions, text, params, props, activeFor) ->
-    if arguments.length == 1
-      goog.asserts.assertObject routeOrOptions
-      {route, text, params, props, activeFor} = routeOrOptions
-    else
-      route = routeOrOptions
-      goog.asserts.assertInstanceof route, este.Route
-      goog.asserts.assertString text
+  to: (options, var_args) ->
+    goog.asserts.assertObject options
+    {route, params, props, activeFor} = options
+    goog.asserts.assertInstanceof route, este.Route
 
+    # Ensure activeFor exists, then add route.
     activeFor ?= []
     activeFor.push route
 
+    # Create link props.
     linkProps = href: route.url params
     goog.mixin linkProps, props || {}
 
+    # Set link props className.
     classNames = (linkProps.className || '').match(/\S+/g) || []
     if activeFor.indexOf(@routes.active) != -1
       classNames.push 'active'
@@ -52,6 +48,7 @@ class app.react.Link
       classNames.push 'clickable'
     linkProps.className = classNames.join ' '
 
-    # "Fast click" anchor.
+    # "Fast click" anchor, TODO: Enable also panX, panY, scroll.
     {a} = @gesture.none 'a'
-    a linkProps, text
+    # Pass props as first arg then all content args.
+    a.apply null, [linkProps].concat Array.prototype.slice.call arguments, 1

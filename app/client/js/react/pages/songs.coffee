@@ -29,7 +29,9 @@ class app.react.pages.Songs
               value: query
           songs.component songs: songsStore.foundSongs
           p {},
-            link.to routes.recentlyUpdatedSongs, Songs.MSG_RECENTLY_UPDATED_SONGS
+            link.to
+              route: routes.recentlyUpdatedSongs
+            , Songs.MSG_RECENTLY_UPDATED_SONGS
 
       componentDidMount: ->
         @delay = new goog.async.Delay @onDelayAction, 300
