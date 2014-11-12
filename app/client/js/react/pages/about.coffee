@@ -10,7 +10,7 @@ class app.react.pages.About
     @constructor
   ###
   constructor: (usersStore) ->
-    {div,p,form,textarea,menu,button,a} = React.DOM
+    {div, p, form, textarea, menu, button, a} = React.DOM
 
     message = ''
 

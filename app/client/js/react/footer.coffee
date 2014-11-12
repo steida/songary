@@ -8,7 +8,7 @@ class app.react.Footer
     @constructor
   ###
   constructor: (usersStore, login) ->
-    {footer,p} = React.DOM
+    {footer, p} = React.DOM
 
     @component = React.createFactory React.createClass
       render: ->

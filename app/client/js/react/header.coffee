@@ -9,7 +9,7 @@ class app.react.Header
     @constructor
   ###
   constructor: (routes, link, usersStore) ->
-    {header,nav} = React.DOM
+    {header, nav} = React.DOM
 
     @component = React.createFactory React.createClass
       render: ->

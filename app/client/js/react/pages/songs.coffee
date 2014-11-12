@@ -13,7 +13,7 @@ class app.react.pages.Songs
     @constructor
   ###
   constructor: (actions, routes, link, songs, songsStore) ->
-    {div,input,p} = React.DOM
+    {div, input, p} = React.DOM
     query = ''
 
     @component = React.createFactory React.createClass

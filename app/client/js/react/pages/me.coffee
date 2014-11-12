@@ -10,8 +10,8 @@ class app.react.pages.Me
     @constructor
   ###
   constructor: (routes, login, gesture, usersStore) ->
-    {div,p,img,ul,li,nav} = React.DOM
-    {a,button} = gesture.none 'a', 'button'
+    {div, p, img, ul, li, nav} = React.DOM
+    {a, button} = gesture.none 'a', 'button'
 
     @component = React.createFactory React.createClass
 

@@ -10,7 +10,7 @@ class app.react.pages.Trash
     @constructor
   ###
   constructor: (actions, routes, gesture, usersStore) ->
-    {div,ul,li,nav,button} = React.DOM
+    {div, ul, li, nav, button} = React.DOM
     {a} = gesture.scroll 'a'
 
     @component = React.createFactory React.createClass

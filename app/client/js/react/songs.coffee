@@ -8,7 +8,7 @@ class app.react.Songs
     @constructor
   ###
   constructor: (routes, gesture) ->
-    {ul,li} = React.DOM
+    {ul, li} = React.DOM
     {a} = gesture.scroll 'a'
 
     @component = React.createFactory React.createClass

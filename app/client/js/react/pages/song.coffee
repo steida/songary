@@ -18,8 +18,8 @@ class app.react.pages.Song
   ###
   constructor: (routes, gesture, usersStore) ->
     {div} = gesture.scroll 'div'
-    {article,menu} = React.DOM
-    {a,menuitem} = gesture.none 'a', 'menuitem'
+    {article, menu} = React.DOM
+    {a, menuitem} = gesture.none 'a', 'menuitem'
 
     @component = React.createFactory React.createClass
 

@@ -8,7 +8,7 @@ class app.react.pages.NotFound
     @constructor
   ###
   constructor: (routes, gesture) ->
-    {div,h1,p} = React.DOM
+    {div, h1, p} = React.DOM
     {a} = gesture.none 'a'
 
     @component = React.createFactory React.createClass

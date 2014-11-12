@@ -9,7 +9,7 @@ class app.react.pages.MySongs
     @constructor
   ###
   constructor: (routes, usersStore, gesture) ->
-    {div,ul,li,p,nav} = React.DOM
+    {div, ul, li, p, nav} = React.DOM
     {a} = gesture.scroll 'a'
 
     @component = React.createFactory React.createClass

@@ -19,8 +19,8 @@ class app.react.pages.EditSong
     @constructor
   ###
   constructor: (actions, routes, gesture, yellowFade, usersStore) ->
-    {div,form,input,textarea,p,nav,ol,li,br} = React.DOM
-    {a,span,button} = gesture.none 'a', 'span', 'button'
+    {div, form, input, textarea, p, nav, ol, li, br} = React.DOM
+    {a, span, button} = gesture.none 'a', 'span', 'button'
 
     # Why not React state? Because it's not preserved over component life cycle.
     editMode = false
