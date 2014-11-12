@@ -84,7 +84,6 @@ class app.users.Store extends este.Store
       .waitFor [@facebookStore.dispatcherId]
       .then =>
         @fromJson user: app.users.User.fromFacebook @facebookStore.me
-        # TODO: Use waitFor in error reporter imho.
         @errorReporter.userName = @user.name
 
   ###*
@@ -200,19 +199,19 @@ class app.users.Store extends este.Store
     #     return false if seen[lyrics]
     #     seen[lyrics] = true
 
-  ###*
-    @param {app.songs.Song} song
-  ###
-  setSongPublisher: (song) ->
-    # song.publisher = @user.uid
-    # @notify()
-
-  ###*
-    @param {app.songs.Song} song
-  ###
-  removeSongPublisher: (song) ->
-    # song.publisher = null
-    # @notify()
+  # ###*
+  #   @param {app.songs.Song} song
+  # ###
+  # setSongPublisher: (song) ->
+  #   # song.publisher = @user.uid
+  #   # @notify()
+  #
+  # ###*
+  #   @param {app.songs.Song} song
+  # ###
+  # removeSongPublisher: (song) ->
+  #   # song.publisher = null
+  #   # @notify()
 
   ###*
     @param {app.songs.Song} song

@@ -3,23 +3,23 @@ goog.provide 'App'
 class App
 
   ###*
-    @param {app.Actions} actions
-    @param {app.FrontPage} frontPage
-    @param {app.Routes} routes
-    @param {app.Storage} storage
+    @param {Element} element
+    @param {app.Dispatcher} dispatcher
+    @param {app.LocalStorage} localStorage
+    @param {app.react.App} reactApp
     @param {app.facebook.Store} facebookStore
-    @param {este.Router} router
+    @param {app.routes.Store} routesStore
+    @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (actions, frontPage, routes, storage, facebookStore, router) ->
+  constructor: (element, dispatcher, localStorage, reactApp,
+      facebookStore, routesStore, usersStore) ->
 
-    frontPage.init()
-    storage.init()
+    dispatcher.register (action, payload) ->
+      switch action
+        when app.Actions.RENDER_APP
+          React.render reactApp.component(), element
+
+    localStorage.sync [usersStore]
     facebookStore.init()
-
-    routes.addToEste router, (route, params) ->
-      actions.loadRoute route, params
-        .then -> routes.setActive route, params
-        .thenCatch (reason) -> routes.trySetErrorRoute reason
-        .then -> actions.syncView()
-    router.start()
+    routesStore.start()

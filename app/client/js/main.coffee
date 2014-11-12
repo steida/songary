@@ -17,7 +17,7 @@ app.main = (data) ->
 
   container = new app.DiContainer
   container.configure
-    resolve: app.FrontPage
+    resolve: App
     with: element: document.body
   container.resolveApp()
 

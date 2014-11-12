@@ -8,21 +8,17 @@ class app.Actions
   ###
   constructor: (@dispatcher) ->
 
-  @ADD_NEW_SONG: 'add-new-song'
-  @EMPTY_SONGS_TRASH: 'empty-songs-trash'
   @LOAD_ROUTE: 'load-route'
+  @RENDER_APP: 'render-app'
+
   @LOGIN: 'login'
   @LOGOUT: 'logout'
+
+  @ADD_NEW_SONG: 'add-new-song'
+  @EMPTY_SONGS_TRASH: 'empty-songs-trash'
   @SEARCH_SONG: 'search-song'
   @SET_SONG_INTRASH: 'set-song-intrash'
   @SET_SONG_PROP: 'set-song-prop'
-  @SYNC_VIEW: 'sync-view'
-
-  addNewSong: ->
-    @dispatcher.dispatch Actions.ADD_NEW_SONG
-
-  emptySongsTrash: ->
-    @dispatcher.dispatch Actions.EMPTY_SONGS_TRASH
 
   ###*
     @param {este.Route} route
@@ -31,11 +27,20 @@ class app.Actions
   loadRoute: (route, params) ->
     @dispatcher.dispatch Actions.LOAD_ROUTE, route: route, params: params
 
+  renderApp: ->
+    @dispatcher.dispatch Actions.RENDER_APP
+
   login: ->
     @dispatcher.dispatch Actions.LOGIN
 
   logout: ->
     @dispatcher.dispatch Actions.LOGOUT
+
+  addNewSong: ->
+    @dispatcher.dispatch Actions.ADD_NEW_SONG
+
+  emptySongsTrash: ->
+    @dispatcher.dispatch Actions.EMPTY_SONGS_TRASH
 
   ###*
     @param {string} query
@@ -63,6 +68,3 @@ class app.Actions
       song: song
       name: name
       value: value
-
-  syncView: ->
-    @dispatcher.dispatch Actions.SYNC_VIEW
