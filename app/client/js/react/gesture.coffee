@@ -89,7 +89,7 @@ class app.react.Gesture
         props.onKeyUp = (e) =>
           onKeyUp e if onKeyUp
           # Ignore unfocusable tab index.
-          return if @getDOMNode().tabIndex == -1
+          return if e.target.tabIndex == -1
           # Enter/backspace to dispatch tap.
           # TODO: Wait for polymer-gestures fix.
           if e.key in ['Enter', ' ']
@@ -146,7 +146,7 @@ class app.react.Gesture
       onTap: (e) ->
         @props.onTap e if @props.onTap
         @showCoverTemporarily_()
-        if @getDOMNode().tagName == 'A'
+        if e.target.tagName == 'A'
           @delegateAnchorTapToRoutingClickHandler_ e
         return
 
