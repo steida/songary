@@ -1,19 +1,23 @@
 goog.provide 'server.Storage'
 
-goog.require 'este.Storage'
+goog.require 'goog.Promise'
+goog.require 'goog.net.HttpStatus'
 
-class server.Storage extends este.Storage
+class server.Storage
 
   ###*
     @param {app.Routes} routes
     @param {server.ElasticSearch} elastic
     @param {app.songs.Store} songsStore
     @constructor
-    @extends {este.Storage}
-    @final
   ###
   constructor: (@routes, @elastic, @songsStore) ->
-    super()
+
+  ok: ->
+    goog.Promise.resolve goog.net.HttpStatus.OK
+
+  notFound: ->
+    goog.Promise.resolve goog.net.HttpStatus.NOT_FOUND
 
   ###*
     @param {este.Route} route

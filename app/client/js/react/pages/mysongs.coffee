@@ -5,7 +5,7 @@ class app.react.pages.MySongs
   ###*
     @param {app.Routes} routes
     @param {app.users.Store} usersStore
-    @param {app.react.Gesture} gesture
+    @param {este.react.Gesture} gesture
     @constructor
   ###
   constructor: (routes, usersStore, gesture) ->

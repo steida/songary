@@ -7,7 +7,7 @@ class app.react.Link
   ###*
     TODO: Move to este-library once api is stabilized.
     @param {app.Routes} routes
-    @param {app.react.Gesture} gesture
+    @param {este.react.Gesture} gesture
     @constructor
   ###
   constructor: (@routes, @gesture) ->

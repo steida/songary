@@ -5,7 +5,7 @@ class app.react.pages.Me
   ###*
     @param {app.Routes} routes
     @param {app.react.Login} login
-    @param {app.react.Gesture} gesture
+    @param {este.react.Gesture} gesture
     @param {app.users.Store} usersStore
     @constructor
   ###

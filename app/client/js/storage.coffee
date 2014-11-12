@@ -1,15 +1,12 @@
 goog.provide 'app.Storage'
 
-goog.require 'este.Storage'
-
-class app.Storage extends este.Storage
+class app.Storage
 
   ###*
 
     @param {app.Routes} routes
     @param {app.Xhr} xhr
     @constructor
-    @extends {este.Storage}
   ###
   constructor: (@routes, @xhr) ->
 

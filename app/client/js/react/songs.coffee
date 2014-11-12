@@ -4,7 +4,7 @@ class app.react.Songs
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.Gesture} gesture
+    @param {este.react.Gesture} gesture
     @constructor
   ###
   constructor: (routes, gesture) ->

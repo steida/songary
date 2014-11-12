@@ -5,7 +5,7 @@ class app.react.pages.Trash
   ###*
     @param {app.Actions} actions
     @param {app.Routes} routes
-    @param {app.react.Gesture} gesture
+    @param {este.react.Gesture} gesture
     @param {app.users.Store} usersStore
     @constructor
   ###

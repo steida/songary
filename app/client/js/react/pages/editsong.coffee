@@ -13,7 +13,7 @@ class app.react.pages.EditSong
   ###*
     @param {app.Actions} actions
     @param {app.Routes} routes
-    @param {app.react.Gesture} gesture
+    @param {este.react.Gesture} gesture
     @param {app.react.YellowFade} yellowFade
     @param {app.users.Store} usersStore
     @constructor
