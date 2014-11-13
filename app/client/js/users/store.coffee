@@ -217,7 +217,5 @@ class app.users.Store extends este.Store
     @param {app.songs.Song} song
   ###
   savePublishedSongToDevice: (song) ->
-    # Make a clone.
-    song = new app.songs.Song song
     @songs.push song
     @notify()
