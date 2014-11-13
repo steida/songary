@@ -83,7 +83,10 @@ class server.ElasticSearch
   ###
   withoutMetas: (promise) ->
     promise.then (response) ->
-      response.hits.hits.map (hit) -> hit._source
+      response.hits.hits.map (hit) ->
+        json = hit._source
+        json.id = hit._id
+        json
 
   ###*
     Just props for listing.

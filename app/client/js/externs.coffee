@@ -79,6 +79,7 @@ class serverClientData
 
 class elasticSearch
   elasticSearch::Client
+  elasticSearch::_id
   elasticSearch::_source
   elasticSearch::body
   elasticSearch::bool
