@@ -11,6 +11,10 @@ class app.songs.Song
     @constructor
   ###
   constructor: (json) ->
+    ###*
+      @type {string}
+      @const
+    ###
     @id = goog.string.getRandomString()
     goog.mixin @, json if json
 
