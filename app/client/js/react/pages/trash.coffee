@@ -5,13 +5,12 @@ class app.react.pages.Trash
   ###*
     @param {app.Actions} actions
     @param {app.Routes} routes
-    @param {este.react.Gesture} gesture
     @param {app.users.Store} usersStore
+    @param {este.react.Element} element
     @constructor
   ###
-  constructor: (actions, routes, gesture, usersStore) ->
-    {div, ul, li, nav, button} = React.DOM
-    {a} = gesture.scroll 'a'
+  constructor: (actions, routes, usersStore, element) ->
+    {div, ul, li, nav, button, a} = element
 
     @component = React.createFactory React.createClass
 
@@ -22,15 +21,17 @@ class app.react.pages.Trash
         div className: 'page',
           ul className: 'deleted-songs', deletedSongs.map (song) ->
             li key: song.id,
-              a href: routes.editSong.url(song),
-                "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
+              a
+                href: routes.editSong.url(song)
+                touchAction: 'scroll'
+              , "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
           nav {},
             button
               className: 'btn btn-danger'
-              onClick: @onEmptyTrashClick
+              onTap: @onEmptyTrashTap
             , Trash.MSG_EMPTY_TRASH
 
-      onEmptyTrashClick: ->
+      onEmptyTrashTap: ->
         return if !confirm Trash.MSG_ARE_YOU_SURE
         actions.emptySongsTrash()
           .then -> routes.home.redirect()

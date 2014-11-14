@@ -12,14 +12,12 @@ class app.react.pages.Song
 
   ###*
     @param {app.Routes} routes
-    @param {este.react.Gesture} gesture
     @param {app.users.Store} usersStore
+    @param {este.react.Element} element
     @constructor
   ###
-  constructor: (routes, gesture, usersStore) ->
-    {div} = gesture.scroll 'div'
-    {article, menu} = React.DOM
-    {a, menuitem} = gesture.none 'a', 'menuitem'
+  constructor: (routes, usersStore, element) ->
+    {div, article, menu, a, span} = element
 
     @component = React.createFactory React.createClass
 
@@ -29,7 +27,7 @@ class app.react.pages.Song
         song = @props.song
 
         # onUp, because onTap does not dispatch clientX and clientY yet.
-        div className: 'page', onUp: @onSongUp,
+        div className: 'page', onUp: @onSongUp, touchAction: 'scroll',
           article
             dangerouslySetInnerHTML: '__html': @lyricsHtml song
             ref: 'article'
@@ -39,18 +37,28 @@ class app.react.pages.Song
             onMouseLeave: @onMenuMouseHover
             ref: 'menu'
           ,
-            a href: routes.home.url(), ref: 'back', Song.MSG_BACK
-            menuitem
+            a
+              href: routes.home.url()
+              ref: 'back'
+              touchAction: 'none'
+            , Song.MSG_BACK
+            span
               onTap: @onFontResizeTap.bind @, true
+              touchAction: 'none'
             , '+'
-            menuitem
+            span
               onTap: @onFontResizeTap.bind @, false
+              touchAction: 'none'
             , '-'
             if usersStore.songById song.id
-              a href: routes.editSong.url(song), Song.MSG_EDIT
+              a
+                href: routes.editSong.url song
+                touchAction: 'none'
+              , Song.MSG_EDIT
             else
-              menuitem
+              span
                 onTap: @onSaveToDeviceTap
+                touchAction: 'none'
               , Song.MSG_SAVE_TO_DEVICE
 
       ref: (name) ->

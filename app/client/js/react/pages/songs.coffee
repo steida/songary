@@ -7,13 +7,14 @@ class app.react.pages.Songs
   ###*
     @param {app.Actions} actions
     @param {app.Routes} routes
-    @param {app.react.Link} link
     @param {app.react.Songs} songs
     @param {app.songs.Store} songsStore
+    @param {este.react.Element} element
+    @param {este.react.Link} link
     @constructor
   ###
-  constructor: (actions, routes, link, songs, songsStore) ->
-    {div, input, p} = React.DOM
+  constructor: (actions, routes, songs, songsStore, element, link) ->
+    {div, input, p} = element
     query = ''
 
     @component = React.createFactory React.createClass

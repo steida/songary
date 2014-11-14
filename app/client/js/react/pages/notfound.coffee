@@ -4,18 +4,21 @@ class app.react.pages.NotFound
 
   ###*
     @param {app.Routes} routes
-    @param {este.react.Gesture} gesture
+    @param {este.react.Element} element
+    @param {este.react.Link} link
     @constructor
   ###
-  constructor: (routes, gesture) ->
-    {div, h1, p} = React.DOM
-    {a} = gesture.none 'a'
+  constructor: (routes, element, link) ->
+    {div, h1, p} = element
 
     @component = React.createFactory React.createClass
 
       render: ->
         div className: 'page',
-          # TODO: Localize.
-          h1 {}, "This page isn't available"
-          p {}, 'The link may be broken, or the page may have been removed.'
-          a href: routes.home.url(), 'Continue here please.'
+          h1 {}, NotFound.MSG_H1
+          p {}, NotFound.MSG_P
+          link.to route: routes.home, NotFound.MSG_LINK
+
+  @MSG_H1: goog.getMsg "This page isn't available"
+  @MSG_P: goog.getMsg 'The link may be broken, or the page may have been removed.'
+  @MSG_LINK: goog.getMsg 'Continue here please.'

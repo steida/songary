@@ -4,12 +4,11 @@ class app.react.Songs
 
   ###*
     @param {app.Routes} routes
-    @param {este.react.Gesture} gesture
+    @param {este.react.Element} element
     @constructor
   ###
-  constructor: (routes, gesture) ->
-    {ul, li} = React.DOM
-    {a} = gesture.scroll 'a'
+  constructor: (routes, element) ->
+    {ul, li, a} = element
 
     @component = React.createFactory React.createClass
       render: ->
@@ -18,4 +17,5 @@ class app.react.Songs
           li key: text,
             a
               href: routes.song.url song
+              touchAction: 'scroll'
             , text

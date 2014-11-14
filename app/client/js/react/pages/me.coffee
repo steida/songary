@@ -5,13 +5,12 @@ class app.react.pages.Me
   ###*
     @param {app.Routes} routes
     @param {app.react.Login} login
-    @param {este.react.Gesture} gesture
     @param {app.users.Store} usersStore
+    @param {este.react.Element} element
     @constructor
   ###
-  constructor: (routes, login, gesture, usersStore) ->
-    {div, p, img, ul, li, nav} = React.DOM
-    {a, button} = gesture.none 'a', 'button'
+  constructor: (routes, login, usersStore, element) ->
+    {div, p, img, ul, li, nav, a, button} = element
 
     @component = React.createFactory React.createClass
 
@@ -29,6 +28,7 @@ class app.react.pages.Me
             button
               className: 'btn btn-default'
               onTap: @onBackupTap
+              touchAction: 'none'
               type: 'button'
             , Me.MSG_BACKUP
           if publishedSongs.length
@@ -37,7 +37,7 @@ class app.react.pages.Me
               ul {}, publishedSongs.map (song) ->
                 href = routes.song.url song
                 li key: song.id,
-                  a href: href, location.host + href
+                  a touchAction: 'scroll', href: href, location.host + href
 
       getWelcomeMessage: (name) ->
         Me.MSG_WELCOME_MESSAGE = goog.getMsg 'Hi, {$name}.',

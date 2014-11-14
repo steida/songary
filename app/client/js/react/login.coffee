@@ -6,10 +6,11 @@ class app.react.Login
     @param {app.Actions} actions
     @param {app.Routes} routes
     @param {app.users.Store} usersStore
+    @param {este.react.Element} element
     @constructor
   ###
-  constructor: (actions, routes, usersStore) ->
-    {button} = React.DOM
+  constructor: (actions, routes, usersStore, element) ->
+    {button} = element
 
     @component = React.createFactory React.createClass
 

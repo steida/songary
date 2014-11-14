@@ -8,6 +8,7 @@ class app.react.App
   ###*
     @param {app.Routes} routes
     @param {app.Title} appTitle
+    @param {este.react.Element} element
     @param {app.users.Store} usersStore
     @param {app.songs.Store} songsStore
     @param {app.react.Header} header
@@ -23,13 +24,13 @@ class app.react.App
     @param {app.react.pages.Trash} trashPage
     @constructor
   ###
-  constructor: (routes, appTitle,
+  constructor: (routes, appTitle, element,
       usersStore, songsStore,
       header, footer,
       aboutPage, editSongPage, mePage, mySongs, notFoundPage,
       recentlyUpdatedSongsPage, songsPage, songPage, trashPage) ->
 
-    {div} = React.DOM
+    {div} = element
 
     @component = React.createFactory React.createClass
 

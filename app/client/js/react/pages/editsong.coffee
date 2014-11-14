@@ -13,16 +13,16 @@ class app.react.pages.EditSong
   ###*
     @param {app.Actions} actions
     @param {app.Routes} routes
-    @param {este.react.Gesture} gesture
     @param {app.react.YellowFade} yellowFade
     @param {app.users.Store} usersStore
+    @param {este.react.Element} element
     @constructor
   ###
-  constructor: (actions, routes, gesture, yellowFade, usersStore) ->
-    {div, form, input, textarea, p, nav, ol, li, br} = React.DOM
-    {a, span, button} = gesture.none 'a', 'span', 'button'
+  constructor: (actions, routes, yellowFade, usersStore, element) ->
+    {div, form, input, textarea, p, nav, ol, li, br, a, span, button} = element
 
     # Why not React state? Because it's not preserved over component life cycle.
+    # TODO: Add state =
     editMode = false
     lyricsHistoryChanged = false
     lyricsHistoryShown = false
@@ -121,6 +121,7 @@ class app.react.pages.EditSong
                 a
                   href: routes.song.url song
                   ref: 'published-song-link'
+                  touchAction: 'none'
                 , location.host + routes.song.url song
                 '.'
 

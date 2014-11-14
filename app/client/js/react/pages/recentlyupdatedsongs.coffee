@@ -5,10 +5,11 @@ class app.react.pages.RecentlyUpdatedSongs
   ###*
     @param {app.react.Songs} songs
     @param {app.songs.Store} songsStore
+    @param {este.react.Element} element
     @constructor
   ###
-  constructor: (songs, songsStore) ->
-    {div, p} = React.DOM
+  constructor: (songs, songsStore, element) ->
+    {div, p} = element
 
     @component = React.createFactory React.createClass
 

@@ -7,10 +7,11 @@ class app.react.pages.About
 
   ###*
     @param {app.users.Store} usersStore
+    @param {este.react.Element} element
     @constructor
   ###
-  constructor: (usersStore) ->
-    {div, p, form, textarea, menu, button, a} = React.DOM
+  constructor: (usersStore, element) ->
+    {div, p, form, textarea, menu, button, a} = element
 
     message = ''
 

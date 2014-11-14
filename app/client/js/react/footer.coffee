@@ -3,12 +3,13 @@ goog.provide 'app.react.Footer'
 class app.react.Footer
 
   ###*
-    @param {app.users.Store} usersStore
     @param {app.react.Login} login
+    @param {app.users.Store} usersStore
+    @param {este.react.Element} element
     @constructor
   ###
-  constructor: (usersStore, login) ->
-    {footer, p} = React.DOM
+  constructor: (login, usersStore, element) ->
+    {footer, p} = element
 
     @component = React.createFactory React.createClass
       render: ->
