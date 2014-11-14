@@ -27,6 +27,7 @@ class app.ErrorReporter
   @MSG_CONNECTION_ERROR: goog.getMsg 'Connection error. Check your connection please.'
 
   ###*
+    Set after login and remove before logout.
     @type {string}
   ###
   userName: ''
