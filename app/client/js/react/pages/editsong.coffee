@@ -12,12 +12,13 @@ class app.react.pages.EditSong
   ###*
     @param {app.Actions} actions
     @param {app.Routes} routes
+    @param {app.react.Validation} validation
     @param {app.react.YellowFade} yellowFade
     @param {app.users.Store} usersStore
     @param {este.react.Element} element
     @constructor
   ###
-  constructor: (actions, routes, yellowFade, usersStore, element) ->
+  constructor: (actions, routes, validation, yellowFade, usersStore, element) ->
     {div, form, input, GrowingTextarea, p, nav, ol, li, br, a, span, button} = element
 
     # TODO: Move to store.
@@ -28,6 +29,7 @@ class app.react.pages.EditSong
     song = null
 
     @component = React.createFactory React.createClass
+      mixins: [validation.mixin]
 
       render: ->
         song = @props.song ? usersStore.newSong
@@ -164,14 +166,8 @@ class app.react.pages.EditSong
       onFormSubmit: (e) ->
         e.preventDefault()
         return if editMode
-        actions.addNewSong()
-          .then -> routes.home.redirect()
-          .thenCatch (validationError) =>
-            # TODO: Add beautiful reusable helper/mixin/whatever.
-            error = validationError.errors[0]
-            alert error.msg
-            field = @refs['form'].getDOMNode().elements[error.props[0]]
-            field.focus() if field
+        @validate actions.addNewSong().then ->
+          routes.home.redirect()
 
       onSongToggleInTrashTap: ->
         actions.setSongInTrash song, !song.inTrash
