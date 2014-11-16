@@ -21,8 +21,7 @@ class app.react.pages.EditSong
   constructor: (actions, routes, yellowFade, usersStore, element) ->
     {div, form, input, textarea, p, nav, ol, li, br, a, span, button} = element
 
-    # Why not React state? Because it's not preserved over component life cycle.
-    # TODO: Add state =
+    # TODO: Move to store.
     editMode = false
     lyricsHistoryChanged = false
     lyricsHistoryShown = false
