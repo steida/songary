@@ -25,36 +25,35 @@ class app.Actions extends este.Actions
   @SET_SONG_PROP: 'set-song-prop'
 
   loadRoute: (route, params) ->
-    @dispatcher.dispatch Actions.LOAD_ROUTE, route: route, params: params
+    @dispatch Actions.LOAD_ROUTE, route: route, params: params
 
   renderApp: ->
-    @dispatcher.dispatch Actions.RENDER_APP
+    @dispatch Actions.RENDER_APP
 
   login: ->
-    @dispatcher.dispatch Actions.LOGIN
+    @dispatch Actions.LOGIN
 
   logout: ->
-    @dispatcher.dispatch Actions.LOGOUT
+    @dispatch Actions.LOGOUT
 
   addNewSong: ->
-    @dispatcher.dispatch Actions.ADD_NEW_SONG
+    @dispatch Actions.ADD_NEW_SONG
 
   emptySongsTrash: ->
-    @dispatcher.dispatch Actions.EMPTY_SONGS_TRASH
+    @dispatch Actions.EMPTY_SONGS_TRASH
 
   ###*
     @param {string} query
   ###
   searchSong: (query) ->
-    # TODO: Just query.
-    @dispatcher.dispatch Actions.SEARCH_SONG, query: query
+    @dispatch Actions.SEARCH_SONG, query: query
 
   ###*
     @param {app.songs.Song} song
     @param {boolean} inTrash
   ###
   setSongInTrash: (song, inTrash) ->
-    @dispatcher.dispatch Actions.SET_SONG_INTRASH,
+    @dispatch Actions.SET_SONG_INTRASH,
       song: song
       inTrash: inTrash
 
@@ -64,7 +63,7 @@ class app.Actions extends este.Actions
     @param {string} value
   ###
   setSongProp: (song, name, value) ->
-    @dispatcher.dispatch Actions.SET_SONG_PROP,
+    @dispatch Actions.SET_SONG_PROP,
       song: song
       name: name
       value: value
