@@ -1,12 +1,16 @@
 goog.provide 'app.Actions'
 
-class app.Actions
+goog.require 'este.Actions'
+
+class app.Actions extends este.Actions
 
   ###*
     @param {este.Dispatcher} dispatcher
     @constructor
+    @extends {este.Actions}
   ###
   constructor: (@dispatcher) ->
+    super @dispatcher
 
   @LOAD_ROUTE: 'load-route'
   @RENDER_APP: 'render-app'
@@ -20,10 +24,6 @@ class app.Actions
   @SET_SONG_INTRASH: 'set-song-intrash'
   @SET_SONG_PROP: 'set-song-prop'
 
-  ###*
-    @param {este.Route} route
-    @param {Object} params
-  ###
   loadRoute: (route, params) ->
     @dispatcher.dispatch Actions.LOAD_ROUTE, route: route, params: params
 
