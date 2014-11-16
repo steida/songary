@@ -7,17 +7,17 @@ class app.routes.Store extends este.Store
 
   ###*
     @param {app.Actions} actions
-    @param {este.Dispatcher} dispatcher
     @param {app.Routes} routes
     @param {app.Storage} storage
-    @param {este.Router} router
     @param {app.songs.Store} songsStore
     @param {app.users.Store} usersStore
+    @param {este.Dispatcher} dispatcher
+    @param {este.Router} router
     @constructor
     @extends {este.Store}
   ###
-  constructor: (@actions, @dispatcher, @routes, @storage, @router,
-      @songsStore, @usersStore) ->
+  constructor: (@actions, @routes, @storage, @songsStore, @usersStore,
+      @dispatcher, @router) ->
 
     @dispatcher.register (action, payload) =>
       switch action
