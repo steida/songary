@@ -6,6 +6,7 @@ goog.require 'goog.events'
 class app.react.App
 
   ###*
+    @param {app.Actions} actions
     @param {app.Routes} routes
     @param {app.Title} appTitle
     @param {este.react.Element} element
@@ -24,7 +25,7 @@ class app.react.App
     @param {app.react.pages.Trash} trashPage
     @constructor
   ###
-  constructor: (routes, appTitle, element,
+  constructor: (actions, routes, appTitle, element,
       usersStore, songsStore,
       header, footer,
       aboutPage, editSongPage, mePage, mySongs, notFoundPage,
@@ -87,14 +88,15 @@ class app.react.App
           when trashPage then 'trash'
 
       componentDidMount: ->
+        actions.listen 'change', @onStoreChange
+        songsStore.listen 'change', @onStoreChange
+        usersStore.listen 'change', @onStoreChange
         goog.events.listen window, 'orientationchange', @onOrientationChange
-        songsStore.listen 'change', @updateUI
-        usersStore.listen 'change', @updateUI
 
       onOrientationChange: ->
         goog.dom.getDocumentScrollElement().scrollTop = 0
 
-      updateUI: ->
+      onStoreChange: ->
         @forceUpdate()
 
       componentDidUpdate: ->
