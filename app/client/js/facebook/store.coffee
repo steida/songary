@@ -11,7 +11,7 @@ class app.facebook.Store
     isn't used too, because loginStatus is handled by app itself. After login,
     login status is persisted in localStorage via usersStore and sent to server.
     Server issues session cookie via FB confirmed identity.
-    @param {app.Dispatcher} dispatcher
+    @param {este.Dispatcher} dispatcher
     @constructor
   ###
   constructor: (dispatcher) ->

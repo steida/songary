@@ -10,11 +10,10 @@ class app.react.pages.Songs
     @param {app.react.Songs} songs
     @param {app.songs.Store} songsStore
     @param {este.react.Element} element
-    @param {este.react.Link} link
     @constructor
   ###
-  constructor: (actions, routes, songs, songsStore, element, link) ->
-    {div, input, p} = element
+  constructor: (actions, routes, songs, songsStore, element) ->
+    {div, input, p, Link} = element
     query = ''
 
     @component = React.createFactory React.createClass
@@ -30,7 +29,7 @@ class app.react.pages.Songs
               value: query
           songs.component songs: songsStore.foundSongs
           p {},
-            link.to
+            Link
               route: routes.recentlyUpdatedSongs
             , Songs.MSG_RECENTLY_UPDATED_SONGS
 

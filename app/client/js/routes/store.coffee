@@ -7,7 +7,7 @@ class app.routes.Store extends este.Store
 
   ###*
     @param {app.Actions} actions
-    @param {app.Dispatcher} dispatcher
+    @param {este.Dispatcher} dispatcher
     @param {app.Routes} routes
     @param {app.Storage} storage
     @param {este.Router} router

@@ -3,7 +3,7 @@ goog.provide 'app.Actions'
 class app.Actions
 
   ###*
-    @param {app.Dispatcher} dispatcher
+    @param {este.Dispatcher} dispatcher
     @constructor
   ###
   constructor: (@dispatcher) ->

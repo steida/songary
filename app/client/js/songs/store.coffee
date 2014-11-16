@@ -6,7 +6,7 @@ goog.require 'este.Store'
 class app.songs.Store extends este.Store
 
   ###*
-    @param {app.Dispatcher} dispatcher
+    @param {este.Dispatcher} dispatcher
     @param {app.Routes} routes
     @param {app.Storage} storage
     @constructor

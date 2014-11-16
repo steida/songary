@@ -9,7 +9,7 @@ goog.require 'goog.array'
 class app.users.Store extends este.Store
 
   ###*
-    @param {app.Dispatcher} dispatcher
+    @param {este.Dispatcher} dispatcher
     @param {app.ErrorReporter} errorReporter
     @param {app.LocalHistory} localHistory
     @param {app.facebook.Store} facebookStore
