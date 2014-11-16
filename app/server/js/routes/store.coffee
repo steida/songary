@@ -1,9 +1,9 @@
-goog.provide 'server.Storage'
+goog.provide 'server.routes.Store'
 
 goog.require 'goog.Promise'
 goog.require 'goog.net.HttpStatus'
 
-class server.Storage
+class server.routes.Store
 
   ###*
     @param {app.Routes} routes
@@ -17,7 +17,7 @@ class server.Storage
     goog.Promise.resolve goog.net.HttpStatus.OK
 
   notFound: ->
-    goog.Promise.resolve goog.net.HttpStatus.NOT_FOUND
+    goog.Promise.reject goog.net.HttpStatus.NOT_FOUND
 
   ###*
     @param {este.Route} route

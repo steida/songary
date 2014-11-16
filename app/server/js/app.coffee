@@ -12,10 +12,11 @@ class server.App
     @param {server.FrontPage} frontPage
     @param {server.Middleware} middleware
     @param {server.Passport} passport
-    @param {server.Storage} storage
+    @param {server.routes.Store} routesStore
     @constructor
   ###
-  constructor: (express, config, routes, api, frontPage, middleware, passport, storage) ->
+  constructor: (express, config, routes, api, frontPage, middleware, passport,
+      routesStore) ->
 
     app = express()
     middleware.use app
@@ -51,8 +52,7 @@ class server.App
     routes.addToExpress app, (route, req, res) ->
       params = req.params
 
-      # TODO: Leverage este.Dispatcher.
-      storage.load route, params
+      routesStore.load route, params
         .then -> routes.setActive route, params
         .thenCatch (reason) -> routes.trySetErrorRoute reason
         .then ->
