@@ -6,7 +6,6 @@ goog.require 'goog.dom'
 goog.require 'goog.dom.selection'
 goog.require 'goog.labs.userAgent.browser'
 goog.require 'goog.labs.userAgent.device'
-goog.require 'goog.ui.Textarea'
 
 class app.react.pages.EditSong
 
@@ -19,7 +18,7 @@ class app.react.pages.EditSong
     @constructor
   ###
   constructor: (actions, routes, yellowFade, usersStore, element) ->
-    {div, form, input, textarea, p, nav, ol, li, br, a, span, button} = element
+    {div, form, input, GrowingTextarea, p, nav, ol, li, br, a, span, button} = element
 
     # TODO: Move to store.
     editMode = false
@@ -55,14 +54,14 @@ class app.react.pages.EditSong
                 placeholder: EditSong.MSG_SONG_ARTIST
                 value: song.artist
             div className: 'form-group',
-              textarea
+              GrowingTextarea
                 className: 'form-control'
                 disabled: song.inTrash
                 name: 'lyrics'
-                onPaste: @onLyricsPaste
                 onChange: @onFieldChange
+                onPaste: @onLyricsPaste
                 placeholder: EditSong.MSG_WRITE_LYRICS_HERE
-                ref: 'lyrics'
+                rows: 2
                 value: song.lyrics
               # if usersStore.isLogged()
               #   @renderLocalHistory song
@@ -152,21 +151,12 @@ class app.react.pages.EditSong
       #   lyricsHistoryShown = !lyricsHistoryShown
       #   @forceUpdate()
 
-      componentDidMount: ->
-        @chordproTextarea_ = new goog.ui.Textarea ''
-        @chordproTextarea_.decorate @refs['lyrics'].getDOMNode()
-
       componentDidUpdate: ->
-        # For update from other devices. Locally it's not needed.
-        @chordproTextarea_.resize()
         @doYellowFadeIfHistoryChanged()
 
       doYellowFadeIfHistoryChanged: ->
         if !lyricsHistoryShown && lyricsHistoryChanged
           yellowFade.on @refs['lyrics-history-button']
-
-      componentWillUnmount: ->
-        @chordproTextarea_.dispose()
 
       onFieldChange: (e) ->
         actions.setSongProp song, e.target.name, e.target.value
