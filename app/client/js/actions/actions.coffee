@@ -9,8 +9,8 @@ class app.Actions extends este.Actions
     @constructor
     @extends {este.Actions}
   ###
-  constructor: (@dispatcher) ->
-    super @dispatcher
+  constructor: (dispatcher) ->
+    super dispatcher
 
   @LOAD_ROUTE: 'load-route'
   @RENDER_APP: 'render-app'

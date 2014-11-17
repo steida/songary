@@ -15,8 +15,9 @@ class app.react.Songs
       render: ->
         ul {}, @props.songs.map (song) ->
           text = "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
-          li key: text, Link
-            route: routes.song
-            params: song
-            touchAction: 'scroll'
-          , text
+          li key: text,
+            Link
+              route: routes.song
+              params: song
+              touchAction: 'scroll'
+            , text
