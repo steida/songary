@@ -21,8 +21,7 @@ class App
         when app.Actions.RENDER_APP
           React.render reactApp.component(), element
 
-    dispatcher.onError = (action, reason) ->
-      errorReporter.report action, reason
-    localStorage.sync [usersStore]
+    errorReporter.init dispatcher
+    localStorage.init [usersStore]
     facebookStore.init()
     routesStore.start()

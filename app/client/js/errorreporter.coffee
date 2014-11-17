@@ -33,10 +33,17 @@ class app.ErrorReporter
   userName: ''
 
   ###*
+    @param {este.Dispatcher} dispatcher
+  ###
+  init: (dispatcher) ->
+    dispatcher.onError = @onError_.bind @
+
+  ###*
     @param {string} action
     @param {*} reason
+    @private
   ###
-  report: (action, reason) ->
+  onError_: (action, reason) ->
     return if !@isWorthReporting_ reason
 
     # TODO: Show something more beautiful then alert. Add button to reload app.
