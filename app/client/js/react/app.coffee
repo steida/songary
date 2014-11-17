@@ -17,7 +17,7 @@ class app.react.App
     @param {app.react.pages.About} aboutPage
     @param {app.react.pages.EditSong} editSongPage
     @param {app.react.pages.Me} mePage
-    @param {app.react.pages.MySongs} mySongs
+    @param {app.react.pages.Home} homePage
     @param {app.react.pages.NotFound} notFoundPage
     @param {app.react.pages.RecentlyUpdatedSongs} recentlyUpdatedSongsPage
     @param {app.react.pages.Songs} songsPage
@@ -28,7 +28,7 @@ class app.react.App
   constructor: (actions, routes, appTitle, element,
       usersStore, songsStore,
       header, footer,
-      aboutPage, editSongPage, mePage, mySongs, notFoundPage,
+      aboutPage, editSongPage, mePage, homePage, notFoundPage,
       recentlyUpdatedSongsPage, songsPage, songPage, trashPage) ->
 
     {div} = element
@@ -48,7 +48,7 @@ class app.react.App
 
       getActivePage: (props) ->
         page = switch routes.active
-          when routes.home then mySongs
+          when routes.home then homePage
           when routes.newSong then editSongPage
           when routes.songs then songsPage
           when routes.recentlyUpdatedSongs then recentlyUpdatedSongsPage
@@ -81,7 +81,7 @@ class app.react.App
           when aboutPage then 'about'
           when editSongPage then 'edit-song'
           when mePage then 'me'
-          when mySongs then 'home'
+          when homePage then 'home'
           when notFoundPage then 'notfound'
           when songPage then 'song'
           when songsPage, recentlyUpdatedSongsPage then 'songs'
