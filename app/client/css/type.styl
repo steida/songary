@@ -91,9 +91,36 @@ a, button
   &:focus
     outline thin dotted !important
 
-input
-textarea
-button
-  &:disabled
-    cursor wait
-    opacity .5
+// Disabled and pending.
+input:disabled
+textarea:disabled
+button:disabled
+a.pending
+  // opacity .5
+  // // Don't show nothing for < 1s.
+  // transition-delay 1s
+  text-decoration none !important
+  color linkColor !important
+.form-control.pending
+  border-color rgb(162, 235, 253)
+  // Don't show nothing for < 1s.
+  transition-delay 1s
+
+// Ellipsis pending.
+.pending:after
+  // Don't show nothing for < 1s.
+  animation ellipsis 2s 1s infinite
+  content "\2026" /* Ascii code for ellipsis. */
+  display inline-block
+  overflow hidden
+  position absolute
+  vertical-align bottom
+  visibility hidden
+
+@keyframes ellipsis
+  from
+    width 2px
+    visibility hidden
+  to
+    width 55px
+    visibility visible
