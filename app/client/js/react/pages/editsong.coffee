@@ -21,7 +21,6 @@ class app.react.pages.EditSong
   constructor: (actions, routes, validation, yellowFade, usersStore, element) ->
     {div, form, input, GrowingTextarea, p, nav, ol, li, br, a, span, button} = element
 
-    # TODO: Move to store.
     editMode = false
     lyricsHistoryChanged = false
     lyricsHistoryShown = false

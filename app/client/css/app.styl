@@ -1,8 +1,19 @@
 @import '../../../bower_components/normalize-css/normalize.css'
 @import '../../../bower_components/este-library/este/css'
 @import '../../../bower_components/stylus-nib'
+
 @import 'variables.styl'
 @import 'type.styl'
+
+@import 'header'
+@import 'footer'
+
+@import 'pages/editsong'
+@import 'pages/home'
+@import 'pages/me'
+@import 'pages/notfound'
+@import 'pages/song'
+@import 'pages/trash'
 
 // http://phonegap-tips.com/articles/essential-phonegap-css-webkit-tap-highlight-color.html
 *
@@ -25,24 +36,5 @@ body
   line-height 1.4
   background-color #eee
 
-  .app
-
-    &.active-page-edit-song
-      @import 'pages/editsong'
-    &.active-page-home
-      @import 'pages/home'
-    &.active-page-notfound
-      @import 'pages/notfound'
-    &.active-page-song
-      @import 'pages/song'
-    &.active-page-trash
-      @import 'pages/trash'
-    &.active-page-me
-      @import 'pages/me'
-
-    >
-      @import 'header'
-    >
-      @import 'footer'
-
-    padding 0 1.5em
+.app
+  padding 0 1.5em
