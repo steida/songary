@@ -8,7 +8,7 @@ class app.react.App
   ###*
     @param {app.Actions} actions
     @param {app.Routes} routes
-    @param {app.Title} appTitle
+    @param {app.Title} title
     @param {este.react.Element} element
     @param {app.users.Store} usersStore
     @param {app.songs.Store} songsStore
@@ -25,7 +25,7 @@ class app.react.App
     @param {app.react.pages.Trash} trashPage
     @constructor
   ###
-  constructor: (actions, routes, appTitle, element,
+  constructor: (actions, routes, title, element,
       usersStore, songsStore,
       header, footer,
       aboutPage, editSongPage, mePage, homePage, notFoundPage,
@@ -100,4 +100,4 @@ class app.react.App
         @forceUpdate()
 
       componentDidUpdate: ->
-        document.title = appTitle.get()
+        document.title = title.get()
