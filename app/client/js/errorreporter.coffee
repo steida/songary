@@ -35,7 +35,7 @@ class app.ErrorReporter
   ###*
     @param {este.Dispatcher} dispatcher
   ###
-  init: (dispatcher) ->
+  use: (dispatcher) ->
     dispatcher.onError = @onError_.bind @
 
   ###*

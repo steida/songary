@@ -82,7 +82,7 @@ class app.LocalStorage
     Sync stores with localStorage across browsing contexts with the same origin.
     @param {Array<este.Store>} stores
   ###
-  init: (stores) ->
+  use: (stores) ->
     return if !@isAvailable
     for store in stores
       @fetch store
