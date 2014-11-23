@@ -1,10 +1,10 @@
-goog.provide 'app.react.pages.Me'
+goog.provide 'app.me.react.Page'
 
-class app.react.pages.Me
+class app.me.react.Page
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.Login} login
+    @param {app.users.react.Login} login
     @param {app.users.Store} usersStore
     @param {este.react.Element} element
     @constructor
@@ -30,17 +30,17 @@ class app.react.pages.Me
               onTap: @onBackupTap
               touchAction: 'none'
               type: 'button'
-            , Me.MSG_BACKUP
+            , Page.MSG_BACKUP
           if publishedSongs.length
             div {},
-              p {}, Me.MSG_PUBLISHED_SONGS
+              p {}, Page.MSG_PUBLISHED_SONGS
               ul {}, publishedSongs.map (song) ->
                 href = routes.song.url song
                 li key: song.id,
                   a touchAction: 'scroll', href: href, location.host + href
 
       getWelcomeMessage: (name) ->
-        Me.MSG_WELCOME_MESSAGE = goog.getMsg 'Hi, {$name}.',
+        Page.MSG_WELCOME_MESSAGE = goog.getMsg 'Hi, {$name}.',
           name: name
 
       onBackupTap: ->

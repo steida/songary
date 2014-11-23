@@ -1,9 +1,9 @@
-goog.provide 'app.react.pages.About'
+goog.provide 'app.about.react.Page'
 
 goog.require 'goog.labs.userAgent.device'
 goog.require 'goog.ui.Textarea'
 
-class app.react.pages.About
+class app.about.react.Page
 
   ###*
     @param {app.users.Store} usersStore
@@ -19,7 +19,7 @@ class app.react.pages.About
 
       render: ->
         div className: 'page',
-          p {}, About.MSG_ABOUT
+          p {}, Page.MSG_ABOUT
           # TODO: Migrate to Elastic Search.
           if false && usersStore.isLogged()
             form className: 'contact-form',
@@ -28,7 +28,7 @@ class app.react.pages.About
                   autoFocus: goog.labs.userAgent.device.isDesktop()
                   className: 'form-control'
                   onChange: @onContactFormMessageChange
-                  placeholder: About.MSG_SEND_PLACEHOLDER
+                  placeholder: Page.MSG_SEND_PLACEHOLDER
                   ref: 'message'
                   value: message
               button
@@ -36,12 +36,12 @@ class app.react.pages.About
                 disabled: !message.trim().length
                 onClick: @onContactFromSubmit
                 type: 'button'
-              , About.MSG_SEND_BUTTON_LABEL
+              , Page.MSG_SEND_BUTTON_LABEL
           p {},
             a
               href: 'https://github.com/steida/songary/issues'
               target: '_blank'
-            , About.MSG_ISSUES
+            , Page.MSG_ISSUES
 
       onContactFormMessageChange: (e) ->
         message = e.target.value.slice 0, 499
@@ -53,12 +53,12 @@ class app.react.pages.About
           return
         user = usersStore.user
         # firebase.sendContactFormMessage user.uid, user.displayName, message
-        alert About.MSG_THANK_YOU
+        alert Page.MSG_THANK_YOU
         message = ''
         @forceUpdate()
 
       getSuspiciousMessageWarning: (message) ->
-        About.MSG_FOK = goog.getMsg 'Is “{$message}” really what you want to tell us?',
+        Page.MSG_FOK = goog.getMsg 'Is “{$message}” really what you want to tell us?',
           message: message
 
       componentDidMount: ->

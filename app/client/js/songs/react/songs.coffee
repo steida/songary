@@ -1,6 +1,6 @@
-goog.provide 'app.react.Songs'
+goog.provide 'app.songs.react.Songs'
 
-class app.react.Songs
+class app.songs.react.Songs
 
   ###*
     @param {app.Routes} routes

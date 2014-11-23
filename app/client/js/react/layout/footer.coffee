@@ -1,9 +1,9 @@
-goog.provide 'app.react.Footer'
+goog.provide 'app.react.layout.Footer'
 
-class app.react.Footer
+class app.react.layout.Footer
 
   ###*
-    @param {app.react.Login} login
+    @param {app.users.react.Login} login
     @param {app.users.Store} usersStore
     @param {este.react.Element} element
     @constructor

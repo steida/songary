@@ -1,6 +1,6 @@
-goog.provide 'app.react.pages.Trash'
+goog.provide 'app.songs.react.TrashPage'
 
-class app.react.pages.Trash
+class app.songs.react.TrashPage
 
   ###*
     @param {app.Actions} actions
@@ -29,10 +29,10 @@ class app.react.pages.Trash
             button
               className: 'btn btn-danger'
               onTap: @onEmptyTrashTap
-            , Trash.MSG_EMPTY_TRASH
+            , TrashPage.MSG_EMPTY_TRASH
 
       onEmptyTrashTap: ->
-        return if !confirm Trash.MSG_ARE_YOU_SURE
+        return if !confirm TrashPage.MSG_ARE_YOU_SURE
         actions.emptySongsTrash()
           .then -> routes.home.redirect()
 

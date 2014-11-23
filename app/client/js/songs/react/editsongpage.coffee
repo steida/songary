@@ -1,4 +1,4 @@
-goog.provide 'app.react.pages.EditSong'
+goog.provide 'app.songs.react.EditSongPage'
 
 goog.require 'app.songs.Song'
 goog.require 'goog.array'
@@ -7,7 +7,7 @@ goog.require 'goog.dom.selection'
 goog.require 'goog.labs.userAgent.browser'
 goog.require 'goog.labs.userAgent.device'
 
-class app.react.pages.EditSong
+class app.songs.react.EditSongPage
 
   ###*
     @param {app.Actions} actions
@@ -44,7 +44,7 @@ class app.react.pages.EditSong
                 disabled: song.inTrash
                 name: 'name'
                 onChange: @onFieldChange
-                placeholder: EditSong.MSG_SONG_NAME
+                placeholder: EditSongPage.MSG_SONG_NAME
                 value: song.name
             div className: 'form-group',
               input
@@ -52,7 +52,7 @@ class app.react.pages.EditSong
                 disabled: song.inTrash
                 name: 'artist'
                 onChange: @onFieldChange
-                placeholder: EditSong.MSG_SONG_ARTIST
+                placeholder: EditSongPage.MSG_SONG_ARTIST
                 value: song.artist
             div className: 'form-group',
               GrowingTextarea
@@ -61,7 +61,7 @@ class app.react.pages.EditSong
                 name: 'lyrics'
                 onChange: @onFieldChange
                 onPaste: @onLyricsPaste
-                placeholder: EditSong.MSG_WRITE_LYRICS_HERE
+                placeholder: EditSongPage.MSG_WRITE_LYRICS_HERE
                 rows: 2
                 value: song.lyrics
               # if usersStore.isLogged()
@@ -71,7 +71,7 @@ class app.react.pages.EditSong
                   a
                     href: 'http://linkesoft.com/songbook/chordproformat.html'
                     target: '_blank'
-                  , EditSong.MSG_HOW_TO_WRITE_LYRICS
+                  , EditSongPage.MSG_HOW_TO_WRITE_LYRICS
                   ', or find some on '
                   a
                     href: 'http://www.ultimate-guitar.com/'
@@ -92,31 +92,34 @@ class app.react.pages.EditSong
               if !editMode
                 button
                   className: 'btn btn-default'
-                , EditSong.MSG_ADD_NEW_SONG
+                , EditSongPage.MSG_ADD_NEW_SONG
               # if editMode && !song.inTrash then [
               #   button
               #     className: 'btn btn-default'
               #     key: 'publish'
               #     onTap: @onPublishTap
               #     type: 'button'
-              #   , EditSong.MSG_PUBLISH
+              #   , EditSongPage.MSG_PUBLISH
               #   if song.isPublished()
               #     button
               #       className: 'btn btn-default'
               #       key: 'unpublish'
               #       onTap: @onUnpublishTap
               #       type: 'button'
-              #     , EditSong.MSG_UNPUBLISH
+              #     , EditSongPage.MSG_UNPUBLISH
               # ]
               if editMode
                 button
                   className: "btn btn-#{if song.inTrash then 'default' else 'danger'}"
                   onTap: @onSongToggleInTrashTap
                   type: 'button'
-                , if song.inTrash then EditSong.MSG_RESTORE else EditSong.MSG_DELETE
+                , if song.inTrash
+                    EditSongPage.MSG_RESTORE
+                  else
+                    EditSongPage.MSG_DELETE
             if editMode && song.isPublished()
               p {},
-                EditSong.MSG_SONG_WAS_PUBLISHED + ' '
+                EditSongPage.MSG_SONG_WAS_PUBLISHED + ' '
                 a
                   href: routes.song.url song
                   ref: 'published-song-link'
@@ -142,11 +145,11 @@ class app.react.pages.EditSong
       #       className: 'btn btn-default ' + if lyricsHistoryShown then 'active' else ''
       #       onTap: @onLyricsHistoryUp
       #       type: 'button'
-      #     , EditSong.MSG_LYRICS_HISTORY
+      #     , EditSongPage.MSG_LYRICS_HISTORY
       #     if lyricsHistoryShown
       #       div {},
       #         ol {}, lyrics
-      #         p {}, EditSong.MSG_LYRICS_HISTORY_P
+      #         p {}, EditSongPage.MSG_LYRICS_HISTORY_P
       #
       # onLyricsHistoryUp: ->
       #   lyricsHistoryShown = !lyricsHistoryShown
@@ -180,14 +183,14 @@ class app.react.pages.EditSong
       # onPublishTap: ->
       #   if !usersStore.isLogged()
       #     # TODO: remove alert.
-      #     alert EditSong.MSG_LOGIN_TO_PUBLISH
+      #     alert EditSongPage.MSG_LOGIN_TO_PUBLISH
       #     return
       #   songsStore
       #     .publish song
       #     .then => yellowFade.on @refs['published-song-link']
       #
       # onUnpublishTap: ->
-      #   return if !confirm EditSong.MSG_ARE_YOU_SURE_UNPUBLISH
+      #   return if !confirm EditSongPage.MSG_ARE_YOU_SURE_UNPUBLISH
       #   songsStore.unpublish song
 
       onLyricsPaste: (e) ->

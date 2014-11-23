@@ -1,9 +1,9 @@
-goog.provide 'app.react.SearchSong'
+goog.provide 'app.songs.react.SearchSong'
 
 goog.require 'goog.async.Delay'
 goog.require 'goog.labs.userAgent.device'
 
-class app.react.SearchSong
+class app.songs.react.SearchSong
 
   ###*
     @param {app.Actions} actions

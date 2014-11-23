@@ -1,6 +1,6 @@
-goog.provide 'app.react.Login'
+goog.provide 'app.users.react.Login'
 
-class app.react.Login
+class app.users.react.Login
 
   ###*
     @param {app.Actions} actions

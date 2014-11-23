@@ -4,25 +4,26 @@ class app.react.Pages
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.Footer} footer
-    @param {app.react.Header} header
     @param {este.react.Element} element
+    @param {app.react.layout.Header} header
+    @param {app.react.layout.Footer} footer
     @param {app.songs.Store} songsStore
     @param {app.users.Store} usersStore
-    @param {app.react.pages.About} aboutPage
-    @param {app.react.pages.EditSong} editSongPage
-    @param {app.react.pages.Home} homePage
-    @param {app.react.pages.Me} mePage
-    @param {app.react.pages.NotFound} notFoundPage
-    @param {app.react.pages.RecentlyUpdatedSongs} recentlyUpdatedSongsPage
-    @param {app.react.pages.Songs} songsPage
-    @param {app.react.pages.Song} songPage
-    @param {app.react.pages.Trash} trashPage
+    @param {app.about.react.Page} aboutPage
+    @param {app.home.react.Page} homePage
+    @param {app.me.react.Page} mePage
+    @param {app.notFound.react.Page} notFoundPage
+    @param {app.songs.react.EditSongPage} editSongPage
+    @param {app.songs.react.RecentlyUpdatedSongsPage} recentlyUpdatedSongsPage
+    @param {app.songs.react.SongsPage} songsPage
+    @param {app.songs.react.Song} songPage
+    @param {app.songs.react.TrashPage} trashPage
     @constructor
   ###
-  constructor: (routes, footer, header, element,
-      songsStore, usersStore, aboutPage, editSongPage, homePage, mePage,
-      notFoundPage, recentlyUpdatedSongsPage, songsPage, songPage, trashPage) ->
+  constructor: (routes, element, header, footer,
+      songsStore, usersStore,
+      aboutPage, homePage, mePage, notFoundPage, editSongPage,
+      recentlyUpdatedSongsPage, songsPage, songPage, trashPage) ->
     {div} = element
 
     @component = React.createFactory React.createClass

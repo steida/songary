@@ -1,6 +1,6 @@
-goog.provide 'app.react.Header'
+goog.provide 'app.react.layout.Header'
 
-class app.react.Header
+class app.react.layout.Header
 
   ###*
     @param {app.Routes} routes

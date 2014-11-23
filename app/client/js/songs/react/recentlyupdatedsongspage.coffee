@@ -1,9 +1,9 @@
-goog.provide 'app.react.pages.RecentlyUpdatedSongs'
+goog.provide 'app.songs.react.RecentlyUpdatedSongsPage'
 
-class app.react.pages.RecentlyUpdatedSongs
+class app.songs.react.RecentlyUpdatedSongsPage
 
   ###*
-    @param {app.react.Songs} songs
+    @param {app.songs.react.Songs} songs
     @param {app.songs.Store} songsStore
     @param {este.react.Element} element
     @constructor
@@ -15,7 +15,7 @@ class app.react.pages.RecentlyUpdatedSongs
 
       render: ->
         div className: 'page',
-          p {}, RecentlyUpdatedSongs.MSG_RECENTLY_UPDATED_SONGS
+          p {}, RecentlyUpdatedSongsPage.MSG_RECENTLY_UPDATED_SONGS
           songs.component songs: songsStore.recentlyUpdatedSongs
 
   @MSG_RECENTLY_UPDATED_SONGS: goog.getMsg 'Recently updated songs:'

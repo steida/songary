@@ -1,16 +1,16 @@
-goog.provide 'app.react.pages.Songs'
+goog.provide 'app.songs.react.SongsPage'
 
-class app.react.pages.Songs
+class app.songs.react.SongsPage
 
   ###*
     @param {app.Routes} routes
-    @param {app.react.SearchSong} searchSong
-    @param {app.react.Songs} songs
     @param {app.songs.Store} songsStore
+    @param {app.songs.react.SearchSong} searchSong
+    @param {app.songs.react.Songs} songs
     @param {este.react.Element} element
     @constructor
   ###
-  constructor: (routes, searchSong, songs, songsStore, element) ->
+  constructor: (routes, songsStore, searchSong, songs, element) ->
     {div, p, Link} = element
 
     @component = React.createFactory React.createClass
@@ -21,6 +21,6 @@ class app.react.pages.Songs
           songs.component songs: songsStore.foundSongs
           p {},
             Link route: routes.recentlyUpdatedSongs,
-              Songs.MSG_RECENTLY_UPDATED_SONGS
+              SongsPage.MSG_RECENTLY_UPDATED_SONGS
 
   @MSG_RECENTLY_UPDATED_SONGS: goog.getMsg 'Recently updated songs'

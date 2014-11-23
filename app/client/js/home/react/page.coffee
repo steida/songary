@@ -1,6 +1,6 @@
-goog.provide 'app.react.pages.Home'
+goog.provide 'app.home.react.Page'
 
-class app.react.pages.Home
+class app.home.react.Page
 
   ###*
     TODO: Rename to homepage, this is confusing.
@@ -31,18 +31,18 @@ class app.react.pages.Home
                 , "#{song.getDisplayName()} [#{song.getDisplayArtist()}]"
           else
             div {},
-              p {}, Home.MSG_NO_SONGS
+              p {}, Page.MSG_NO_SONGS
               p {},
-                Link route: routes.newSong, Home.MSG_ADD
-                Home.MSG_OR
-                Link route: routes.songs, Home.MSG_SEARCH
-                Home.MSG_ONE
+                Link route: routes.newSong, Page.MSG_ADD
+                Page.MSG_OR
+                Link route: routes.songs, Page.MSG_SEARCH
+                Page.MSG_ONE
           nav {},
             if songs.length > 0
               Link
                 className: 'btn btn-link'
                 route: routes.newSong
-              , Home.MSG_ADD_NEW_SONG
+              , Page.MSG_ADD_NEW_SONG
             if deletedSongs.length > 0
               Link
                 className: 'btn btn-link'

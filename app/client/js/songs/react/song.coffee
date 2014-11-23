@@ -1,4 +1,4 @@
-goog.provide 'app.react.pages.Song'
+goog.provide 'app.songs.react.Song'
 
 goog.require 'goog.dom.ViewportSizeMonitor'
 goog.require 'goog.dom.classlist'
@@ -8,7 +8,7 @@ goog.require 'goog.math.Size'
 goog.require 'goog.positioning.ViewportClientPosition'
 goog.require 'goog.string'
 
-class app.react.pages.Song
+class app.songs.react.Song
 
   ###*
     @param {app.Routes} routes

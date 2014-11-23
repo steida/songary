@@ -1,6 +1,6 @@
-goog.provide 'app.react.pages.NotFound'
+goog.provide 'app.notFound.react.Page'
 
-class app.react.pages.NotFound
+class app.notFound.react.Page
 
   ###*
     @param {app.Routes} routes
@@ -14,9 +14,9 @@ class app.react.pages.NotFound
 
       render: ->
         div className: 'page',
-          h1 {}, NotFound.MSG_H1
-          p {}, NotFound.MSG_P
-          Link route: routes.home, NotFound.MSG_LINK
+          h1 {}, Page.MSG_H1
+          p {}, Page.MSG_P
+          Link route: routes.home, Page.MSG_LINK
 
   @MSG_H1: goog.getMsg "This page isn't available"
   @MSG_P: goog.getMsg 'The link may be broken, or the page may have been removed.'
