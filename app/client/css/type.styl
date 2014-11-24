@@ -2,26 +2,20 @@
 a
   color linkColor
   text-decoration none
-  &:focus
-    color linkHoverColor
-    text-decoration underline
+
   // Use :hover only for desktop, because on touch devices it's janky as hell.
   // Use custom hover via polymer-gestures for touch devices.
   html.is-desktop &:hover,
   html:not(.is-desktop) &.touch-hover
-    color linkHoverColor
+    // color linkHoverColor
     text-decoration underline
-  &:focus
-    // Default
-    outline thin dotted
-    // WebKit
-    outline 5px auto -webkit-focus-ring-color
-    outline-offset -2px
+
+  // TODO: Use .pending
   &.active
-    color linkHoverColor
     text-decoration none !important
+    color linkHoverColor
     cursor default
-    text-shadow 1px 2px 3px rgba(80,80,80,0.3)
+    // text-shadow 1px 2px 3px rgba(80,80,80,0.3)
     html.is-desktop &.clickable:hover,
     html:not(.is-desktop) &.clickable.touch-hover
       text-decoration underline !important
@@ -85,11 +79,6 @@ textarea.form-control { height: auto; }
 .form-group { margin-bottom: 15px; }
 .form-horizontal .form-group-sm .form-control, .input-sm { height: 30px; padding: 5px 10px; font-size: 12px; line-height: 1.5; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; }
 .form-horizontal .form-group-lg .form-control, .input-lg { height: 46px; padding: 10px 16px; font-size: 18px; line-height: 1.33; border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; }
-
-// Minimal focus highlight for all browsers.
-a, button
-  &:focus
-    outline thin dotted !important
 
 // Disabled and pending.
 input:disabled
