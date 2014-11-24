@@ -40,23 +40,21 @@ class app.routes.Store extends este.Store
   ###
   loadRoute_: (payload) ->
     {route, params} = payload
-    HttpStatus = goog.net.HttpStatus
 
     switch route
-      when @routes.about, @routes.home, @routes.newSong, @routes.songs, @routes.trash
-        HttpStatus.OK
       when @routes.me
-        if !@usersStore.isLogged() then throw HttpStatus.NOT_FOUND
-        HttpStatus.OK
+        if !@usersStore.isLogged()
+          throw goog.net.HttpStatus.NOT_FOUND
       when @routes.mySong, @routes.editSong
-        if !@usersStore.songById params.id then throw HttpStatus.NOT_FOUND
-        HttpStatus.OK
+        if !@usersStore.songById params.id
+          throw goog.net.HttpStatus.NOT_FOUND
       when @routes.song
         @storage.getSong(params).then (songs) =>
-          if !songs.length then throw HttpStatus.NOT_FOUND
+          if !songs.length
+            throw goog.net.HttpStatus.NOT_FOUND
           @songsStore.fromJson songsByUrl: songs
       when @routes.recentlyUpdatedSongs
         @storage.getRecentlyUpdatedSongs().then (songs) =>
           @songsStore.fromJson recentlyUpdatedSongs: songs
       else
-        throw HttpStatus.NOT_FOUND
+        goog.net.HttpStatus.OK
