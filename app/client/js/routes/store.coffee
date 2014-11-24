@@ -49,12 +49,12 @@ class app.routes.Store extends este.Store
         if !@usersStore.songById params.id
           throw goog.net.HttpStatus.NOT_FOUND
       when @routes.song
-        @storage.getSong(params).then (songs) =>
+        return @storage.getSong(params).then (songs) =>
           if !songs.length
             throw goog.net.HttpStatus.NOT_FOUND
           @songsStore.fromJson songsByUrl: songs
       when @routes.recentlyUpdatedSongs
-        @storage.getRecentlyUpdatedSongs().then (songs) =>
+        return @storage.getRecentlyUpdatedSongs().then (songs) =>
           @songsStore.fromJson recentlyUpdatedSongs: songs
-      else
-        goog.net.HttpStatus.OK
+
+    goog.net.HttpStatus.OK
