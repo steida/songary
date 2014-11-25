@@ -36,6 +36,6 @@ class app.users.User
   name: ''
 
   ###*
-    @type {Object}
+    @type {Object<string, Object>}
   ###
-  provider: null
+  providers: null

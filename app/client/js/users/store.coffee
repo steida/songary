@@ -18,14 +18,15 @@ class app.users.Store extends este.Store
   ###
   constructor: (@dispatcher, @errorReporter, @localHistory, @facebookStore) ->
     super()
-    @name = 'user'
+    @name = 'users'
     @setEmpty_()
 
     @dispatcherId = @dispatcher.register (action, payload) =>
       switch action
         when app.Actions.ADD_NEW_SONG then @addNewSong_()
         when app.Actions.EMPTY_SONGS_TRASH then @emptySongsTrash_()
-        when app.Actions.LOGIN then @login_()
+        when app.Actions.LOGIN, app.Actions.LOGIN_FROM_FACEBOOK_REDIRECT
+          @login_()
         when app.Actions.LOGOUT then @logout_()
         when app.Actions.SET_SONG_INTRASH then @trashSong_ payload
         when app.Actions.SET_SONG_PROP then @setSongProp_ payload

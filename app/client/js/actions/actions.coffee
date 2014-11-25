@@ -16,6 +16,7 @@ class app.Actions extends este.Actions
   @RENDER_APP: 'render-app'
 
   @LOGIN: 'login'
+  @LOGIN_FROM_FACEBOOK_REDIRECT: 'login-from-facebook-redirect'
   @LOGOUT: 'logout'
 
   @ADD_NEW_SONG: 'add-new-song'
@@ -32,6 +33,12 @@ class app.Actions extends este.Actions
 
   login: ->
     @dispatch Actions.LOGIN
+
+  ###*
+    @param {Object} auth
+  ###
+  loginFromFacebookRedirect: (auth) ->
+    @dispatch Actions.LOGIN_FROM_FACEBOOK_REDIRECT, auth
 
   logout: ->
     @dispatch Actions.LOGOUT

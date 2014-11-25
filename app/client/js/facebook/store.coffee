@@ -2,22 +2,31 @@ goog.provide 'app.facebook.Store'
 goog.provide 'app.facebook.Store.LoginError'
 
 goog.require 'app.errors.InnocuousError'
+goog.require 'goog.labs.net.xhr'
+goog.require 'goog.labs.userAgent.browser'
+goog.require 'goog.labs.userAgent.platform'
+goog.require 'goog.uri.utils'
 
 class app.facebook.Store
 
   ###*
-    FB account is used for login. Note FB.logout is not used, because it logout
-    user out of Facebook entirely, which is not what we want.FB.getLoginStatus
-    isn't used too, because loginStatus is handled by app itself. After login,
-    login status is persisted in localStorage via usersStore and sent to server.
-    Server issues session cookie via FB confirmed identity.
+    Facebook login. Note FB.logout method isn't used, because it logouts user
+    from Facebook entirely. FB.getLoginStatus isn't used also, because
+    loginStatus is persisted in localStorage.
+    @param {app.Actions} actions
     @param {este.Dispatcher} dispatcher
     @constructor
   ###
-  constructor: (dispatcher) ->
+  constructor: (@actions, dispatcher) ->
     @dispatcherId = dispatcher.register (action, payload) =>
       switch action
-        when app.Actions.LOGIN then @login_()
+        when app.Actions.LOGIN
+          @login_()
+        when app.Actions.LOGIN_FROM_FACEBOOK_REDIRECT
+          @loginFromFacebookRedirect_ payload
+
+  @FB_APP_ID: '1458272837757905'
+  @FB_SCOPE: 'public_profile,email,user_friends'
 
   ###*
     Facebook me user data.
@@ -35,12 +44,15 @@ class app.facebook.Store
     Load Facebook api async.
   ###
   init: ->
+    if @isIosChrome_()
+      @handleManualLoginFlow_()
+
     window.fbAsyncInit = =>
       @fb_ = window.FB
       @fb_.init
-        'appId': '1458272837757905'
+        'appId': Store.FB_APP_ID
         'cookie': true
-        'version': 'v2.1'
+        'version': 'v2.2'
         'xfbml': false
 
     ((d, s, id) ->
@@ -54,6 +66,47 @@ class app.facebook.Store
     ) document, 'script', 'facebook-jssdk'
 
   ###*
+    @return {boolean}
+    @private
+  ###
+  isIosChrome_: ->
+    goog.labs.userAgent.browser.isChrome() &&
+    goog.labs.userAgent.platform.isIos()
+
+  ###*
+    https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/v2.2#login
+    https://www.youtube.com/watch?v=i0zdxVaK59g
+    @protected
+  ###
+  handleManualLoginFlow_: ->
+    # Transform Facebook fragment querydata into querystring.
+    uri = location.host + '?' + location.hash.slice 1
+
+    loginCancelled =
+      goog.uri.utils.hasParam(uri, 'error') ||
+      goog.uri.utils.hasParam(uri, 'error_reason')
+    if loginCancelled
+      alert goog.uri.utils.getParamValue uri, 'error_description'
+      @removeQuestionMarkWithHashWithoutReload_()
+      return
+
+    auth =
+      accessToken: goog.uri.utils.getParamValue uri, 'access_token'
+      expiresIn: Number goog.uri.utils.getParamValue uri, 'expires_in'
+    isLogged = auth.accessToken && auth.expiresIn
+    if isLogged
+      @removeQuestionMarkWithHashWithoutReload_()
+      @actions.loginFromFacebookRedirect auth
+
+  ###*
+    http://stackoverflow.com/a/13824103/233902
+    TODO: If ok, move to este-library.
+  ###
+  removeQuestionMarkWithHashWithoutReload_: ->
+    location.replace '#'
+    window.history.replaceState {}, '', location.href.slice 0, -2
+
+  ###*
     @private
   ###
   login_: ->
@@ -61,9 +114,26 @@ class app.facebook.Store
       error = new app.errors.InnocuousError "Facebook API not ready yet. Click
         again please."
       return goog.Promise.reject error
-    @loginAsync_()
-      .then (response) => @getMeAsync_()
-      .then (me) => @me = me
+
+    if @isIosChrome_()
+      redirectUrl = "https://m.facebook.com/dialog/oauth?client_id=#{Store.FB_APP_ID}&redirect_uri=#{location.href}&scope=#{Store.FB_SCOPE}&response_type=token"
+      window.location = redirectUrl
+      return goog.Promise.reject goog.net.HttpStatus.USE_PROXY
+
+    @loginAsync_().then (response) =>
+      @getMeAsync_().then (me) =>
+        @setMe_ me,
+          accessToken: response.authResponse.accessToken
+          expiresIn: response.authResponse.expiresIn
+
+  ###*
+    @param {Object} me
+    @param {Object} auth
+    @private
+  ###
+  setMe_: (me, auth) ->
+    @me = me
+    @me.auth = auth
 
   ###*
     @private
@@ -75,7 +145,7 @@ class app.facebook.Store
           resolve response
         else
           reject new app.facebook.Store.LoginError response.status
-      , scope: 'public_profile,email,user_friends'
+      , scope: Store.FB_SCOPE
 
   ###*
     @private
@@ -87,6 +157,15 @@ class app.facebook.Store
           resolve response
         else
           reject new app.facebook.Store.LoginError response?.error
+
+  ###*
+    @param {Object} auth
+    @private
+  ###
+  loginFromFacebookRedirect_: (auth) ->
+    uri = "https://graph.facebook.com/me?access_token=#{auth.accessToken}"
+    goog.labs.net.xhr.getJson uri
+      .then (me) => @setMe_ me, auth
 
 class app.facebook.Store.LoginError extends app.errors.InnocuousError
 

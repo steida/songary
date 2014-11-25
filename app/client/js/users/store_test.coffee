@@ -10,7 +10,7 @@ suite 'app.users.Store', ->
 
   suite 'constructor', ->
     test 'should set default state', ->
-      assert.equal store.name, 'user'
+      assert.equal store.name, 'users'
       assert.instanceOf store.newSong, app.songs.Song
       assert.isArray store.songs
       assert.instanceOf store.user, app.users.User
