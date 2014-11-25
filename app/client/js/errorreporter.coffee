@@ -65,7 +65,7 @@ class app.ErrorReporter
   ###
   isWorthReporting_: (reason) ->
     isSilent =
-      reason == 404 ||
+      @isNotHttpSuccess_(reason) ||
       reason instanceof app.errors.SilentError ||
       reason instanceof goog.Promise.CancellationError
     return false if isSilent
@@ -81,9 +81,19 @@ class app.ErrorReporter
     true
 
   ###*
+    @private
+  ###
+  isNotHttpSuccess_: (reason) ->
+    isSuccess =
+      goog.isNumber(reason) &&
+      goog.net.HttpStatus.isSuccess(reason)
+    !isSuccess
+
+  ###*
     Don't report already reported reason.
     @param {*} reason
     @return {boolean}
+    @private
   ###
   isAlreadyReported_: (reason) ->
     stringReason = String reason
