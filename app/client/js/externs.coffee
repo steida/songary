@@ -25,6 +25,8 @@ class appUser
   appUser::name
   appUser::providers
   # Facebook
+  appUser::auth
+  appUser::expiresIn
   appUser::facebook
   appUser::first_name
   appUser::gender
@@ -32,6 +34,7 @@ class appUser
   appUser::link
   appUser::locale
   appUser::timezone
+  appUser::token
   appUser::updated_time
   appUser::verified
 
@@ -57,7 +60,10 @@ class appSongsSong
 
 class facebookApi
   facebookApi::FB
+  facebookApi::accessToken
   facebookApi::api
+  facebookApi::authResponse
+  facebookApi::expiresIn
   facebookApi::fbAsyncInit
   facebookApi::getLoginStatus
   facebookApi::init
