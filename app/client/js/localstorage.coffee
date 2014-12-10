@@ -9,10 +9,11 @@ goog.require 'goog.string'
 class app.LocalStorage
 
   ###*
+    @param {app.users.Store} usersStore
     @param {goog.labs.pubsub.BroadcastPubSub} pubSub
     @constructor
   ###
-  constructor: (@pubSub) ->
+  constructor: (@usersStore, @pubSub) ->
     mechanism = goog.storage.mechanism.mechanismfactory
       .createHTML5LocalStorage LocalStorage.Key.APP
 
@@ -78,12 +79,9 @@ class app.LocalStorage
     return if version
     @localStorage.set LocalStorage.Key.VERSION, LocalStorage.VERSION
 
-  ###*
-    Sync stores with localStorage across browsing contexts with the same origin.
-    @param {Array<este.Store>} stores
-  ###
-  use: (stores) ->
+  start: ->
     return if !@isAvailable
+    stores = [@usersStore]
     for store in stores
       @fetch store
       @publishOnChange store

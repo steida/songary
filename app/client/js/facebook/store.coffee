@@ -1,7 +1,7 @@
 goog.provide 'app.facebook.Store'
 goog.provide 'app.facebook.Store.LoginError'
 
-goog.require 'app.errors.InnocuousError'
+goog.require 'app.errors.Error'
 goog.require 'goog.labs.net.xhr'
 goog.require 'goog.labs.userAgent.browser'
 goog.require 'goog.labs.userAgent.platform'
@@ -43,7 +43,7 @@ class app.facebook.Store
   ###*
     Load Facebook api async.
   ###
-  init: ->
+  start: ->
     if @isIosChrome_()
       @handleManualLoginFlow_()
 
@@ -111,7 +111,7 @@ class app.facebook.Store
   ###
   login_: ->
     if !@fb_
-      error = new app.errors.InnocuousError "Facebook API not ready yet. Click
+      error = new app.errors.Error "Facebook API not ready yet. Click
         again please."
       return goog.Promise.reject error
 
@@ -167,12 +167,12 @@ class app.facebook.Store
     goog.labs.net.xhr.getJson uri
       .then (me) => @setMe_ me, auth
 
-class app.facebook.Store.LoginError extends app.errors.InnocuousError
+class app.facebook.Store.LoginError extends app.errors.Error
 
   ###*
     @param {string} responseStatus
     @constructor
-    @extends {app.errors.InnocuousError}
+    @extends {app.errors.Error}
   ###
   constructor: (responseStatus) ->
     msg = switch responseStatus

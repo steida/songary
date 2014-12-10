@@ -1,6 +1,6 @@
 goog.provide 'app.react.Validation'
 
-goog.require 'app.errors.ValidationError'
+goog.require 'app.errors.Validation'
 goog.require 'este.dom'
 
 class app.react.Validation
@@ -16,7 +16,7 @@ class app.react.Validation
       validate: (promise) ->
         promise.thenCatch (reason) =>
           # Don't swallow other errors.
-          if reason not instanceof app.errors.ValidationError
+          if reason not instanceof app.errors.Validation
             throw reason
 
           error = reason.errors[0]

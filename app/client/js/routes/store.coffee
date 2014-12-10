@@ -16,45 +16,73 @@ class app.routes.Store extends este.Store
     @constructor
     @extends {este.Store}
   ###
-  constructor: (@actions, @routes, @storage, @songsStore, @usersStore,
-      @dispatcher, @router) ->
+  constructor: (@actions, @routes, @storage,
+      @songsStore, @usersStore, @dispatcher, @router) ->
 
     @dispatcher.register (action, payload) =>
       switch action
         when app.Actions.LOAD_ROUTE then @loadRoute_ payload
+        when app.Actions.LOGIN, app.Actions.LOGIN_FROM_FACEBOOK_REDIRECT
+          @login_()
 
-  start: ->
-    @routes.addToEste @router, @onRouteMatch_.bind @
+  ###*
+    @type {Function}
+    @private
+  ###
+  render_: null
+
+  ###*
+    @type {Object}
+    @private
+  ###
+  lastRouteMatch_: null
+
+  ###*
+    @param {Function} render
+  ###
+  start: (render) ->
+    @render_ = render
+    @routes.addToEste @router, (route, params) =>
+      @lastRouteMatch_ = route: route, params: params
+      @actions.loadRoute route, params
     @router.start()
-
-  onRouteMatch_: (route, params) ->
-    @actions.loadRoute route, params
-      .then => @routes.setActive route, params
-      .thenCatch (reason) => @routes.trySetErrorRoute reason
-      .then => @actions.renderApp()
 
   ###*
     @param {Object} payload
+    @param {boolean=} noWaitFor
     @return {goog.Promise|number}
     @private
   ###
-  loadRoute_: (payload) ->
+  loadRoute_: (payload, noWaitFor) ->
     {route, params} = payload
 
-    switch route
-      when @routes.me
-        if !@usersStore.isLogged()
-          throw goog.net.HttpStatus.NOT_FOUND
-      when @routes.mySong, @routes.editSong
-        if !@usersStore.songById params.id
-          throw goog.net.HttpStatus.NOT_FOUND
-      when @routes.song
-        return @storage.getSong(params).then (songs) =>
-          if !songs.length
-            throw goog.net.HttpStatus.NOT_FOUND
-          @songsStore.fromJson songsByUrl: songs
-      when @routes.recentlyUpdatedSongs
-        return @storage.getRecentlyUpdatedSongs().then (songs) =>
-          @songsStore.fromJson recentlyUpdatedSongs: songs
+    stores = [
+      @songsStore
+    ].map (store) -> store.dispatcherId
 
-    goog.net.HttpStatus.OK
+    promise = if noWaitFor
+      goog.Promise.resolve()
+    else
+      @dispatcher.waitFor stores
+
+    promise
+      .then => @checkHttpStatus_ route, params
+      .then => @routes.setActive route, params
+      .thenCatch (httpStatus) => @routes.trySetErrorRoute httpStatus
+      .then => @render_()
+
+  ###*
+    @param {este.Route} route
+    @param {Object} params
+  ###
+  checkHttpStatus_: (route, params) ->
+    if !@usersStore.isLogged() && route in [
+      @routes.me
+    ]
+      throw goog.net.HttpStatus.NOT_FOUND
+
+  login_: ->
+    @dispatcher.waitFor [@usersStore.dispatcherId]
+      .then =>
+        # Reload route after login.
+        @loadRoute_ @lastRouteMatch_, true

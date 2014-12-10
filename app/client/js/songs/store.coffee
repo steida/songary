@@ -6,25 +6,56 @@ goog.require 'este.Store'
 class app.songs.Store extends este.Store
 
   ###*
-    @param {este.Dispatcher} dispatcher
     @param {app.Routes} routes
     @param {app.Storage} storage
+    @param {este.Dispatcher} dispatcher
     @constructor
     @extends {este.Store}
   ###
-  constructor: (@dispatcher, @routes, @storage) ->
+  constructor: (@routes, @storage, @dispatcher) ->
     super()
     @name = 'songs'
-    ###* @type {Array<app.songs.Song>} ###
+
+    ###*
+      @type {Array<app.songs.Song>}
+    ###
     @recentlyUpdatedSongs = []
-    ###* @type {Array<app.songs.Song>} ###
+
+    ###*
+      @type {Array<app.songs.Song>}
+    ###
     @songsByUrl = []
-    ###* @type {Array<app.songs.Song>} ###
+
+    ###*
+      @type {Array<app.songs.Song>}
+    ###
     @foundSongs = []
 
-    @dispatcher.register (action, payload) =>
+    @dispatcherId = @dispatcher.register (action, payload) =>
       switch action
+        when app.Actions.LOAD_ROUTE then @loadRoute_ payload
         when app.Actions.SEARCH_SONG then @searchSong_ payload.query
+
+  ###*
+    @param {Object} payload
+    @return {goog.Promise}
+    @private
+  ###
+  loadRoute_: (payload) ->
+    {route, params} = payload
+    switch route
+      when @routes.song
+        @storage.getSong params
+          .then (songs) =>
+            if !songs.length
+              throw goog.net.HttpStatus.NOT_FOUND
+            @fromJson songsByUrl: songs
+      when @routes.recentlyUpdatedSongs
+        @storage.getRecentlyUpdatedSongs()
+          .then (songs) =>
+            @fromJson recentlyUpdatedSongs: songs
+      else
+        null
 
   ###*
     @param {string} query

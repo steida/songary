@@ -13,7 +13,6 @@ class app.Actions extends este.Actions
     super dispatcher
 
   @LOAD_ROUTE: 'load-route'
-  @RENDER_APP: 'render-app'
 
   @LOGIN: 'login'
   @LOGIN_FROM_FACEBOOK_REDIRECT: 'login-from-facebook-redirect'
@@ -27,9 +26,6 @@ class app.Actions extends este.Actions
 
   loadRoute: (route, params) ->
     @dispatch Actions.LOAD_ROUTE, route: route, params: params
-
-  renderApp: ->
-    @dispatch Actions.RENDER_APP
 
   login: ->
     @dispatch Actions.LOGIN

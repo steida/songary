@@ -10,11 +10,13 @@ class app.react.App
     @param {app.react.Pages} pages
     @param {este.react.Element} element
     @param {app.Actions} actions
+    @param {app.errors.Store} errorsStore
     @param {app.songs.Store} songsStore
     @param {app.users.Store} usersStore
     @constructor
   ###
-  constructor: (title, pages, element, actions, songsStore, usersStore) ->
+  constructor: (title, pages, element, actions,
+      errorsStore, songsStore, usersStore) ->
     {div} = element
 
     @component = React.createFactory React.createClass
@@ -27,6 +29,7 @@ class app.react.App
 
       componentDidMount: ->
         actions.listen 'change', @onStoreChange
+        errorsStore.listen 'change', @onStoreChange
         songsStore.listen 'change', @onStoreChange
         usersStore.listen 'change', @onStoreChange
         goog.events.listen window, 'orientationchange', @onOrientationChange

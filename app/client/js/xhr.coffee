@@ -1,8 +1,7 @@
 goog.provide 'app.Xhr'
 
-goog.require 'app.errors.InnocuousError'
+goog.require 'app.errors.Error'
 goog.require 'goog.Promise'
-goog.require 'goog.debug.Error'
 goog.require 'goog.labs.net.xhr'
 
 class app.Xhr
@@ -35,7 +34,7 @@ class app.Xhr
   ###
   send: (method, url, json) ->
     if !navigator.onLine
-      return goog.Promise.reject new app.errors.InnocuousError Xhr.MSG_MUST_BE_ONLINE
+      return goog.Promise.reject new app.errors.Error Xhr.MSG_MUST_BE_ONLINE
 
     goog.labs.net.xhr
       .send method, url, JSON.stringify(json), Xhr.XHR_OPTIONS

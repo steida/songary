@@ -1,7 +1,7 @@
 {
   "name": "Songary",
   "description": "Your personal song book. Demo app for Este.js",
-  "version": "0.1.1-8",
+  "version": "0.1.1-15",
   "author": "Daniel Steigerwald <daniel@steigerwald.cz>",
   "private": true,
   "dependencies": {

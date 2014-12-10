@@ -1,6 +1,6 @@
 goog.provide 'app.users.Store'
 
-goog.require 'app.errors.ValidationError'
+goog.require 'app.errors.Validation'
 goog.require 'app.songs.Song'
 goog.require 'app.users.User'
 goog.require 'este.Store'
@@ -10,13 +10,12 @@ class app.users.Store extends este.Store
 
   ###*
     @param {este.Dispatcher} dispatcher
-    @param {app.ErrorReporter} errorReporter
     @param {app.LocalHistory} localHistory
     @param {app.facebook.Store} facebookStore
     @constructor
     @extends {este.Store}
   ###
-  constructor: (@dispatcher, @errorReporter, @localHistory, @facebookStore) ->
+  constructor: (@dispatcher, @localHistory, @facebookStore) ->
     super()
     @name = 'users'
     @setEmpty_()
@@ -64,7 +63,7 @@ class app.users.Store extends este.Store
     @newSong.validate()
       .then =>
         return if !@contains @newSong
-        throw new app.errors.ValidationError [
+        throw new app.errors.Validation [
           msg: "Song #{@newSong.name}, #{@newSong.artist} already exists."
           props: ['name', 'artist']
         ]
@@ -81,11 +80,9 @@ class app.users.Store extends este.Store
     @private
   ###
   login_: ->
-    @dispatcher
-      .waitFor [@facebookStore.dispatcherId]
+    @dispatcher.waitFor [@facebookStore.dispatcherId]
       .then =>
         @fromJson user: app.users.User.fromFacebook @facebookStore.me
-        @errorReporter.userName = @user.name
 
   ###*
     It's important to delete all user data on logout.
@@ -93,7 +90,6 @@ class app.users.Store extends este.Store
   ###
   logout_: ->
     @setEmpty_()
-    @errorReporter.userName = ''
     @notify()
 
   ###*

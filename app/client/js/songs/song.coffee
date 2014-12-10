@@ -1,6 +1,6 @@
 goog.provide 'app.songs.Song'
 
-goog.require 'app.errors.ValidationError'
+goog.require 'app.errors.Validation'
 goog.require 'este.string'
 
 class app.songs.Song
@@ -93,15 +93,15 @@ class app.songs.Song
       .map (prop) ->
         msg: "Please fill out #{prop}."
         props: [prop]
-    app.errors.ValidationError.toPromise errors
+    app.errors.Validation.toPromise errors
 
   # ###
-  #   @return {Array<app.errors.ValidationError>}
+  #   @return {Array<app.errors.Validation>}
   # ###
   # validatePublished: ->
   #   errors = @validate()
   #   if !@publisher
-  #     errors.push new app.errors.ValidationError 'publisher', Song.MSG_NOT_PUBLISHED
+  #     errors.push new app.errors.Validation 'publisher', Song.MSG_NOT_PUBLISHED
   #   errors
 
   ###*
