@@ -5,7 +5,7 @@ Your personal song book. [Demo](http://songary.jit.su/).
 
 Made with [Este.js](https://github.com/steida/este).
 
-Still under development.
+__Still under development. Just experimental project for now. __
 
 ## Install and run
 
