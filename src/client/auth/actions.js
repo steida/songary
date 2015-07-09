@@ -4,6 +4,28 @@ import {dispatch} from '../dispatcher';
 import {firebase, promisify, firebaseValidationError, set} from '../firebase';
 import {validate} from '../validation';
 
+// export default {
+
+//   updateFormField({target: {name, value}}) {
+//     // Both email and password max length is 256.
+//     value = value.slice(0, 256);
+//     return {name, value};
+//   },
+
+//   login(provider, params) {
+//     // Because Firebase is control freak requiring plain JS object.
+//     if (params) params = params.toJS();
+//     return providerLogin(provider, params)
+//       .then(saveUser)
+//       .catch(error => {
+//         error = firebaseValidationError(error);
+//         authError(error);
+//         throw error;
+//       });
+//   }
+
+// }
+
 export function updateFormField({target: {name, value}}) {
   // Both email and password max length is 256.
   value = value.slice(0, 256);

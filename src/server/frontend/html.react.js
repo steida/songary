@@ -1,7 +1,7 @@
 import Component from '../../client/components/component.react';
 import React from 'react';
 
-class Html extends Component {
+export default class Html extends Component {
 
   static propTypes = {
     bodyHtml: React.PropTypes.string.isRequired,
@@ -32,5 +32,3 @@ class Html extends Component {
   }
 
 }
-
-export default Html;

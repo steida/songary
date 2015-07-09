@@ -11,7 +11,7 @@ class Component extends React.Component {
 
   static contextTypes = {
     router: React.PropTypes.func
-  };
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     // TODO: Make whole React Pure, add something like dangerouslySetLocalState.

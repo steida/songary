@@ -1,3 +1,15 @@
+// import actions from './actions';
+
+// export default {
+
+//   [actions.authError]: (state, error) =>
+//     state.setIn(['form', 'error'], error),
+
+//   [actions.updateFormField]: (state, {name, value}) =>
+//     state.setIn(['form', 'fields', name], value);
+
+// }
+
 import * as actions from './actions';
 import {authCursor} from '../state';
 import {register} from '../dispatcher';
