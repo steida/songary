@@ -106,7 +106,7 @@ export class Flux extends EventEmitter {
       Map(actions).forEach((action, name) => {
         featureActionRecord = featureActionRecord.set(name, (...args) => {
           const payload = action(...args);
-          return this._dispatch(feature, name, action, payload);
+          return this._dispatch(feature, name, payload, action);
         });
       });
       actionsRecord = actionsRecord.set(feature, featureActionRecord);
@@ -123,12 +123,11 @@ export class Flux extends EventEmitter {
     }
   }
 
-  _dispatch(feature, name, action, payload) {
-    console.log(feature, name, action, payload);
-
-    // do vsech storu predam state, action, payload
-    // a pokud store neco vrati, musim to promitnout
-    // coz musi vyvolat rerender, ok
+  _dispatch(feature, name, payload, action) {
+    console.log(feature, name, payload, action);
+    // ted predam vsem storum state, action, payload
+    // pokud store neco vrati, zmenim state, a preda, set state
+    // this.emit('dispatch', feature, name, payload, action);
   }
 
   dispose() {

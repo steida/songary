@@ -16,8 +16,8 @@ export default function(state, action, payload) {
     case actions.authError:
       return state.setIn(['form', 'error'], payload);
 
-    case action.updateFormField:
-      return state.setIn(['form', 'fields', payload.name], payload.value);
+    // case action.updateFormField:
+    //   return state.setIn(['form', 'fields', payload.name], payload.value);
 
   }
 

@@ -7,16 +7,17 @@ import {validate} from '../validation';
 // doesn't makes sense.
 export default {
 
-  updateFormField({target: {name, value}}) {
-    // Both email and password max length is 256.
-    value = value.slice(0, 256);
-    // I don't like returning {type: 'foo', ...}, because it can clash with
-    // payload type property. Therefore, Este prefers returning object instead.
-    // This allows returning primitive objects as well. Also, typing type twice
-    // is verbose. Hint, function name itself is action type.
-    return {name, value};
-  },
+  // updateFormField({target: {name, value}}) {
+  //   // Both email and password max length is 256.
+  //   value = value.slice(0, 256);
+  //   // I don't like returning {type: 'foo', ...}, because it can clash with
+  //   // payload type property. Therefore, Este prefers returning object instead.
+  //   // This allows returning primitive objects as well. Also, typing type twice
+  //   // is verbose. Hint, function name itself is action type.
+  //   return {name, value};
+  // },
 
+  // TODO: Firebase optional param for unit testing is ok.
   login(provider, params) {
     // Because Firebase is control freak requiring plain JS object.
     if (params) params = params.toJS();
