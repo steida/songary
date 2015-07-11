@@ -1,24 +1,21 @@
 import './login.styl';
-import * as actions from './actions';
 import Component from '../components/component.react';
 import React from 'react';
 import exposeRouter from '../components/exposerouter.react';
-import immutable from 'immutable';
-// import {Alert, Field} from '../components/bs';
 import {Alert} from '../components/bs';
+import {Record} from 'immutable';
 import {focusInvalidField} from '../lib/validation';
-import {msg} from '../intl/store';
+
+const msg = msg => msg;
 
 @exposeRouter
 class Login extends Component {
 
-  // static propTypes = {
-  //   authLegend: React.PropTypes.string,
-  //   form: React.PropTypes.instanceOf(immutable.Record).isRequired,
-  //   nextPath: React.PropTypes.string,
-  //   pendingActions: React.PropTypes.instanceOf(immutable.Map).isRequired,
-  //   router: React.PropTypes.func
-  // };
+  static propTypes = {
+    actions: React.PropTypes.instanceOf(Record).isRequired,
+    form: React.PropTypes.instanceOf(Record).isRequired,
+    router: React.PropTypes.func
+  };
 
   // onFormSubmit(e) {
   //   e.preventDefault();
@@ -32,10 +29,9 @@ class Login extends Component {
   }
 
   login(provider, params) {
-    // TODO: this.props.actions.auth.login
-    actions.login(provider, params)
-      .then(() => this.redirectAfterLogin())
-      .catch(focusInvalidField(this));
+    this.props.actions.login(provider, params)
+    //   .then(() => this.redirectAfterLogin())
+    //   .catch(focusInvalidField(this));
   }
 
   // onEmailKeyDown(e) {
@@ -50,12 +46,11 @@ class Login extends Component {
   // }
 
   render() {
-    return <div>login fok</div>
-    const {form, pendingActions} = this.props;
-    const pending =
-      pendingActions.has(actions.login.toString()) ||
-      pendingActions.has(actions.signup.toString()) ||
-      pendingActions.has(actions.resetPassword.toString());
+    const {form} = this.props;
+    const pending = false;
+      // pendingActions.has(actions.login.toString()) ||
+      // pendingActions.has(actions.signup.toString()) ||
+      // pendingActions.has(actions.resetPassword.toString());
 
     return (
       <div className="login">

@@ -1,12 +1,14 @@
+// Reduced functional immutable Flux.
+// We don't need Flux dispatcher. It's impossible to call action within another
+// action, and we don't need waitFor with atomic app state.
+
 import EventEmitter from 'eventemitter3';
 import React from 'react';
-import {Dispatcher} from 'flux';
-import {Map, List, fromJS} from 'immutable';
+import {List, Map, Record, fromJS} from 'immutable';
 
-// Decorator HOC component.
 export default function flux(actionsAndStores) {
+  // TODO: Add invariant for actionsAndStores
 
-  // TODO: Add invariant for actionsAndStores.
   return BaseComponent => class FluxDecorator extends React.Component {
 
     static propTypes = {
@@ -31,11 +33,10 @@ export default function flux(actionsAndStores) {
     }
 
     componentWillReceiveProps() {
-      // We can detect hot load, because module will get new actionsAndStores
-      // instance, but instance is the same. Sweet.
+      // Hot load reloads modules, but React instance is the same. Sweet.
       const wasHotLoaded = actionsAndStores !== this.flux.actionsAndStores;
       if (!wasHotLoaded) return;
-      console.log('was hot loaded')
+      //  console.log('was hot loaded')
       this.fluxify();
     }
 
@@ -50,20 +51,18 @@ export default function flux(actionsAndStores) {
   }
 }
 
-// Compose actions, stores, and app state.
 export class Flux extends EventEmitter {
 
   constructor(initialState, actionsAndStores) {
     super();
     this.actionsAndStores = actionsAndStores;
-    this._history = [];
     this.load(initialState);
   }
 
   setState(state) {
-    // if (this._state === state) return;
-    // this._state = state;
-    // this.emit('change', this._state, previousState, path);
+    if (this._state === state) return;
+    this._state = state;
+    this.emit('statechange', this._state);
   }
 
   getState() {
@@ -75,31 +74,61 @@ export class Flux extends EventEmitter {
   }
 
   load(json) {
-    // Deeply convert json to immutable map asap for two reasons:
+    // Deeply convert json to immutable map asap because:
     //  1) store getInitialState can't accidentally break anything
     //  2) immutables provide much richer api for manipulation
+    //  3) we can leverage immutable record so json is not needed anyway
     const initialState = fromJS(json);
-    const storesState = Map(this.actionsAndStores).map((value, key) => {
-      const {store} = this._destruct(value);
-      const storeInitialState = initialState.get(key);
-      return store &&
-        store(storeInitialState || Map(), 'init') || storeInitialState;
-    });
-    // TODO: Compose actions to have this.props.actions.auth.login etc.
-    // TODO: Add pending actions somehow, should be actions immutable map?
-
-    const actions = null;
+    const storesState = this._createStoresState(initialState);
+    const actions = this._createActions();
     this._state = initialState.merge(storesState, {
       actions: actions,
       flux: this
     });
   }
 
+  _createStoresState(initialState) {
+    return Map(this.actionsAndStores).map((value, key) => {
+      const {store} = this._destruct(value);
+      const state = initialState.get(key);
+      return store && store(state || Map(), 'init') || state;
+    });
+  }
+
+  _createActions() {
+    const defaultValuesOf = obj => Map(obj).map(item => null).toJS();
+    // Features like auth, users, todos, etc.
+    let actionsRecord = new (Record(defaultValuesOf(this.actionsAndStores)));
+    Map(this.actionsAndStores).forEach((value, feature) => {
+      const {actions, store} = this._destruct(value);
+      if (!actions) return;
+      let featureActionRecord = new (Record(defaultValuesOf(actions)));
+      Map(actions).forEach((action, name) => {
+        featureActionRecord = featureActionRecord.set(name, (...args) => {
+          const payload = action(...args);
+          return this._dispatch(feature, name, action, payload);
+        });
+      });
+      actionsRecord = actionsRecord.set(feature, featureActionRecord);
+    });
+    return actionsRecord;
+  }
+
+  // So people can use [actions, store], [actions], [store], [].
   _destruct(value) {
+    const find = type => List(value).find(item => typeof item === type);
     return {
-      actions: List(value).find(item => typeof item === 'object'),
-      store: List(value).find(item => typeof item === 'function')
+      actions: find('object'),
+      store: find('function')
     }
+  }
+
+  _dispatch(feature, name, action, payload) {
+    console.log(feature, name, action, payload);
+
+    // do vsech storu predam state, action, payload
+    // a pokud store neco vrati, musim to promitnout
+    // coz musi vyvolat rerender, ok
   }
 
   dispose() {

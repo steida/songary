@@ -1,17 +1,17 @@
 import Form from './form';
 import actions from './actions';
+import {Record} from 'immutable';
 
+// Pure side effects free function. That's what functional Flux is all about.
 export default function(state, action, payload) {
 
   switch(action) {
 
-    // TODO: or actions.initStore?
     case 'init':
-      return state.merge({
-        form: new Form,
-        // TODO: Try to update it, and see how hot load is working :-)
-        test: 1
-      });
+      // Records allow us to use dot syntax instead of getters everywhere.
+      return new (Record({
+        form: new Form
+      }));
 
     case actions.authError:
       return state.setIn(['form', 'error'], payload);

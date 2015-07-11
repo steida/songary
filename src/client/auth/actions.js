@@ -41,40 +41,40 @@ export default {
     firebase.unauth();
   },
 
-  toggleForgetPasswordShown() {},
+  // toggleForgetPasswordShown() {},
 
-  resetPassword(params) {
-    return validate(params)
-      .prop('email').required().email()
-      .promise
-      .then(() => {
-        return promisify(onComplete => {
-          firebase.resetPassword(params, onComplete);
-        });
-      })
-      .catch(error => {
-        error = firebaseValidationError(error);
-        authError(error);
-        throw error;
-      });
-  },
+  // resetPassword(params) {
+  //   return validate(params)
+  //     .prop('email').required().email()
+  //     .promise
+  //     .then(() => {
+  //       return promisify(onComplete => {
+  //         firebase.resetPassword(params, onComplete);
+  //       });
+  //     })
+  //     .catch(error => {
+  //       error = firebaseValidationError(error);
+  //       authError(error);
+  //       throw error;
+  //     });
+  // },
 
-  signup(params) {
-    // if (params) params = params.toJS(); // wtf?
-    // return validateForm(params)
-    //   .then(() => {
-    //     return promisify(onComplete => {
-    //       firebase.createUser(params, onComplete);
-    //     });
-    //   })
-    //   .then(() => authWithPassword(params))
-    //   .then(saveUser)
-    //   .catch(error => {
-    //     error = firebaseValidationError(error);
-    //     authError(error);
-    //     throw error;
-    //   });
-  }
+  // signup(params) {
+  //   if (params) params = params.toJS(); // wtf?
+  //   return validateForm(params)
+  //     .then(() => {
+  //       return promisify(onComplete => {
+  //         firebase.createUser(params, onComplete);
+  //       });
+  //     })
+  //     .then(() => authWithPassword(params))
+  //     .then(saveUser)
+  //     .catch(error => {
+  //       error = firebaseValidationError(error);
+  //       authError(error);
+  //       throw error;
+  //     });
+  // }
 
 }
 
@@ -84,23 +84,23 @@ function providerLogin(provider, params) {
     : socialLogin(provider);
 }
 
-function emailLogin(params) {
-  return validateForm(params)
-    .then(() => authWithPassword(params));
-}
+// function emailLogin(params) {
+//   return validateForm(params)
+//     .then(() => authWithPassword(params));
+// }
 
-function validateForm(params) {
-  return validate(params)
-    .prop('email').required().email()
-    .prop('password').required().simplePassword()
-    .promise;
-}
+// function validateForm(params) {
+//   return validate(params)
+//     .prop('email').required().email()
+//     .prop('password').required().simplePassword()
+//     .promise;
+// }
 
-function authWithPassword(params) {
-  return promisify(onComplete => {
-    firebase.authWithPassword(params, onComplete);
-  });
-}
+// function authWithPassword(params) {
+//   return promisify(onComplete => {
+//     firebase.authWithPassword(params, onComplete);
+//   });
+// }
 
 // Never merge social accounts. Never treat email as key.
 // http://grokbase.com/p/gg/firebase-talk/14a91gqjse/firebase-handling-multiple-providers
