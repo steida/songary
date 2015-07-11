@@ -1,35 +1,24 @@
-// import actions from './actions';
+import Form from './form';
+import actions from './actions';
 
-// export default {
+export default function(state, action, payload) {
 
-//   [actions.authError]: (state, error) =>
-//     state.setIn(['form', 'error'], error),
+  switch(action) {
 
-//   [actions.updateFormField]: (state, {name, value}) =>
-//     state.setIn(['form', 'fields', name], value);
+    // TODO: or actions.initStore?
+    case 'init':
+      return state.merge({
+        form: new Form,
+        // TODO: Try to update it, and see how hot load is working :-)
+        test: 1
+      });
 
-// }
-
-import * as actions from './actions';
-import {authCursor} from '../state';
-import {register} from '../dispatcher';
-
-export const dispatchToken = register(({action, data}) => {
-
-  switch (action) {
     case actions.authError:
-      authCursor(auth => {
-        const error = data;
-        return auth.setIn(['form', 'error'], error);
-      });
-      break;
+      return state.setIn(['form', 'error'], payload);
 
-    case actions.updateFormField:
-      authCursor(auth => {
-        const {name, value} = data;
-        return auth.setIn(['form', 'fields', name], value);
-      });
-      break;
+    case action.updateFormField:
+      return state.setIn(['form', 'fields', payload.name], payload.value);
+
   }
 
-});
+}

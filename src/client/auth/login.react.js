@@ -12,13 +12,13 @@ import {msg} from '../intl/store';
 @exposeRouter
 class Login extends Component {
 
-  static propTypes = {
-    authLegend: React.PropTypes.string,
-    form: React.PropTypes.instanceOf(immutable.Record).isRequired,
-    nextPath: React.PropTypes.string,
-    pendingActions: React.PropTypes.instanceOf(immutable.Map).isRequired,
-    router: React.PropTypes.func
-  };
+  // static propTypes = {
+  //   authLegend: React.PropTypes.string,
+  //   form: React.PropTypes.instanceOf(immutable.Record).isRequired,
+  //   nextPath: React.PropTypes.string,
+  //   pendingActions: React.PropTypes.instanceOf(immutable.Map).isRequired,
+  //   router: React.PropTypes.func
+  // };
 
   // onFormSubmit(e) {
   //   e.preventDefault();
@@ -32,6 +32,7 @@ class Login extends Component {
   }
 
   login(provider, params) {
+    // TODO: this.props.actions.auth.login
     actions.login(provider, params)
       .then(() => this.redirectAfterLogin())
       .catch(focusInvalidField(this));
@@ -49,6 +50,7 @@ class Login extends Component {
   // }
 
   render() {
+    return <div>login fok</div>
     const {form, pendingActions} = this.props;
     const pending =
       pendingActions.has(actions.login.toString()) ||

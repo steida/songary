@@ -12,17 +12,17 @@ export const firebase = new Firebase(firebaseCursor().get('url'));
 
 // Explicitly passed loggedIn and isLoggedIn to prevent circular dependencies.
 export function init(loggedIn, isLoggedIn) {
-  // Sync getAuth for asap rendering.
-  const authData = firebase.getAuth();
-  if (authData)
-    loggedIn(authData);
-  firebase.onAuth((authData) => {
-    // Just loggedIn.
-    if (authData && !isLoggedIn())
-      loggedIn(authData);
-    else if (!authData && isLoggedIn())
-      location.href = '/';
-  });
+  // // Sync getAuth for asap rendering.
+  // const authData = firebase.getAuth();
+  // if (authData)
+  //   loggedIn(authData);
+  // firebase.onAuth((authData) => {
+  //   // Just loggedIn.
+  //   if (authData && !isLoggedIn())
+  //     loggedIn(authData);
+  //   else if (!authData && isLoggedIn())
+  //     location.href = '/';
+  // });
 }
 
 // Promisify Firebase onComplete callback.

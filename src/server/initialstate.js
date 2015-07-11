@@ -4,10 +4,6 @@ import messages from '../client/messages';
 const initialLocale = 'en';
 
 export default {
-  auth: {
-    data: null,
-    form: null
-  },
   firebase: {
     listenedRefs: [],
     url: config.firebaseUrl
@@ -16,10 +12,5 @@ export default {
     formats: {},
     locales: initialLocale,
     messages: messages[initialLocale]
-  },
-  pendingActions: {},
-  users: {
-    map: {},
-    viewer: null
   }
 };

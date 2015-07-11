@@ -1,18 +1,20 @@
 import Component from '../components/component.react';
 import DocumentTitle from 'react-document-title';
 import React from 'react';
+import immutable from 'immutable';
 import {Link} from 'react-router';
 import {msg} from '../intl/store';
 
-class Home extends Component {
+export default class Home extends Component {
 
   static propTypes = {
-    isLoggedIn: React.PropTypes.bool.isRequired
-  };
+    users: React.PropTypes.instanceOf(immutable.Map).isRequired
+  }
 
   render() {
-    const {isLoggedIn} = this.props;
-    const loginOrMePageLink = isLoggedIn
+    // const {users: {viewer}} = this.props;
+    const viewer = null
+    const loginOrMePageLink = viewer
       ? <Link to="me">me</Link>
       : <Link to="login">login</Link>;
 
@@ -30,5 +32,3 @@ class Home extends Component {
   }
 
 }
-
-export default Home;

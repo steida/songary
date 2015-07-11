@@ -5,16 +5,18 @@ import React from 'react';
 import immutable from 'immutable';
 import {msg} from '../intl/store';
 
-class Login extends Component {
+export default class Login extends Component {
 
   static propTypes = {
     auth: React.PropTypes.instanceOf(immutable.Map).isRequired
-  };
+  }
 
   render() {
-    const form = this.props.auth.get('form');
+    // const form = this.props.auth.get('form');
+    const form = null;
 
     return (
+      // TODO: title={this.props.messages.auth.title}
       <DocumentTitle title={msg('auth.title')}>
         <div className="login-page">
           <LoginForm {...this.props} form={form} />
@@ -24,5 +26,3 @@ class Login extends Component {
   }
 
 }
-
-export default Login;

@@ -1,70 +1,52 @@
 import User from '../users/user';
-import setToString from '../lib/settostring';
-import {dispatch} from '../dispatcher';
 import {firebase, promisify, firebaseValidationError, set} from '../firebase';
 import {validate} from '../validation';
 
-// export default {
+// Export actions as default object, because indentation nicely separates public
+// and private functions. Exporting plain functions separately is verbose and
+// doesn't makes sense.
+export default {
 
-//   updateFormField({target: {name, value}}) {
-//     // Both email and password max length is 256.
-//     value = value.slice(0, 256);
-//     return {name, value};
-//   },
+  updateFormField({target: {name, value}}) {
+    // Both email and password max length is 256.
+    value = value.slice(0, 256);
+    // I don't like returning {type: 'foo', ...}, because it can clash with
+    // payload type property. Therefore, Este prefers returning object instead.
+    // This allows returning primitive objects as well. Also, typing type twice
+    // is verbose. Hint, function name itself is action type.
+    return {name, value};
+  },
 
-//   login(provider, params) {
-//     // Because Firebase is control freak requiring plain JS object.
-//     if (params) params = params.toJS();
-//     return providerLogin(provider, params)
-//       .then(saveUser)
-//       .catch(error => {
-//         error = firebaseValidationError(error);
-//         authError(error);
-//         throw error;
-//       });
-//   }
+  login(provider, params) {
+    // Because Firebase is control freak requiring plain JS object.
+    if (params) params = params.toJS();
+    return providerLogin(provider, params)
+      .then(saveUser)
+      .catch(error => {
+        error = firebaseValidationError(error);
+        this.authError(error);
+        throw error;
+      });
+  },
 
-// }
+  authError(error) {
+    return error;
+  },
 
-export function updateFormField({target: {name, value}}) {
-  // Both email and password max length is 256.
-  value = value.slice(0, 256);
-  dispatch(updateFormField, {name, value});
-}
+  loggedIn(authData) {
+    return authData;
+  },
 
-export function login(provider, params) {
-  // Because Firebase is control freak requiring plain JS object.
-  if (params) params = params.toJS();
-  return dispatch(login, providerLogin(provider, params)
-    .then(saveUser)
-    .catch(error => {
-      error = firebaseValidationError(error);
-      authError(error);
-      throw error;
-    })
-  );
-}
+  logout() {
+    firebase.unauth();
+  },
 
-export function authError(error) {
-  dispatch(authError, error);
-}
+  toggleForgetPasswordShown() {},
 
-export function loggedIn(authData) {
-  dispatch(loggedIn, authData);
-}
-
-export function logout() {
-  firebase.unauth();
-}
-
-export function toggleForgetPasswordShown() {
-  dispatch(toggleForgetPasswordShown);
-}
-
-export function resetPassword(params) {
-  return dispatch(resetPassword, validate(params)
-    .prop('email').required().email()
-    .promise
+  resetPassword(params) {
+    return validate(params)
+      .prop('email').required().email()
+      .promise
       .then(() => {
         return promisify(onComplete => {
           firebase.resetPassword(params, onComplete);
@@ -74,24 +56,26 @@ export function resetPassword(params) {
         error = firebaseValidationError(error);
         authError(error);
         throw error;
-      }));
-}
-
-export function signup(params) {
-  if (params) params = params.toJS();
-  return dispatch(signup, validateForm(params)
-    .then(() => {
-      return promisify(onComplete => {
-        firebase.createUser(params, onComplete);
       });
-    })
-    .then(() => authWithPassword(params))
-    .then(saveUser)
-    .catch(error => {
-      error = firebaseValidationError(error);
-      authError(error);
-      throw error;
-    }));
+  },
+
+  signup(params) {
+    // if (params) params = params.toJS(); // wtf?
+    // return validateForm(params)
+    //   .then(() => {
+    //     return promisify(onComplete => {
+    //       firebase.createUser(params, onComplete);
+    //     });
+    //   })
+    //   .then(() => authWithPassword(params))
+    //   .then(saveUser)
+    //   .catch(error => {
+    //     error = firebaseValidationError(error);
+    //     authError(error);
+    //     throw error;
+    //   });
+  }
+
 }
 
 function providerLogin(provider, params) {
@@ -144,14 +128,3 @@ function saveUser(auth) {
   const user = User.fromAuth(auth);
   return set(['users', user.id], user.toJS());
 }
-
-setToString('auth', {
-  authError,
-  loggedIn,
-  login,
-  logout,
-  resetPassword,
-  signup,
-  toggleForgetPasswordShown,
-  updateFormField
-});

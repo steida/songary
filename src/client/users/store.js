@@ -1,23 +1,29 @@
-import * as authActions from '../auth/actions';
-import {register} from '../dispatcher';
 import User from './user';
-import {usersCursor} from '../state';
+import authActions from '../auth/actions';
+import {Map} from 'immutable';
 
-export const dispatchToken = register(({action, data}) => {
+// TODO: Check hot load. Doesn't work not, because store is still requested
+// somewhere.
+export default function (state, action, payload) {
 
-  switch (action) {
-    case authActions.loggedIn:
-      usersCursor(users => {
-        const user = User.fromAuth(data);
-        return users
-          .setIn(['map', user.id], user)
-          .set('viewer', user);
+  switch(action) {
+
+    case 'init':
+      return state.merge({
+        map: Map(),
+        viewer: null
       });
-      break;
+
+    case authActions.loggedIn:
+      return loggedIn(state, payload);
+
   }
 
-});
+}
 
-export function isLoggedIn() {
-  return !!usersCursor(['viewer']);
+function loggedIn(state, payload) {
+  const user = User.fromAuth(payload);
+  return state
+    .setIn(['map', user.id], user)
+    .set('viewer', user);
 }
