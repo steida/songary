@@ -18,19 +18,20 @@ export default {
   // },
 
   // TODO: Firebase optional param for unit testing is ok.
-  login(provider, params) {
+  login(provider, params, loginError) {
+    return 'fok'
     // Because Firebase is control freak requiring plain JS object.
-    if (params) params = params.toJS();
-    return providerLogin(provider, params)
-      .then(saveUser)
-      .catch(error => {
-        error = firebaseValidationError(error);
-        this.authError(error);
-        throw error;
-      });
+    // if (params) params = params.toJS();
+    // return providerLogin(provider, params)
+    //   .then(saveUser)
+    //   .catch(error => {
+    //     error = firebaseValidationError(error);
+    //     loginError(error);
+    //     throw error;
+    //   });
   },
 
-  authError(error) {
+  loginError(error) {
     return error;
   },
 

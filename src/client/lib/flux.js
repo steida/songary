@@ -1,13 +1,11 @@
-// Reduced functional immutable Flux.
-// We don't need Flux dispatcher. It's impossible to call action within another
-// action, and we don't need waitFor with atomic app state.
-
 import EventEmitter from 'eventemitter3';
 import React from 'react';
+import {Dispatcher} from 'flux';
 import {List, Map, Record, fromJS} from 'immutable';
 
+// Higher order component to fluxify app. Can be used as ES2016 decorator.
 export default function flux(actionsAndStores) {
-  // TODO: Add invariant for actionsAndStores
+  // TODO: Use Flux invariant for actionsAndStores.
 
   return BaseComponent => class FluxDecorator extends React.Component {
 
@@ -27,8 +25,8 @@ export default function flux(actionsAndStores) {
     }
 
     setFluxState() {
-      // For component state we need shallow clone.
       // TODO: How dev tools will be able to measure rerender?
+      // Shalow clone to get immutable object props.
       this.setState(this.flux.getState().toObject());
     }
 
@@ -36,7 +34,6 @@ export default function flux(actionsAndStores) {
       // Hot load reloads modules, but React instance is the same. Sweet.
       const wasHotLoaded = actionsAndStores !== this.flux.actionsAndStores;
       if (!wasHotLoaded) return;
-      //  console.log('was hot loaded')
       this.fluxify();
     }
 
@@ -51,6 +48,7 @@ export default function flux(actionsAndStores) {
   }
 }
 
+// Atomic immutable functional Flux with hot reloading.
 export class Flux extends EventEmitter {
 
   constructor(initialState, actionsAndStores) {
@@ -77,7 +75,7 @@ export class Flux extends EventEmitter {
     // Deeply convert json to immutable map asap because:
     //  1) store getInitialState can't accidentally break anything
     //  2) immutables provide much richer api for manipulation
-    //  3) we can leverage immutable record so json is not needed anyway
+    //  3) we can leverage immutable record to provide json-like dot access.
     const initialState = fromJS(json);
     const storesState = this._createStoresState(initialState);
     const actions = this._createActions();
@@ -85,37 +83,42 @@ export class Flux extends EventEmitter {
       actions: actions,
       flux: this
     });
+    this._createDispatcher();
   }
 
   _createStoresState(initialState) {
     return Map(this.actionsAndStores).map((value, key) => {
-      const {store} = this._destruct(value);
+      const {store} = this._getActionsAndStores(value);
       const state = initialState.get(key);
       return store && store(state || Map(), 'init') || state;
     });
   }
 
   _createActions() {
-    const defaultValuesOf = obj => Map(obj).map(item => null).toJS();
-    // Features like auth, users, todos, etc.
-    let actionsRecord = new (Record(defaultValuesOf(this.actionsAndStores)));
-    Map(this.actionsAndStores).forEach((value, feature) => {
-      const {actions, store} = this._destruct(value);
-      if (!actions) return;
-      let featureActionRecord = new (Record(defaultValuesOf(actions)));
-      Map(actions).forEach((action, name) => {
-        featureActionRecord = featureActionRecord.set(name, (...args) => {
-          const payload = action(...args);
-          return this._dispatch(feature, name, payload, action);
-        });
+    return Map(this.actionsAndStores).reduce((record, value, feature) => {
+      const {actions} = this._getActionsAndStores(value);
+      if (!actions) return record;
+      const featureActions = this._createFeatureActions(feature, actions);
+      return record.set(feature, featureActions)
+    }, this._createEmptyRecord(this.actionsAndStores));
+  }
+
+  _createFeatureActions(feature, actions) {
+    return Map(actions).reduce((record, action, name) => {
+      return record.set(name, (...args) => {
+        const payload = action(...args);
+        return this._dispatch(feature, name, payload, action);
       });
-      actionsRecord = actionsRecord.set(feature, featureActionRecord);
-    });
-    return actionsRecord;
+    }, this._createEmptyRecord(actions));
+  }
+
+  _createEmptyRecord(object) {
+    const emptyObject = Map(object).map(item => null).toJS();
+    return new (Record(emptyObject));
   }
 
   // So people can use [actions, store], [actions], [store], [].
-  _destruct(value) {
+  _getActionsAndStores(value) {
     const find = type => List(value).find(item => typeof item === type);
     return {
       actions: find('object'),
@@ -123,9 +126,16 @@ export class Flux extends EventEmitter {
     }
   }
 
+  _createDispatcher() {
+    // TODO: Use smarter waitFor, pass it into store.
+    this._dispatcher = new Dispatcher;
+    // sync a async, a nastavovani pending pro akce
+  }
+
   _dispatch(feature, name, payload, action) {
     console.log(feature, name, payload, action);
-    // ted predam vsem storum state, action, payload
+    this._dispatcher
+    // waitFor, predavat ve storu, ok
     // pokud store neco vrati, zmenim state, a preda, set state
     // this.emit('dispatch', feature, name, payload, action);
   }

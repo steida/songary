@@ -5,7 +5,7 @@ import {init as firebaseInit} from './firebase';
 import {isLoggedIn} from './users/store';
 import {loggedIn} from './auth/actions';
 
-// TODO: Tohle taky do perdele.
+// TODO: Tohle taky do perdele, respektive, jako HOC.
 firebaseInit(loggedIn, isLoggedIn);
 
 // Never render to body. Everybody updates it.

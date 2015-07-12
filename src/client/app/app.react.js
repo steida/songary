@@ -39,7 +39,7 @@ export default class App extends Component {
   }
 
   render() {
-    const test = this.props.auth.get('test');
+    const test = this.props.auth.test;
     // this.props.actions.auth.login atd.
     // this.props.flux.getState, setState. .on
 

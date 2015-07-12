@@ -9,6 +9,7 @@ export default function (state, action, payload) {
   switch(action) {
 
     case 'init':
+      // TODO: Create record.
       return state.merge({
         map: Map(),
         viewer: null

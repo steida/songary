@@ -10,10 +10,15 @@ export default function(state, action, payload) {
     case 'init':
       // Records allow us to use dot syntax instead of getters everywhere.
       return new (Record({
-        form: new Form
+        form: new Form,
+        test: 1
       }));
 
-    case actions.authError:
+    case actions.login:
+      console.log(payload);
+      return;
+
+    case actions.loginError:
       return state.setIn(['form', 'error'], payload);
 
     // case action.updateFormField:
