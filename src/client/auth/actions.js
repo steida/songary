@@ -33,10 +33,6 @@ export default {
     return error;
   },
 
-  loggedIn(authData) {
-    return authData;
-  },
-
   logout() {
     firebase.unauth();
   },

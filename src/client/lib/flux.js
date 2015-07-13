@@ -138,11 +138,11 @@ export class Flux extends EventEmitter {
     Map(this.actionsAndStores).forEach((array, feature) => {
       const {store} = Flux.findActionsAndStores(array);
       if (!store) return;
-      this._dispatcher.register(this._onDispatch.bind(this, store));
+      this._dispatcher.register(this._onDispatch.bind(this, feature, store));
     });
   }
 
-  _onDispatch(store, {action, payload, name, feature}) {
+  _onDispatch(feature, store, {action, payload}) {
     const storeState = this._state.get(feature);
     const newStoreState = store(storeState, action, payload);
     if (!newStoreState) return;

@@ -4,7 +4,6 @@ import React from 'react';
 import exposeRouter from '../components/exposerouter.react';
 import flux from '../lib/flux';
 import {RouteHandler} from 'react-router';
-import immutable from 'immutable';
 
 import authActions from '../auth/actions';
 import authStore from '../auth/store';
@@ -21,7 +20,7 @@ export default class App extends Component {
 
   static propTypes = {
     router: React.PropTypes.func,
-    users: React.PropTypes.instanceOf(immutable.Map).isRequired
+    users: React.PropTypes.object.isRequired
   }
 
   componentWillMount() {
@@ -33,7 +32,7 @@ export default class App extends Component {
   // authenticated on client, then this method redirect him back.
   redirectAfterClientSideAuth() {
     const {router, users} = this.props;
-    const isLoggedIn = !!users.get('viewer');
+    const isLoggedIn = !!users.viewer;
     const nextPath = router.getCurrentQuery().nextPath;
     if (nextPath && isLoggedIn) router.replaceWith(nextPath);
   }

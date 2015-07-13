@@ -1,6 +1,6 @@
 import User from './user';
 import authActions from '../auth/actions';
-import {Map} from 'immutable';
+import {Map, Record} from 'immutable';
 
 // TODO: Check hot load. Doesn't work not, because store is still requested
 // somewhere.
@@ -9,20 +9,20 @@ export default function (state, action, payload) {
   switch(action) {
 
     case 'init':
-      // TODO: Create record.
-      return state.merge({
+      return new (Record({
         map: Map(),
         viewer: null
-      });
+      }));
 
-    case authActions.loggedIn:
-      return loggedIn(state, payload);
+    case authActions.login:
+      console.log(payload)
+      return login(state, payload);
 
   }
 
 }
 
-function loggedIn(state, payload) {
+function login(state, payload) {
   const user = User.fromAuth(payload);
   return state
     .setIn(['map', user.id], user)
