@@ -1,7 +1,10 @@
 import EventEmitter from 'eventemitter3';
+import Promise from 'bluebird';
 import React from 'react';
 import {Dispatcher} from 'flux';
 import {List, Map, Record, fromJS} from 'immutable';
+
+const isDev = 'production' !== process.env.NODE_ENV;
 
 // Higher order component to fluxify app. Can be used as ES2016 decorator.
 export default function flux(actionsAndStores) {
@@ -48,8 +51,25 @@ export default function flux(actionsAndStores) {
   }
 }
 
-// Atomic immutable functional Flux with hot reloading.
+// Atomic Flux with hot reloading.
 export class Flux extends EventEmitter {
+
+  static emptyRecord(object) {
+    const emptyObject = Map(object).map(item => null).toJS();
+    return new (Record(emptyObject));
+  }
+
+  // So people can use [actions, store], [actions], [store], [].
+  static findActionsAndStores(array) {
+    const find = type => List(array).find(item => typeof item === type);
+    return {actions: find('object'), store: find('function') };
+  }
+
+  static enrichAction(action, name, feature, isPending) {
+    action.isPending = isPending;
+    action.toString = () => feature + '/' + name;
+    return action;
+  }
 
   constructor(initialState, actionsAndStores) {
     super();
@@ -87,57 +107,91 @@ export class Flux extends EventEmitter {
   }
 
   _createStoresState(initialState) {
-    return Map(this.actionsAndStores).map((value, key) => {
-      const {store} = this._getActionsAndStores(value);
-      const state = initialState.get(key);
+    return Map(this.actionsAndStores).map((array, feature) => {
+      const {store} = Flux.findActionsAndStores(array);
+      const state = initialState.get(feature);
       return store && store(state || Map(), 'init') || state;
     });
   }
 
   _createActions() {
-    return Map(this.actionsAndStores).reduce((record, value, feature) => {
-      const {actions} = this._getActionsAndStores(value);
+    return Map(this.actionsAndStores).reduce((record, array, feature) => {
+      const {actions} = Flux.findActionsAndStores(array);
       if (!actions) return record;
       const featureActions = this._createFeatureActions(feature, actions);
       return record.set(feature, featureActions)
-    }, this._createEmptyRecord(this.actionsAndStores));
+    }, Flux.emptyRecord(this.actionsAndStores));
   }
 
   _createFeatureActions(feature, actions) {
     return Map(actions).reduce((record, action, name) => {
-      return record.set(name, (...args) => {
+      return record.set(name, Flux.enrichAction((...args) => {
         const payload = action(...args);
-        return this._dispatch(feature, name, payload, action);
-      });
-    }, this._createEmptyRecord(actions));
-  }
-
-  _createEmptyRecord(object) {
-    const emptyObject = Map(object).map(item => null).toJS();
-    return new (Record(emptyObject));
-  }
-
-  // So people can use [actions, store], [actions], [store], [].
-  _getActionsAndStores(value) {
-    const find = type => List(value).find(item => typeof item === type);
-    return {
-      actions: find('object'),
-      store: find('function')
-    }
+        return this._dispatch(action, payload, name, feature);
+      }, name, feature, () => false));
+    }, Flux.emptyRecord(actions));
   }
 
   _createDispatcher() {
-    // TODO: Use smarter waitFor, pass it into store.
+    // No need to dispose dispatcher, GC will eat it.
     this._dispatcher = new Dispatcher;
-    // sync a async, a nastavovani pending pro akce
+    Map(this.actionsAndStores).forEach((array, feature) => {
+      const {store} = Flux.findActionsAndStores(array);
+      if (!store) return;
+      this._dispatcher.register(this._onDispatch.bind(this, store));
+    });
   }
 
-  _dispatch(feature, name, payload, action) {
-    console.log(feature, name, payload, action);
-    this._dispatcher
-    // waitFor, predavat ve storu, ok
-    // pokud store neco vrati, zmenim state, a preda, set state
-    // this.emit('dispatch', feature, name, payload, action);
+  _onDispatch(store, {action, payload, name, feature}) {
+    const storeState = this._state.get(feature);
+    const newStoreState = store(storeState, action, payload);
+    if (!newStoreState) return;
+    const newState = this._state.set(feature, newStoreState);
+    this.setState(newState);
+  }
+
+  _dispatch(action, payload, name, feature) {
+    const payloadIsPromise = payload && typeof payload.then === 'function';
+    return payloadIsPromise
+      ? this._asyncDispatch(action, payload, name, feature)
+      : this._syncDispatch(action, payload, name, feature);
+  }
+
+  _syncDispatch(action, payload, name, feature) {
+    // TODO: Move into dev tools.
+    if (isDev) console.log(feature + '/' + name);
+    this._dispatcher.dispatch({action, payload, name, feature});
+    return Promise.resolve();
+  }
+
+  _asyncDispatch(action, payloadAsPromise, name, feature) {
+    if (isDev) console.log(`pending ${feature + '/' + name}`); // eslint-disable-line no-console
+    this._setPending(action, payloadAsPromise, name, feature, true);
+    return payloadAsPromise.then(
+      (payload) => {
+        this._setPending(action, payloadAsPromise, name, feature, false);
+        this._syncDispatch(action, payload, name, feature);
+        return payload;
+      },
+      (reason) => {
+        if (isDev) console.log(`reject ${feature + '/' + name}`); // eslint-disable-line no-console
+        this._setPending(action, payloadAsPromise, name, feature, false);
+        throw reason;
+      }
+    );
+  }
+
+  _setPending(action, payloadAsPromise, name, feature, isPending) {
+    const newAction = Flux.enrichAction((...args) => action(...args),
+      name, feature,
+      // TODO: Consider payloadAsPromise for per action granularity.
+      () => isPending
+    );
+    this._setAction(feature, name, newAction);
+  }
+
+  _setAction(feature, name, action) {
+    this.setState(this._state.setIn(['actions', feature, name], action));
   }
 
   dispose() {

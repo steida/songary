@@ -3,6 +3,8 @@ import Promise from 'bluebird';
 import {ValidationError} from './lib/validation';
 import {firebaseCursor} from './state';
 
+// TODO: Export jako celek aka default, fakt to zprehlednuje kod.
+
 // if (!process.env.IS_BROWSER) {
 //   // TODO: Set Firebase for server.
 // }

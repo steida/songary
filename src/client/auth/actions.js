@@ -17,18 +17,16 @@ export default {
   //   return {name, value};
   // },
 
-  // TODO: Firebase optional param for unit testing is ok.
+  // TODO: Add firebase arg.
   login(provider, params, loginError) {
-    return 'fok'
-    // Because Firebase is control freak requiring plain JS object.
-    // if (params) params = params.toJS();
-    // return providerLogin(provider, params)
-    //   .then(saveUser)
-    //   .catch(error => {
-    //     error = firebaseValidationError(error);
-    //     loginError(error);
-    //     throw error;
-    //   });
+    if (params) params = params.toJS();
+    return providerLogin(provider, params)
+      .then(saveUser)
+      .catch(error => {
+        error = firebaseValidationError(error);
+        loginError(error);
+        throw error;
+      });
   },
 
   loginError(error) {
@@ -128,5 +126,6 @@ function socialLogin(provider) {
 
 function saveUser(auth) {
   const user = User.fromAuth(auth);
-  return set(['users', user.id], user.toJS());
+  set(['users', user.id], user.toJS());
+  return auth;
 }

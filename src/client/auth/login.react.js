@@ -29,9 +29,11 @@ class Login extends Component {
   }
 
   login(provider, params) {
-    this.props.actions.login(provider, params)
-    //   .then(() => this.redirectAfterLogin())
-    //   .catch(focusInvalidField(this));
+    const {actions} = this.props;
+    // Example of actions composition :-)
+    actions.login(provider, params, actions.loginError)
+      .then(() => this.redirectAfterLogin())
+      .catch(focusInvalidField(this));
   }
 
   // onEmailKeyDown(e) {
@@ -46,11 +48,8 @@ class Login extends Component {
   // }
 
   render() {
-    const {form} = this.props;
-    const pending = false;
-      // pendingActions.has(actions.login.toString()) ||
-      // pendingActions.has(actions.signup.toString()) ||
-      // pendingActions.has(actions.resetPassword.toString());
+    const {actions, form} = this.props;
+    const pending = actions.login.isPending();
 
     return (
       <div className="login">

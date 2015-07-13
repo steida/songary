@@ -2,21 +2,19 @@ import Form from './form';
 import actions from './actions';
 import {Record} from 'immutable';
 
-// Pure side effects free function. That's what functional Flux is all about.
 export default function(state, action, payload) {
 
   switch(action) {
 
     case 'init':
       // Records allow us to use dot syntax instead of getters everywhere.
+      // Aha, record nema set, shit, co s tim?
       return new (Record({
-        form: new Form,
-        test: 1
+        form: new Form
       }));
 
-    case actions.login:
-      console.log(payload);
-      return;
+    // case actions.login:
+    //   return;
 
     case actions.loginError:
       return state.setIn(['form', 'error'], payload);
