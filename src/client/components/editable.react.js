@@ -13,7 +13,7 @@ const State = immutable.Record({
 
 const initialState = new State;
 
-class Editable extends Component {
+export default class Editable extends Component {
 
   static propTypes = {
     className: React.PropTypes.string,
@@ -51,13 +51,13 @@ class Editable extends Component {
 
   constructor(props) {
     super(props);
-    this.cancelEdit = this.cancelEdit.bind(this);
-    this.enableEdit = this.enableEdit.bind(this);
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onInputFocus = this.onInputFocus.bind(this);
-    this.onInputKeyDown = this.onInputKeyDown.bind(this);
-    this.onViewClick = this.onViewClick.bind(this);
-    this.saveEdit = this.saveEdit.bind(this);
+    this.cancelEdit = ::this.cancelEdit;
+    this.enableEdit = ::this.enableEdit;
+    this.onInputChange = ::this.onInputChange;
+    this.onInputFocus = ::this.onInputFocus;
+    this.onInputKeyDown = ::this.onInputKeyDown;
+    this.onViewClick = ::this.onViewClick;
+    this.saveEdit = ::this.saveEdit;
   }
 
   onInputChange(e) {
@@ -115,7 +115,7 @@ class Editable extends Component {
 
   cancelEdit() {
     if (this.isDirty())
-      if (!confirm(msg('confirmations.cancelEdit'))) // eslint-disable-line no-alert
+      if (!confirm(msg('components.editable.cancelEdit'))) // eslint-disable-line no-alert
         return;
     this.disableEdit();
   }
@@ -181,5 +181,3 @@ class Editable extends Component {
   }
 
 }
-
-export default Editable;

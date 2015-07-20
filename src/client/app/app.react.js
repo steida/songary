@@ -1,53 +1,50 @@
 import './app.styl';
 import Component from '../components/component.react';
+import Footer from './footer.react';
+import Header from './header.react';
 import React from 'react';
-import exposeRouter from '../components/exposerouter.react';
 import flux from '../lib/flux';
+import store from './store';
 import {RouteHandler} from 'react-router';
+import {createValidate} from '../validate';
 
-import authActions from '../auth/actions';
-import authStore from '../auth/store';
-import usersStore from '../users/store';
+import * as authActions from '../auth/actions';
 
-// Compose actions, stores, and app state declaratively.
-@flux({
-  auth: [authActions, authStore],
-  users: [usersStore]
-})
-@exposeRouter
-// @firebase?
+const actions = [authActions];
+
+@flux(store)
 export default class App extends Component {
 
   static propTypes = {
-    router: React.PropTypes.func,
+    flux: React.PropTypes.object.isRequired,
+    msg: React.PropTypes.object.isRequired,
     users: React.PropTypes.object.isRequired
-  }
+  };
 
   componentWillMount() {
-    if (!process.env.IS_BROWSER) return;
-    this.redirectAfterClientSideAuth();
+    this.createActions();
   }
 
-  // For client auth, when server redirects user to login path. If user is
-  // authenticated on client, then this method redirect him back.
-  redirectAfterClientSideAuth() {
-    const {router, users} = this.props;
-    const isLoggedIn = !!users.viewer;
-    const nextPath = router.getCurrentQuery().nextPath;
-    if (nextPath && isLoggedIn) router.replaceWith(nextPath);
+  createActions() {
+    const {flux, msg} = this.props;
+    const validate = createValidate(msg);
+    this.actions = actions.reduce((actions, {feature, create}) => {
+      const dispatch = (action, payload) => flux.dispatch(action, payload, {feature});
+      const featureActions = create(dispatch, validate, msg[feature]);
+      return {...actions, [feature]: featureActions};
+    }, {});
   }
 
   render() {
-    const test = this.props.auth.test;
-    // this.props.actions.auth.login atd.
-    // this.props.flux.getState, setState. .on
+    const props = {...this.props, actions: this.actions};
+    const {users: {viewer}, msg} = props;
 
     return (
       <div className="page">
-        <h1>{test}</h1>
-        {/*<Header isLoggedIn={this.state.isLoggedIn} />*/}
-        <RouteHandler {...this.props} />
-        {/*<Footer />*/}
+        {/* Pass only what's needed. Law of Demeter ftw. */}
+        <Header msg={msg} viewer={viewer} />
+        <RouteHandler {...props} />
+        <Footer msg={msg} />
       </div>
     );
   }

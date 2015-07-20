@@ -59,9 +59,9 @@ gulp.task('test', (done) => {
 
 gulp.task('server', ['env', 'build'], bg('node', 'src/server'));
 
-gulp.task('default', (done) => {
-  if (args.production)
-    runSequence('server', done);
-  else
-    runSequence('server', 'karma-dev', done);
+// Run karma configured for TDD.
+gulp.task('tdd', (done) => {
+  runSequence('server', 'karma-dev', done);
 });
+
+gulp.task('default', ['server']);

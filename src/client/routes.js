@@ -1,8 +1,8 @@
 import App from './app/app.react';
-import Home from './pages/home.react';
-import Login from './pages/login.react';
-import Me from './pages/me.react';
-import NotFound from './pages/notfound.react';
+import Home from './home/index.react';
+import Login from './auth/index.react';
+import Me from './me/index.react';
+import NotFound from './components/notfound.react';
 import React from 'react';
 import {DefaultRoute, NotFoundRoute, Route} from 'react-router';
 

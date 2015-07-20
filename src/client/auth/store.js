@@ -1,27 +1,30 @@
 import Form from './form';
-import actions from './actions';
 import {Record} from 'immutable';
+import {actions} from './actions';
 
-export default function(state, action, payload) {
+// We can use simple initialState if no data from server need to be revived.
+const initialState = new (Record({
+  form: new Form
+}));
 
-  switch(action) {
+const disableForm = (state, disable) =>
+  state.setIn(['form', 'disabled'], disable);
 
-    case 'init':
-      // Records allow us to use dot syntax instead of getters everywhere.
-      // Aha, record nema set, shit, co s tim?
-      return new (Record({
-        form: new Form
-      }));
+export default function(state = initialState, action, payload) {
 
-    // case actions.login:
-    //   return;
+  switch (action) {
 
-    case actions.loginError:
-      return state.setIn(['form', 'error'], payload);
+    case actions.login:
+      return disableForm(state, true);
 
-    // case action.updateFormField:
-    //   return state.setIn(['form', 'fields', payload.name], payload.value);
+    case actions.loginSuccess:
+    case actions.loginFail:
+      return disableForm(state, false).setIn(['form', 'error'], payload);
+
+    case actions.setFormField:
+      return state.setIn(['form', 'fields', payload.name], payload.value);
 
   }
 
+  return state;
 }

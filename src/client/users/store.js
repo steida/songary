@@ -1,30 +1,26 @@
 import User from './user';
-import authActions from '../auth/actions';
-import {Map, Record} from 'immutable';
+import {Record} from 'immutable';
+import {actions as authActions} from '../auth/actions';
 
-// TODO: Check hot load. Doesn't work not, because store is still requested
-// somewhere.
-export default function (state, action, payload) {
+function revive(state) {
+  // Handle case user was authenticated on the server.
+  const viewer = state && state.get('viewer');
+  return new (Record({
+    viewer: viewer ? new User(viewer) : null
+  }));
+}
 
-  switch(action) {
+export default function(state, action, payload) {
+  if (!action) state = revive(state);
 
-    case 'init':
-      return new (Record({
-        map: Map(),
-        viewer: null
-      }));
+  switch (action) {
 
-    case authActions.login:
-      console.log(payload)
-      return login(state, payload);
+    case authActions.loginSuccess:
+      // Hideous side effect hack, will be removed soon with new react-router.
+      User.isLoggedIn = true;
+      return state.set('viewer', new User(payload));
 
   }
 
-}
-
-function login(state, payload) {
-  const user = User.fromAuth(payload);
-  return state
-    .setIn(['map', user.id], user)
-    .set('viewer', user);
+  return state;
 }

@@ -1,8 +1,7 @@
-/* @flow weak */
-
 'use strict';
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var NyanProgressPlugin = require('nyan-progress-webpack-plugin');
 var NotifyPlugin = require('./notifyplugin');
 var constants = require('./constants');
 var path = require('path');
@@ -63,7 +62,7 @@ module.exports = function(isDevelopment) {
         path.join(constants.NODE_MODULES_DIR, 'intl/locale-data/jsonp/en.js'),
         path.join(constants.SRC_DIR, 'client/main.js')
       ] : [
-        path.join(constants.NODE_MODULES_DIR, 'intl/Intl.js'),
+        path.join(constants.NODE_MODULES_DIR, 'intl/Intl.min.js'),
         path.join(constants.NODE_MODULES_DIR, 'intl/locale-data/jsonp/en.js'),
         path.join(constants.SRC_DIR, 'client/main.js')
       ]
@@ -115,13 +114,25 @@ module.exports = function(isDevelopment) {
           new ExtractTextPlugin('app.css', {
             allChunks: true
           }),
+          new NyanProgressPlugin(),
           new webpack.optimize.DedupePlugin(),
           new webpack.optimize.OccurenceOrderPlugin(),
           new webpack.optimize.UglifyJsPlugin({
+            // keep_fnames prevents function name mangling.
+            // Function names are useful. Seeing a readable error stack while
+            // being able to programmatically analyse it is priceless. And yes,
+            // we don't need infamous FLUX_ACTION_CONSTANTS with function name.
+            // It's ES6 standard polyfilled by Babel.
+            /* eslint-disable camelcase */
             compress: {
-              // Because uglify reports so many irrelevant warnings.
-              warnings: false
+              keep_fnames: true,
+              screw_ie8: true,
+              warnings: false // Because uglify reports irrelevant warnings.
+            },
+            mangle: {
+              keep_fnames: true
             }
+            /* eslint-enable camelcase */
           })
         );
       return plugins;

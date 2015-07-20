@@ -1,127 +1,60 @@
-import User from '../users/user';
-import {firebase, promisify, firebaseValidationError, set} from '../firebase';
-import {validate} from '../validation';
+import Promise from 'bluebird';
+import {ValidationError} from '../lib/validation';
 
-// Export actions as default object, because indentation nicely separates public
-// and private functions. Exporting plain functions separately is verbose and
-// doesn't makes sense.
-export default {
+export const actions = create();
+export const feature = 'auth';
 
-  // updateFormField({target: {name, value}}) {
-  //   // Both email and password max length is 256.
-  //   value = value.slice(0, 256);
-  //   // I don't like returning {type: 'foo', ...}, because it can clash with
-  //   // payload type property. Therefore, Este prefers returning object instead.
-  //   // This allows returning primitive objects as well. Also, typing type twice
-  //   // is verbose. Hint, function name itself is action type.
-  //   return {name, value};
-  // },
+const formFieldMaxLength = 100;
 
-  // TODO: Add firebase arg.
-  login(provider, params, loginError) {
-    if (params) params = params.toJS();
-    return providerLogin(provider, params)
-      .then(saveUser)
-      .catch(error => {
-        error = firebaseValidationError(error);
-        loginError(error);
-        throw error;
-      });
-  },
+export function create(dispatch, validate, msg) {
 
-  loginError(error) {
-    return error;
-  },
+  const validateForm = fields => validate(fields)
+    .prop('email').required().email()
+    .prop('password').required().simplePassword()
+    .promise;
 
-  logout() {
-    firebase.unauth();
-  },
-
-  // toggleForgetPasswordShown() {},
-
-  // resetPassword(params) {
-  //   return validate(params)
-  //     .prop('email').required().email()
-  //     .promise
-  //     .then(() => {
-  //       return promisify(onComplete => {
-  //         firebase.resetPassword(params, onComplete);
-  //       });
-  //     })
-  //     .catch(error => {
-  //       error = firebaseValidationError(error);
-  //       authError(error);
-  //       throw error;
-  //     });
-  // },
-
-  // signup(params) {
-  //   if (params) params = params.toJS(); // wtf?
-  //   return validateForm(params)
-  //     .then(() => {
-  //       return promisify(onComplete => {
-  //         firebase.createUser(params, onComplete);
-  //       });
-  //     })
-  //     .then(() => authWithPassword(params))
-  //     .then(saveUser)
-  //     .catch(error => {
-  //       error = firebaseValidationError(error);
-  //       authError(error);
-  //       throw error;
-  //     });
-  // }
-
-}
-
-function providerLogin(provider, params) {
-  return provider === 'email'
-    ? emailLogin(params)
-    : socialLogin(provider);
-}
-
-// function emailLogin(params) {
-//   return validateForm(params)
-//     .then(() => authWithPassword(params));
-// }
-
-// function validateForm(params) {
-//   return validate(params)
-//     .prop('email').required().email()
-//     .prop('password').required().simplePassword()
-//     .promise;
-// }
-
-// function authWithPassword(params) {
-//   return promisify(onComplete => {
-//     firebase.authWithPassword(params, onComplete);
-//   });
-// }
-
-// Never merge social accounts. Never treat email as key.
-// http://grokbase.com/p/gg/firebase-talk/14a91gqjse/firebase-handling-multiple-providers
-function socialLogin(provider) {
-  return promisify(onComplete => {
-    const options = {
-      scope: {
-        facebook: 'email,user_friends',
-        google: 'email',
-        twitter: ''
-      }[provider]
+  const validateCredentials = fields => new Promise((resolve, reject) => {
+    // For real usage, use isomorphic-fetch, socket.io, or whatever.
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/v1/auth/login', true);
+    xhr.setRequestHeader('Content-type', 'application/json');
+    // TODO: Show how to handle different password/username server errors.
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState !== 4) return;
+      if (xhr.status === 200)
+        resolve(fields);
+      else
+        reject(new ValidationError(msg.form.wrongPassword, 'password'));
     };
-    // https://www.firebase.com/docs/web/guide/user-auth.html#section-popups
-    firebase.authWithOAuthPopup(provider, (error, authData) => {
-      if (error && error.code === 'TRANSPORT_UNAVAILABLE') {
-        firebase.authWithOAuthRedirect(provider, onComplete, options);
-        return;
-      }
-      onComplete(error, authData);
-    }, options);
+    xhr.send(JSON.stringify(fields));
   });
-}
 
-function saveUser(auth) {
-  const user = User.fromAuth(auth);
-  set(['users', user.id], user.toJS());
-  return auth;
+  return {
+
+    login(fields) {
+      dispatch(actions.login);
+
+      return validateForm(fields)
+        .then(() => validateCredentials(fields))
+        .then(() => dispatch(actions.loginSuccess, fields))
+        .catch(error => {
+          dispatch(actions.loginFail, error);
+          throw error;
+        });
+    },
+    loginSuccess() {},
+    loginFail() {},
+
+    logout() {
+      // Always reload app on logout for security reasons.
+      location.href = '/';
+    },
+
+    setFormField({target: {name, value}}) {
+      value = value.slice(0, formFieldMaxLength);
+      dispatch(actions.setFormField, {name, value});
+    }
+
+  };
+
 }

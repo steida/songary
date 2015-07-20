@@ -1,8 +1,6 @@
 import Promise from 'bluebird';
 import Immutable from 'immutable';
 
-// Example how initialState, which is the same for all users, is enriched with
-// user state. With state-less Flux, we don't need instances.
 export default function userState() {
 
   return (req, res, next) => {
@@ -17,6 +15,7 @@ export default function userState() {
 // Gracefully settle all promises, ignore failed.
 function loadUserData(req) {
   const dataSources = [
+    loadTodos()
   ];
 
   return Promise.settle(dataSources).then(receivedData =>
@@ -26,19 +25,19 @@ function loadUserData(req) {
   );
 }
 
-// // Simulate async action.
-// function loadTodos() {
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       const todos = {
-//         todos: {
-//           list: [
-//             {id: 2, title: 'relax'}
-//           ]
-//         }
-//       };
+// Simulate async action.
+function loadTodos() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const todos = {
+        todos: {
+          list: [
+            {id: 2, title: 'relax'}
+          ]
+        }
+      };
 
-//       resolve(todos);
-//     }, 20);
-//   });
-// }
+      resolve(todos);
+    }, 20);
+  });
+}

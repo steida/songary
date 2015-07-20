@@ -1,3 +1,1 @@
-# Songary
-
-made by Daniel Steigerwald, [twitter.com/steida](https://twitter.com/steida)
+Bare Este version. Not always up to date.
