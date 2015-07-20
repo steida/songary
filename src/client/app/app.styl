@@ -1,80 +1,21 @@
-// Remember to use rems and ems. http://css-tricks.com/rems-ems.
+@import '../components/variables'
 
-@import '../../../node_modules/normalize.css/normalize.css'
-
-// http://phonegap-tips.com/articles/essential-phonegap-css-webkit-tap-highlight-color.html
-*
-  -webkit-tap-highlight-color rgba(0,0,0,0)
-
-// Goodness.
-*, ::after, ::before
-  box-sizing border-box
-
-html,
-body
-  height 100%
-
-body {
-  color #333
-  font-family 'Segoe UI', 'Lucida Grande','Ubuntu','sans-serif'
-  font-size 16px
-  line-height 1.5
-}
+@import '../../../node_modules/bootstrap-styl/bootstrap/variables'
+@import '../../../node_modules/bootstrap-styl/bootstrap/mixins'
+@import '../../../node_modules/bootstrap-styl/bootstrap/normalize'
+@import '../../../node_modules/bootstrap-styl/bootstrap/print'
+// @import '../../../node_modules/bootstrap-styl/bootstrap/glyphicons'
+@import '../../../node_modules/bootstrap-styl/bootstrap/scaffolding'
+@import '../../../node_modules/bootstrap-styl/bootstrap/utilities'
+// @import '../../../node_modules/bootstrap-styl/bootstrap/type'
+// @import '../../../node_modules/bootstrap-styl/bootstrap/grid'
+@import '../../../node_modules/bootstrap-styl/bootstrap/tables'
+@import '../../../node_modules/bootstrap-styl/bootstrap/forms'
+@import '../../../node_modules/bootstrap-styl/bootstrap/buttons'
+@import '../../../node_modules/bootstrap-styl/bootstrap/button-groups'
+@import '../../../node_modules/bootstrap-styl/bootstrap/input-groups'
+@import '../../../node_modules/bootstrap-styl/bootstrap/alerts'
+@import '../../../node_modules/bootstrap-styl/bootstrap/responsive-utilities'
 
 #app
   margin 1em 2em
-
-  > header
-    h1
-      margin-bottom 0
-    ul
-      li
-        font-size 1em
-
-  > footer
-    font-size .75em
-    font-style italic
-
-  :focus
-    outline-style none
-
-  a
-    color #346392
-    text-decoration none
-
-    &:hover:not(.active)
-      text-decoration underline
-
-    &.active
-      font-weight bold
-
-  button
-    background-color #6496c8
-    border none
-    border-radius 1em
-    color #fff
-    font-weight bold
-    line-height 1.8
-    margin 0 10px 0 0
-    padding 0 1em
-    text-shadow -1px 1px #417cb8
-
-    &[disabled]
-      opacity .5
-
-    &:hover:not(&[disabled])
-      background-color #346392
-      text-shadow -1px 1px #27496d
-
-    &:active
-      background-color #27496d
-      text-shadow -1px 1px #193047
-
-  button
-  input
-  textarea
-    &:disabled
-      opacity .5
-
-  p, li
-    max-width 42em
