@@ -54,6 +54,7 @@ export default class List extends Component {
           )}
         </ul>
         <p>
+          {/* TODO: Move. */}
           <button onClick={::this.onLoadFromJsonClick}>Add from JSON</button>
         </p>
       </div>

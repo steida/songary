@@ -7,14 +7,13 @@ export default class Add extends Component {
   static propTypes = {
     actions: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
-    song: React.PropTypes.object.isRequired,
-    viewer: React.PropTypes.object.isRequired
+    users: React.PropTypes.object.isRequired
   };
 
-  onInputKeyDown(e) {
-    if (e.key !== 'Enter') return;
-    if (!e.target.value.trim()) return;
-    const {actions, song, viewer} = this.props;
+  onAddClick(e) {
+    const el = React.findDOMNode(this.refs.lyrics);
+    if (!el.value.trim()) return;
+    const {actions, songs: {add: song}, users: {viewer}} = this.props;
     actions.songs.add(song, viewer);
   }
 
@@ -22,19 +21,34 @@ export default class Add extends Component {
     const {
       actions: {songs: actions},
       msg: {songs: {add: msg}},
-      song
+      songs: {add: song}
     } = this.props;
 
     return (
       <div className="songs-add">
-        <textarea
+        <input
           autoFocus
+          name="name"
+          onChange={actions.setAddField}
+          placeholder="song name"
+          value={song.name}
+        />
+        <input
+          name="artist"
+          onChange={actions.setAddField}
+          placeholder="artist"
+          value={song.artist}
+        />
+        <textarea
           name="lyrics"
           onChange={actions.setAddField}
-          onKeyDown={::this.onInputKeyDown}
           placeholder={msg.placeholder}
-          value={song.text}
+          ref="lyrics"
+          value={song.lyrics}
         />
+        <div>
+          <button onClick={() => this.onAddClick()}>add</button>
+        </div>
       </div>
     );
   }

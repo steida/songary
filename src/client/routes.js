@@ -1,3 +1,4 @@
+import AddSong from './songs/add.react';
 import App from './app/app.react';
 import Home from './home/index.react';
 import Login from './auth/index.react';
@@ -11,8 +12,9 @@ export default (
   <Route handler={App} path="/">
     <DefaultRoute handler={Home} name="home" />
     <NotFoundRoute handler={NotFound} name="not-found" />
+    <Route handler={AddSong} name="songs-add" path="me/songs/new" />
     <Route handler={Login} name="login" />
     <Route handler={Me} name="me" />
-    <Route handler={Song} name="song" path="me/song/:id" />
+    <Route handler={Song} name="song" path="me/songs/:id" />
   </Route>
 );

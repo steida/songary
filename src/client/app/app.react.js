@@ -86,7 +86,9 @@ export default class App extends Component {
   render() {
     const props = {...this.props, actions: this.actions};
     const {users: {viewer}, msg, router} = props;
-    const songPageIsShown = router.getCurrentPath().indexOf('/me/song') > -1;
+    const routes = router.getCurrentRoutes();
+    const currentRoute = routes[routes.length - 1];
+    const songPageIsShown = currentRoute.name === 'song';
 
     return (
       <div className="page">

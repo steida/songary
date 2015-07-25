@@ -19,6 +19,7 @@ export function create(dispatch, validate, msg, firebase, router) {
       firebase.set(['songs', viewer.id, json.id], json);
       // Optimistic add, Firebase always dispatches local changes anyway.
       dispatch(actions.add);
+      router.transitionTo('me');
     },
 
     addFromJson(songs, viewer) {
