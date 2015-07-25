@@ -2,9 +2,8 @@ export default {
   form: {
     button: {
       login: 'Login',
-      signup: 'Sign up'
+      signUp: 'Sign Up'
     },
-    hint: 'Hint: pass1',
     legend: 'Login / Sign Up',
     placeholder: {
       email: 'your@email.com',
@@ -15,7 +14,7 @@ export default {
   logout: {
     button: 'Logout'
   },
-  page: {
+  index: {
     title: 'Login'
   },
   validation: {

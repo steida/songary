@@ -20,9 +20,9 @@ export default class Header extends Component {
         </h1>
         <ul>
           <li><Link to="home">{header.home}</Link></li>
-          {viewer
-            ? <li><Link to="me">{header.me}</Link></li>
-            : <li><Link to="login">{header.login}</Link></li>
+          <li><Link to="me">{header.me}</Link></li>
+          {!viewer &&
+            <li><Link to="login">{header.login}</Link></li>
           }
         </ul>
       </header>

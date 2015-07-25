@@ -7,6 +7,7 @@ nconf.env('__');
 var config = {
   appLocales: ['en', 'fr'],
   defaultLocale: 'en',
+  firebaseUrl: 'https://songary.firebaseio.com',
   googleAnalyticsId: 'UA-XXXXXXX-X',
   isProduction: process.env.NODE_ENV === 'production',
   piping: {

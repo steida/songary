@@ -18,7 +18,7 @@ export default function(state, action, payload) {
     case authActions.loginSuccess:
       // Hideous side effect hack, will be removed soon with new react-router.
       User.isLoggedIn = true;
-      return state.set('viewer', new User(payload));
+      return state.set('viewer', User.fromFirebaseAuth(payload));
 
   }
 

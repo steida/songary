@@ -15,7 +15,7 @@ export default function userState() {
 // Gracefully settle all promises, ignore failed.
 function loadUserData(req) {
   const dataSources = [
-    loadTodos()
+    // loadTodos()
   ];
 
   return Promise.settle(dataSources).then(receivedData =>
@@ -25,19 +25,19 @@ function loadUserData(req) {
   );
 }
 
-// Simulate async action.
-function loadTodos() {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const todos = {
-        todos: {
-          list: [
-            {id: 2, title: 'relax'}
-          ]
-        }
-      };
+// // Simulate async action.
+// function loadTodos() {
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       const todos = {
+//         todos: {
+//           list: [
+//             {id: 2, title: 'relax'}
+//           ]
+//         }
+//       };
 
-      resolve(todos);
-    }, 20);
-  });
-}
+//       resolve(todos);
+//     }, 20);
+//   });
+// }

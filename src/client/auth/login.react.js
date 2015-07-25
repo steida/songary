@@ -1,31 +1,26 @@
 import './login.styl';
 import Component from '../components/component.react';
 import React from 'react';
-import exposeRouter from '../components/exposerouter.react';
 import {focusInvalidField} from '../lib/validation';
 
-@exposeRouter
 export default class Login extends Component {
 
   static propTypes = {
     actions: React.PropTypes.object.isRequired,
     auth: React.PropTypes.object.isRequired,
-    msg: React.PropTypes.object.isRequired,
-    router: React.PropTypes.func
+    msg: React.PropTypes.object.isRequired
   };
 
   onFormSubmit(e) {
     e.preventDefault();
-    const {actions: {auth}, auth: {form}} = this.props;
-    auth.login(form.fields)
-      .then(() => this.redirectAfterLogin())
-      .catch(focusInvalidField(this));
+    this.login({signUp: false});
   }
 
-  redirectAfterLogin() {
-    const {router} = this.props;
-    const nextPath = router.getCurrentQuery().nextPath;
-    router.replaceWith(nextPath || 'home');
+  login({signUp}) {
+    const {actions: {auth}, auth: {form}} = this.props;
+    const action = signUp ? auth.signUp : auth.login;
+    action(form.fields)
+      .catch(focusInvalidField(this));
   }
 
   render() {
@@ -60,10 +55,16 @@ export default class Login extends Component {
               children={msg.button.login}
               type="submit"
             />
+            <button
+              children={msg.button.signUp}
+              onClick={() => this.login({signUp: true})}
+              type="button"
+            />
+            <p>
             {form.error &&
               <span className="error-message">{form.error.message}</span>
             }
-            <div>{msg.hint}</div>
+            </p>
           </fieldset>
         </form>
       </div>

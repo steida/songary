@@ -1,4 +1,4 @@
 export default {
-  title: 'Este.js App',
-  todos: 'todos'
+  infoHtml: `Your own song book.`,
+  title: 'Songary - Your own song book'
 };

@@ -1,8 +1,7 @@
+import config from './config';
+
 export default {
-  examples: {
-    editable: {
-      state: null,
-      text: 'Some inline-editable text.'
-    }
+  config: {
+    firebaseUrl: config.firebaseUrl
   }
 };
