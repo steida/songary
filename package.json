@@ -28,6 +28,7 @@
     "cors": "^2.6.0",
     "css-loader": "^0.15.2",
     "del": "^1.1.1",
+    "escape-html": "^1.0.2",
     "eslint": "^0.24.0",
     "eslint-plugin-react": "^3.0.0",
     "eventemitter3": "^1.0.1",

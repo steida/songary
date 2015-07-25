@@ -28,8 +28,8 @@ export default class Index extends Component {
       <DocumentTitle title={msg.me.title}>
         <div className="me-page">
           <p>{format(msg.me.welcome, {email: viewer.email})}</p>
-          <AddSong {...{actions, msg, song, viewer}} />
           <ListSongs {...{actions, list, viewer}} />
+          <AddSong {...{actions, msg, song, viewer}} />
           <Logout {...{actions, msg}} />
         </div>
       </DocumentTitle>

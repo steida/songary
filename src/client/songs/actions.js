@@ -1,9 +1,11 @@
+import Song from './song';
 import getRandomString from '../lib/getrandomstring';
 
 export const actions = create();
 export const feature = 'songs';
 
-const formFieldMaxLength = 100;
+// TODO: Name etc. specific lengths.
+const formFieldMaxLength = 10000;
 
 export function create(dispatch, validate, msg, firebase, router) {
 
@@ -17,6 +19,16 @@ export function create(dispatch, validate, msg, firebase, router) {
       firebase.set(['songs', viewer.id, json.id], json);
       // Optimistic add, Firebase always dispatches local changes anyway.
       dispatch(actions.add);
+    },
+
+    addFromJson(songs, viewer) {
+      songs.forEach(song => {
+        song = new Song(song).merge({
+          createdAt: firebase.TIMESTAMP,
+          updatedAt: null
+        }).toJS();
+        firebase.set(['songs', viewer.id, song.id], song);
+      });
     },
 
     delete(song, viewer) {

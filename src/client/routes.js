@@ -4,6 +4,7 @@ import Login from './auth/index.react';
 import Me from './me/index.react';
 import NotFound from './components/notfound.react';
 import React from 'react';
+import Song from './songs/song.react';
 import {DefaultRoute, NotFoundRoute, Route} from 'react-router';
 
 export default (
@@ -12,5 +13,6 @@ export default (
     <NotFoundRoute handler={NotFound} name="not-found" />
     <Route handler={Login} name="login" />
     <Route handler={Me} name="me" />
+    <Route handler={Song} name="song" path="me/song/:id" />
   </Route>
 );

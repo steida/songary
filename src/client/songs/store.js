@@ -19,7 +19,7 @@ export default function(state, action, payload) {
 
     case actions.onFirebaseSongs:
       return state.set('list', Seq(payload)
-        .sortBy(item => item.createdAt)
+        .sortBy(item => item.updatedAt || item.createdAt)
         .reverse()
         .toList()
       );

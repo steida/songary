@@ -85,14 +85,15 @@ export default class App extends Component {
 
   render() {
     const props = {...this.props, actions: this.actions};
-    const {users: {viewer}, msg} = props;
+    const {users: {viewer}, msg, router} = props;
+    const songPageIsShown = router.getCurrentPath().indexOf('/me/song') > -1;
 
     return (
       <div className="page">
         {/* Pass only what's needed. Law of Demeter ftw. */}
-        <Header msg={msg} viewer={viewer} />
+        {!songPageIsShown && <Header msg={msg} viewer={viewer} />}
         <RouteHandler {...props} />
-        <Footer msg={msg} />
+        {!songPageIsShown && <Footer msg={msg} />}
       </div>
     );
   }

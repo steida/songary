@@ -27,9 +27,9 @@ export default class Add extends Component {
 
     return (
       <div className="songs-add">
-        <input
+        <textarea
           autoFocus
-          name="text"
+          name="lyrics"
           onChange={actions.setAddField}
           onKeyDown={::this.onInputKeyDown}
           placeholder={msg.placeholder}

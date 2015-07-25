@@ -2,6 +2,7 @@ import './list.styl';
 import Component from '../components/component.react';
 import React from 'react';
 import listenFirebase from '../firebase/listenfirebase';
+import {Link} from 'react-router';
 
 @listenFirebase((props, firebase) => ({
   action: props.actions.songs.onFirebaseSongs,
@@ -18,8 +19,23 @@ export default class List extends Component {
   };
 
   delete(song) {
+    // TODO: Localize.
+    if (!confirm('Are you sure?'))
+      return;
     const {actions, viewer} = this.props;
     actions.songs.delete(song, viewer);
+  }
+
+  onLoadFromJsonClick() {
+    const {actions, viewer} = this.props;
+    const jsonString = prompt('Please enter JSON string.');
+    let songs = '';
+    try {
+      songs = JSON.parse(jsonString);
+    }
+    catch(e) {}
+    if (!songs) return;
+    actions.songs.addFromJson(songs, viewer);
   }
 
   render() {
@@ -30,11 +46,16 @@ export default class List extends Component {
         <ul>
           {list.map(song =>
             <li key={song.id}>
-              {song.text}{' '}
+              <Link to="song" params={{id: song.id}}>
+                {song.name} / {song.artist}{' '}
+              </Link>
               <button onClick={() => this.delete(song)}>x</button>
             </li>
           )}
         </ul>
+        <p>
+          <button onClick={::this.onLoadFromJsonClick}>Add from JSON</button>
+        </p>
       </div>
     );
   }
