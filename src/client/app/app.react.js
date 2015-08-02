@@ -27,7 +27,7 @@ export default class App extends Component {
     msg: React.PropTypes.object.isRequired,
     router: React.PropTypes.func.isRequired,
     users: React.PropTypes.object.isRequired
-  };
+  }
 
   constructor(props) {
     super(props);

@@ -9,7 +9,7 @@ export default class Login extends Component {
     actions: React.PropTypes.object.isRequired,
     auth: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired
-  };
+  }
 
   onFormSubmit(e) {
     e.preventDefault();

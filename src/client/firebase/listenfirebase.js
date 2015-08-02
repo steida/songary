@@ -9,7 +9,7 @@ export default function listenFirebase(getArgs) {
 
     static propTypes = {
       actions: React.PropTypes.object.isRequired
-    };
+    }
 
     componentDidMount() {
       this.props.actions.firebase.onDecoratorDidMount(this, getArgs);

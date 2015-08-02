@@ -14,7 +14,7 @@ export default class Index extends Component {
     msg: React.PropTypes.object.isRequired,
     songs: React.PropTypes.object.isRequired,
     users: React.PropTypes.object.isRequired
-  };
+  }
 
   render() {
     const {

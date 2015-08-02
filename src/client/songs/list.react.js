@@ -16,7 +16,7 @@ export default class List extends Component {
     actions: React.PropTypes.object.isRequired,
     list: React.PropTypes.object.isRequired,
     viewer: React.PropTypes.object.isRequired
-  };
+  }
 
   delete(song) {
     // TODO: Localize.

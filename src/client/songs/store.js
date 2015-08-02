@@ -24,7 +24,7 @@ export default function(state, action, payload) {
       .toList()
     );
 
-  case actions.setAddField:
+  case actions.setAddSongField:
     return state.setIn(['add', payload.name], payload.value);
 
   }

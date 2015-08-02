@@ -11,7 +11,7 @@ export default class Add extends Component {
     msg: React.PropTypes.object.isRequired,
     songs: React.PropTypes.object.isRequired,
     users: React.PropTypes.object.isRequired
-  };
+  }
 
   onAddClick(e) {
     const el = React.findDOMNode(this.refs.lyrics);
@@ -32,19 +32,19 @@ export default class Add extends Component {
         <input
           autoFocus
           name="name"
-          onChange={actions.setAddField}
+          onChange={actions.setAddSongField}
           placeholder="song name"
           value={song.name}
         />
         <input
           name="artist"
-          onChange={actions.setAddField}
+          onChange={actions.setAddSongField}
           placeholder="artist"
           value={song.artist}
         />
         <textarea
           name="lyrics"
-          onChange={actions.setAddField}
+          onChange={actions.setAddSongField}
           placeholder={msg.placeholder}
           ref="lyrics"
           value={song.lyrics}

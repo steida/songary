@@ -1,7 +1,6 @@
 import {Record} from 'immutable';
 
 const SongRecord = Record({
-  album: '',
   artist: '',
   createdAt: null,
   createdBy: null,
@@ -11,4 +10,12 @@ const SongRecord = Record({
   updatedAt: null
 });
 
-export default class Song extends SongRecord {}
+export default class Song extends SongRecord {
+
+  static maxLength = {
+    artist: 100,
+    lyrics: 10000,
+    name: 100
+  }
+
+}

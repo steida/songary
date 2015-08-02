@@ -4,9 +4,6 @@ import getRandomString from '../lib/getrandomstring';
 export const actions = create();
 export const feature = 'songs';
 
-// TODO: Name etc. specific lengths.
-const formFieldMaxLength = 10000;
-
 export function create(dispatch, validate, msg, firebase, router) {
 
   return {
@@ -40,9 +37,9 @@ export function create(dispatch, validate, msg, firebase, router) {
       dispatch(actions.onFirebaseSongs, snapshot.val());
     },
 
-    setAddField({target: {name, value}}) {
-      value = value.slice(0, formFieldMaxLength);
-      dispatch(actions.setAddField, {name, value});
+    setAddSongField({target: {name, value}}) {
+      value = value.slice(0, Song.maxLength[name]);
+      dispatch(actions.setAddSongField, {name, value});
     }
 
   };

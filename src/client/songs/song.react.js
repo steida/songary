@@ -8,7 +8,7 @@ export default class Song extends Component {
   static propTypes = {
     params: React.PropTypes.object.isRequired,
     songs: React.PropTypes.object.isRequired
-  };
+  }
 
   static MAX_FONT_SIZE = 50;
   static MIN_READABLE_FONT_SIZE = 8;
