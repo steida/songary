@@ -1,8 +1,8 @@
-// import favicon from 'serve-favicon';
 import compression from 'compression';
 import config from '../config';
 import esteHeaders from '../lib/estemiddleware';
 import express from 'express';
+import favicon from 'serve-favicon';
 import intlMiddleware from '../lib/intlmiddleware';
 import render from './render';
 import userState from './userstate';
@@ -14,11 +14,14 @@ if (!config.isProduction)
   app.use(esteHeaders());
 
 app.use(compression());
-// TODO: Add favicon.
-// app.use(favicon('assets/img/favicon.ico'))
-// TODO: Move to CDN.
+app.use(favicon('assets/img/favicon.ico'))
+
 app.use('/build', express.static('build'));
 app.use('/assets', express.static('assets'));
+
+// Intl
+app.use('/node_modules/intl/dist', express.static('node_modules/intl/dist'));
+app.use('/node_modules/intl/locale-data', express.static('node_modules/intl/locale-data'));
 
 // Load translations, fallback to defaultLocale if no translation is available.
 app.use(intlMiddleware({
