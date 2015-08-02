@@ -18,6 +18,7 @@ export default class Index extends Component {
           <p>
             <FormattedHTMLMessage message={msg.infoHtml} />
           </p>
+          <p>TODO: Last added song here.</p>
         </div>
       </DocumentTitle>
     );

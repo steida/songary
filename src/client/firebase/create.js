@@ -5,10 +5,11 @@ import {ValidationError} from '../lib/validation';
 // Promisify Firebase onComplete callback.
 const promisify = callback => new Promise((resolve, reject) => {
   callback((error, data) => {
-    if (error)
+    if (error) {
       reject(firebaseError(error));
-    else
-      resolve(data);
+      return;
+    }
+    resolve(data);
   });
 });
 

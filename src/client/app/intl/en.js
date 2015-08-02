@@ -3,8 +3,8 @@ export default {
     madeByHtml: `made by <a href="https://twitter.com/steida">steida</a>`
   },
   header: {
-    h1Html: 'Songary',
-    home: 'Home',
+    addSong: 'Add New Song',
+    home: 'Songary',
     login: 'Login / Sign Up',
     me: 'Me'
   }

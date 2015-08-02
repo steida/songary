@@ -1,6 +1,5 @@
 import Component from '../components/component.react';
 import React from 'react';
-import {FormattedHTMLMessage} from 'react-intl';
 import {Link} from 'react-router';
 
 export default class Header extends Component {
@@ -11,18 +10,18 @@ export default class Header extends Component {
   };
 
   render() {
-    const {msg: {app: {header}}, viewer} = this.props;
+    const {msg: {app: {header: msg}}, viewer} = this.props;
 
     return (
       <header>
         <h1>
-          <FormattedHTMLMessage message={header.h1Html} />
+          <Link to="home">{msg.home}</Link>
         </h1>
         <ul>
-          <li><Link to="home">{header.home}</Link></li>
-          <li><Link to="me">{header.me}</Link></li>
-          {!viewer &&
-            <li><Link to="login">{header.login}</Link></li>
+          <li><Link to="songs-add">{msg.addSong}</Link></li>
+          {viewer
+            ? <li><Link to="me">{msg.me}</Link></li>
+            : <li><Link to="login">{msg.login}</Link></li>
           }
         </ul>
       </header>

@@ -12,7 +12,7 @@ export default (
   <Route handler={App} path="/">
     <DefaultRoute handler={Home} name="home" />
     <NotFoundRoute handler={NotFound} name="not-found" />
-    <Route handler={AddSong} name="songs-add" path="me/songs/new" />
+    <Route handler={AddSong} name="songs-add" path="add-song" />
     <Route handler={Login} name="login" />
     <Route handler={Me} name="me" />
     <Route handler={Song} name="song" path="me/songs/:id" />

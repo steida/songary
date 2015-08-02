@@ -15,19 +15,19 @@ export default function(state = initialState, action, payload) {
 
   switch (action) {
 
-    case actions.login:
-    case actions.signUp:
-      return disableForm(state, true);
+  case actions.login:
+  case actions.signUp:
+    return disableForm(state, true);
 
-    case actions.loginFail:
-    case actions.signUpFail:
-      return disableForm(state, false).setIn(['form', 'error'], payload);
+  case actions.loginFail:
+  case actions.signUpFail:
+    return disableForm(state, false).setIn(['form', 'error'], payload);
 
-    case actions.loginSuccess:
-      return disableForm(state, false).setIn(['form', 'error'], null);
+  case actions.loginSuccess:
+    return disableForm(state, false).setIn(['form', 'error'], null);
 
-    case actions.setFormField:
-      return state.setIn(['form', 'fields', payload.name], payload.value);
+  case actions.setFormField:
+    return state.setIn(['form', 'fields', payload.name], payload.value);
 
   }
 

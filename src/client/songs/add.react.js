@@ -1,12 +1,15 @@
 import './add.styl';
 import Component from '../components/component.react';
 import React from 'react';
+import requireAuth from '../auth/requireauth.react';
 
+@requireAuth
 export default class Add extends Component {
 
   static propTypes = {
     actions: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
+    songs: React.PropTypes.object.isRequired,
     users: React.PropTypes.object.isRequired
   };
 

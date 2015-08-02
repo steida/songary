@@ -14,18 +14,18 @@ export default function(state, action, payload) {
 
   switch (action) {
 
-    case actions.add:
-      return state.set('add', new Song);
+  case actions.add:
+    return state.set('add', new Song);
 
-    case actions.onFirebaseSongs:
-      return state.set('list', Seq(payload)
-        .sortBy(item => item.updatedAt || item.createdAt)
-        .reverse()
-        .toList()
-      );
+  case actions.onFirebaseSongs:
+    return state.set('list', Seq(payload)
+      .sortBy(item => item.updatedAt || item.createdAt)
+      .reverse()
+      .toList()
+    );
 
-    case actions.setAddField:
-      return state.setIn(['add', payload.name], payload.value);
+  case actions.setAddField:
+    return state.setIn(['add', payload.name], payload.value);
 
   }
 

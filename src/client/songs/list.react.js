@@ -29,12 +29,7 @@ export default class List extends Component {
   onLoadFromJsonClick() {
     const {actions, viewer} = this.props;
     const jsonString = prompt('Please enter JSON string.');
-    let songs = '';
-    try {
-      songs = JSON.parse(jsonString);
-    }
-    catch(e) {}
-    if (!songs) return;
+    const songs = JSON.parse(jsonString);
     actions.songs.addFromJson(songs, viewer);
   }
 
@@ -46,7 +41,7 @@ export default class List extends Component {
         <ul>
           {list.map(song =>
             <li key={song.id}>
-              <Link to="song" params={{id: song.id}}>
+              <Link params={{id: song.id}} to="song">
                 {song.name} / {song.artist}{' '}
               </Link>
               <button onClick={() => this.delete(song)}>x</button>

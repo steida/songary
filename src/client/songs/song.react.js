@@ -45,13 +45,13 @@ export default class Song extends Component {
     const songElSize = this.getElSize(songEl);
     let fontSize = Song.MIN_READABLE_FONT_SIZE;
     songEl.style.visibility = 'hidden';
-    while (fontSize != Song.MAX_FONT_SIZE) {
+    while (fontSize !== Song.MAX_FONT_SIZE) {
       lyricsEl.style.fontSize = fontSize + 'px';
       const articleElSize = this.getElSize(lyricsEl);
       // It seems that measuring only width is the best pattern.
       if (articleElSize.width > songElSize.width) {
         lyricsEl.style.fontSize = (fontSize - 1) + 'px';
-        break
+        break;
       }
       fontSize++;
     }

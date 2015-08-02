@@ -14,7 +14,7 @@ if (!config.isProduction)
   app.use(esteHeaders());
 
 app.use(compression());
-app.use(favicon('assets/img/favicon.ico'))
+app.use(favicon('assets/img/favicon.ico'));
 
 app.use('/build', express.static('build'));
 app.use('/assets', express.static('assets'));

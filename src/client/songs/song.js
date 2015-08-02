@@ -4,6 +4,7 @@ const SongRecord = Record({
   album: '',
   artist: '',
   createdAt: null,
+  createdBy: null,
   id: '',
   lyrics: '',
   name: '',
