@@ -32,8 +32,8 @@ export default function devTools(BaseComponent) {
     onDocumentKeyPress({ctrlKey, shiftKey, keyCode}) {
       if (!ctrlKey || !shiftKey) return;
       switch (keyCode) {
-        case 12: this.loadStateFromPrompt(); break; // eslint-disable-line no-undef
-        case 19: this.saveStateToConsole(); break; // eslint-disable-line no-undef
+      case 12: this.loadStateFromPrompt(); break; // eslint-disable-line no-undef
+      case 19: this.saveStateToConsole(); break; // eslint-disable-line no-undef
       }
     }
 
@@ -45,7 +45,7 @@ export default function devTools(BaseComponent) {
     }
 
     onFluxRender(total) {
-      this.log(total);
+      this.log(`render ${total.toFixed(2)}ms`);
     }
 
     logDispatch() {
