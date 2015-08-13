@@ -15,8 +15,8 @@ export function create(dispatch, validate, firebase, router) {
         .promise
         .then(() => {
           const newSong = Song.createNew(song, viewer, firebase.TIMESTAMP);
+          // Optimistic add for now. TODO: Catch errors.
           firebase.set(['songs', newSong.id], newSong.toJS());
-          // Optimistic add, Firebase always dispatches local changes anyway.
           dispatch(actions.add);
           router.transitionTo('me');
         });
