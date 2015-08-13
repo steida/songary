@@ -55,16 +55,18 @@ export default class App extends Component {
 
   createActions() {
     const {firebase, flux, msg, router} = this.props;
-    const validate = createValidate(msg);
-    // console.log(actions)
-    this.actions = actions.reduce((actions, {feature, create}) => {
-      const dispatch = (action, payload) => flux.dispatch(action, payload, {feature});
-      const featureActions = create(
-        dispatch, validate, msg[feature], firebase, router
-      );
-      return {...actions, [feature]: featureActions};
+    const state = () => flux.state.toObject();
+    const validate = createValidate(() => msg);
+
+    this.actions = actions.reduce((actions, {create, feature, inject}) => {
+      const dispatch = (action, payload) =>
+        flux.dispatch(action, payload, {feature});
+
+      const deps = [dispatch, validate, firebase, router, state];
+      const args = inject ? inject(...deps) : deps;
+      return {...actions, [feature]: create(...args)};
+
     }, {});
-    // console.log(this.actions)
   }
 
   onFirebaseAuth(auth) {

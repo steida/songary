@@ -3,7 +3,7 @@ import invariant from 'invariant';
 export const actions = create();
 export const feature = 'firebase';
 
-export function create(dispatch, validate, msg, firebase) {
+export function create(dispatch, validate, firebase) {
 
   function maybeListenFirebaseRef(decorator, getArgs) {
     const {props} = decorator;

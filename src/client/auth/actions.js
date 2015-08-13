@@ -5,7 +5,7 @@ export const feature = 'auth';
 
 const formFieldMaxLength = 100;
 
-export function create(dispatch, validate, msg, firebase, router) {
+export function create(dispatch, validate, firebase, router) {
 
   const validateForm = fields => validate(fields)
     .prop('email').required().email()
