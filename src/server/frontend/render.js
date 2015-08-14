@@ -11,7 +11,8 @@ import stateMerger from '../lib/merger';
 import useragent from 'useragent';
 
 export default function render(req, res, ...customStates) {
-  const appState = immutable.fromJS(initialState).mergeWith(stateMerger, ...customStates).toJS();
+  const appState = immutable.fromJS(initialState)
+    .mergeWith(stateMerger, ...customStates).toJS();
   return renderPage(req, res, appState);
 }
 
@@ -37,12 +38,18 @@ function renderPage(req, res, appState) {
 
     router.run((Handler, routerState) => {
       const ua = useragent.is(req.headers['user-agent']);
+
+      // A bit clunky way how to set 404 from userstate, but it works nicely.
+      const $404 = appState.$404;
+      delete appState.$404;
+
       const html = getPageHtml(Handler, appState, {
         hostname: req.hostname,
         // TODO: Remove once Safari and IE without Intl will die.
         needIntlPolyfill: ua.safari || (ua.ie && ua.version < '11')
       });
-      const notFound = routerState.routes.some(route => route.name === 'not-found');
+      const notFound = $404 || routerState.routes
+        .some(route => route.name === 'not-found');
       const status = notFound ? 404 : 200;
       res.status(status).send(html);
       resolve();

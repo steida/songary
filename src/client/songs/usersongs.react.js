@@ -4,7 +4,6 @@ import Loading from '../components/loading.react';
 import React from 'react';
 import SongLink from '../songs/songlink.react';
 import listenFirebase from '../firebase/listenfirebase';
-import {Link} from 'react-router';
 
 @listenFirebase((props, firebase) => ({
   action: props.actions.songs.onSongsCreatedByUser,
@@ -26,7 +25,7 @@ export default class UserSongs extends Component {
     const {msg, userSongs, viewer} = this.props;
     const songs = userSongs.get(viewer.id);
 
-    if (!songs) return <Loading msg={msg} />
+    if (!songs) return <Loading msg={msg} />;
 
     return (
       <div className="songs-usersongs">

@@ -37,8 +37,8 @@ export function create(dispatch, validate, firebase, router) {
       firebase.remove(['songs', viewer.id, song.id]);
     },
 
-    onSong(snapshot) {
-      dispatch(actions.onSong, snapshot.val());
+    onSong(snapshot, {params: {id}}) {
+      dispatch(actions.onSong, {id, value: snapshot.val()});
     },
 
     onSongsCreatedByUser(snapshot, {viewer: {id}}) {

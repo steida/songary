@@ -2,11 +2,11 @@ import Song from './song';
 import {List, Map, Record, Seq} from 'immutable';
 import {actions} from './actions';
 
-function revive(state) {
+function revive(state = Map()) {
   return new (Record({
     add: new Song,
     lastAdded: List(),
-    map: Map(),
+    map: (state.get('map') || Map()).map(json => json && new Song(json)),
     userSongs: Map()
   }));
 }
@@ -45,8 +45,10 @@ export default function(state, action, payload) {
   case actions.add:
     return state.set('add', new Song);
 
-  case actions.onSong:
-    return addToMap(state, {[payload.id]: payload});
+  case actions.onSong: {
+    const {id, value} = payload;
+    return state.setIn(['map', id], value ? new Song(value) : null);
+  }
 
   case actions.onSongsCreatedByUser: {
     const {userId, songs} = payload;
