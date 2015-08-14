@@ -2,6 +2,7 @@ export default {
   editable: {
     cancelEdit: `You have unsaved changes. Are you sure you want to cancel them?`
   },
+  loading: 'Loading...',
   notFound: {
     continueMessage: 'Continue here please.',
     header: 'This page isn\'t available',
