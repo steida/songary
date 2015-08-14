@@ -2,6 +2,7 @@
   "rules": {
     "songs": {
       ".read": true,
+      ".indexOn": ["createdBy"],
       "$id": {
         ".write": "auth != null"
       }
