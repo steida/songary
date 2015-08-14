@@ -10,19 +10,19 @@ function revive(state) {
 }
 
 export default function(state, action, payload) {
-  if (!action) state = revive(state);
+  if (!action) return revive(state);
 
   switch (action) {
 
   case actions.add:
     return state.set('add', new Song);
 
-  case actions.onFirebaseSongs:
-    return state.set('list', Seq(payload)
-      .sortBy(item => item.updatedAt || item.createdAt)
-      .reverse()
-      .toList()
-    );
+  // case actions.onFirebaseSongs:
+  //   return state.set('list', Seq(payload)
+  //     .sortBy(item => item.updatedAt || item.createdAt)
+  //     .reverse()
+  //     .toList()
+  //   );
 
   case actions.setAddSongField:
     return state.setIn(['add', payload.name], payload.value);
