@@ -5,7 +5,7 @@ export default function listenFirebase(getArgs) {
 
   return BaseComponent => class ListenFirebase extends Component {
 
-    static displayName = `${BaseComponent.displayName}ListenFirebase`;
+    static displayName = `${BaseComponent.displayName || BaseComponent.name}ListenFirebase`;
 
     static propTypes = {
       actions: React.PropTypes.object.isRequired
