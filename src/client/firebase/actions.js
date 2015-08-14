@@ -32,8 +32,9 @@ export function create(dispatch, validate, firebase) {
     );
     events.forEach(eventType => {
       ref.on(eventType, (...args) => {
+        // Do we need it? I don't think so.
         // setTimeout(() => {
-        action(...[eventType, ...args, props]);
+        action(...[...args, props, eventType]);
         // }, 0)
       }, onFirebaseError);
     });

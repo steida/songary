@@ -1,8 +1,8 @@
 import Component from '../components/component.react';
 import DocumentTitle from 'react-document-title';
-import ListSongs from '../songs/list.react';
 import Logout from '../auth/logout.react';
 import React from 'react';
+import UserSongs from '../songs/usersongs.react';
 import requireAuth from '../auth/requireauth.react';
 import {format} from '../intl/store';
 
@@ -19,7 +19,7 @@ export default class Index extends Component {
   render() {
     const {
       actions, msg,
-      songs: {list},
+      songs: {userSongs},
       users: {viewer}
     } = this.props;
 
@@ -27,7 +27,7 @@ export default class Index extends Component {
       <DocumentTitle title={msg.me.title}>
         <div className="me-page">
           <p>{format(msg.me.welcome, {email: viewer.email})}</p>
-          <ListSongs {...{actions, list, viewer}} />
+          <UserSongs {...{actions, msg, viewer, userSongs}} />
           <Logout {...{actions, msg}} />
         </div>
       </DocumentTitle>

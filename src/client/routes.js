@@ -15,6 +15,6 @@ export default (
     <Route handler={AddSong} name="songs-add" path="add-song" />
     <Route handler={Login} name="login" />
     <Route handler={Me} name="me" />
-    <Route handler={Song} name="song" path="me/songs/:id" />
+    <Route handler={Song} name="song" path="songs/:id" />
   </Route>
 );

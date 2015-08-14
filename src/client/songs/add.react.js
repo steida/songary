@@ -1,5 +1,6 @@
 import './add.styl';
 import Component from '../components/component.react';
+import DocumentTitle from 'react-document-title';
 import React from 'react';
 import Textarea from 'react-textarea-autosize';
 import requireAuth from '../auth/requireauth.react';
@@ -72,38 +73,40 @@ export default class Add extends Component {
     } = this.props;
 
     return (
-      <div className="songs-add">
-        <form onSubmit={::this.onFormSubmit}>
-          <input
-            autoFocus
-            name="name"
-            onChange={actions.setAddSongField}
-            placeholder="song name"
-            value={song.name}
-          />
-          <input
-            name="artist"
-            onChange={actions.setAddSongField}
-            placeholder="artist"
-            value={song.artist}
-          />
-          <Textarea
-            minRows={6}
-            name="lyrics"
-            onChange={actions.setAddSongField}
-            onPaste={::this.onLyricsPaste}
-            placeholder={msg.placeholder}
-            ref="lyrics"
-            value={song.lyrics}
-          />
-          <p>
-            <FormattedHTMLMessage message={msg.lyricsHelp} />
-          </p>
-          <div>
-            <button>{msg.button}</button>
-          </div>
-        </form>
-      </div>
+      <DocumentTitle title={msg.title}>
+        <div className="songs-add">
+          <form onSubmit={::this.onFormSubmit}>
+            <input
+              autoFocus
+              name="name"
+              onChange={actions.setAddSongField}
+              placeholder="song name"
+              value={song.name}
+            />
+            <input
+              name="artist"
+              onChange={actions.setAddSongField}
+              placeholder="artist"
+              value={song.artist}
+            />
+            <Textarea
+              minRows={6}
+              name="lyrics"
+              onChange={actions.setAddSongField}
+              onPaste={::this.onLyricsPaste}
+              placeholder={msg.placeholder}
+              ref="lyrics"
+              value={song.lyrics}
+            />
+            <p>
+              <FormattedHTMLMessage message={msg.lyricsHelp} />
+            </p>
+            <div>
+              <button>{msg.button}</button>
+            </div>
+          </form>
+        </div>
+      </DocumentTitle>
     );
   }
 

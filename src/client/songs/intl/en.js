@@ -14,6 +14,7 @@ export default {
         href="http://chordify.net"
         target="_blank"
       >chordify.net</a>.`,
-    placeholder: '[F]Michelle [Bmi7]ma belle...'
+    placeholder: '[F]Michelle [Bmi7]ma belle...',
+    title: 'Add New Song'
   }
 };

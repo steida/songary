@@ -1,8 +1,16 @@
 import './song.styl';
 import Component from '../components/component.react';
+import DocumentTitle from 'react-document-title';
 import React from 'react';
 import escape from 'escape-html';
+import listenFirebase from '../firebase/listenfirebase';
 
+@listenFirebase((props, firebase) => ({
+  action: props.actions.songs.onSong,
+  ref: firebase
+    .child('songs')
+    .child(props.params.id)
+}))
 export default class Song extends Component {
 
   static propTypes = {
@@ -70,22 +78,26 @@ export default class Song extends Component {
   }
 
   render() {
-    const {params: {id}, songs: {list}} = this.props;
-    // TODO: ...
-    if (!list) return null;
-    const song = list.find(song => song.id === id);
+    const {params: {id}, songs: {map}} = this.props;
+    const song = map.get(id);
+
+    // TODO: Distinguish 404 from not yet loaded.
     if (!song) return null;
+
+    const title = song.name + ' / ' + song.artist;
     const displayLyrics = this.getDisplayLyrics(song.lyrics);
 
     return (
-      <div className="song">
-        <h1>{song.name} / {song.artist}</h1>
-        <div
-          className="lyrics"
-          dangerouslySetInnerHTML={{__html: displayLyrics}}
-          ref="lyrics"
-        />
-      </div>
+      <DocumentTitle title={title}>
+        <div className="song">
+          <h1>{title}</h1>
+          <div
+            className="lyrics"
+            dangerouslySetInnerHTML={{__html: displayLyrics}}
+            ref="lyrics"
+          />
+        </div>
+      </DocumentTitle>
     );
   }
 
