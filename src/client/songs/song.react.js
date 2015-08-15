@@ -95,7 +95,7 @@ export default class Song extends Component {
     return (
       <DocumentTitle title={title}>
         <div className="song">
-          <Link to="home">home</Link>
+          <Link to="songs">{msg.app.header.songs}</Link>
           <h1>{title}</h1>
           <div
             className="lyrics"

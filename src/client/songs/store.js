@@ -15,15 +15,14 @@ function toSortedSongsList(iterable) {
 
 function addToMap(state, songs) {
   Seq(songs).forEach(json => {
-    if (!json) return;
-    const song = new Song(json);
+    const song = json && new Song(json);
     state = state.setIn(['map', song.id], song);
   });
   return state;
 }
 
-function setLastAdded(state) {
-  return state.set('lastAdded', toSortedSongsList(state.map));
+function setAll(state) {
+  return state.set('all', toSortedSongsList(state.map.toJS()));
 }
 
 function setUserSongs(state, userId, songs) {
@@ -33,7 +32,7 @@ function setUserSongs(state, userId, songs) {
 function revive(state = Map()) {
   return new (Record({
     add: new Song,
-    lastAdded: List(),
+    all: List(),
     map: (state.get('map') || Map()).map(json => json && new Song(json)),
     userSongs: Map()
   }));
@@ -52,10 +51,17 @@ export default function(state, action, payload) {
     return state.setIn(['map', id], value ? new Song(value) : null);
   }
 
+  case actions.onSongs: {
+    const songs = payload;
+    state = addToMap(state, songs);
+    state = setAll(state);
+    return state;
+  }
+
   case actions.onSongsCreatedByUser: {
     const {userId, songs} = payload;
     state = addToMap(state, songs);
-    state = setLastAdded(state);
+    state = setAll(state);
     state = setUserSongs(state, userId, songs);
     return state;
   }

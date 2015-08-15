@@ -16,5 +16,8 @@ export default {
       >chordify.net</a>.`,
     placeholder: '[F]Michelle [Bmi7]ma belle...',
     title: 'Add New Song'
+  },
+  index: {
+    title: 'Songs'
   }
 };

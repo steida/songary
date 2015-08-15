@@ -33,12 +33,16 @@ export function create(dispatch, validate, firebase, router) {
       // });
     },
 
-    delete(song, viewer) {
-      firebase.remove(['songs', viewer.id, song.id]);
-    },
+    // delete(song, viewer) {
+    //   firebase.remove(['songs', viewer.id, song.id]);
+    // },
 
     onSong(snapshot, {params: {id}}) {
       dispatch(actions.onSong, {id, value: snapshot.val()});
+    },
+
+    onSongs(snapshot) {
+      dispatch(actions.onSongs, snapshot.val());
     },
 
     onSongsCreatedByUser(snapshot, {viewer: {id}}) {

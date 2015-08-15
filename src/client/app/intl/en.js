@@ -6,6 +6,7 @@ export default {
     addSong: 'Add New Song',
     home: 'Songary',
     login: 'Login / Sign Up',
-    me: 'Me'
+    me: 'Me',
+    songs: 'Songs'
   }
 };
