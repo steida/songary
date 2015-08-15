@@ -2,19 +2,20 @@ import Song from './song';
 import {List, Map, Record, Seq} from 'immutable';
 import {actions} from './actions';
 
-function revive(state = Map()) {
-  return new (Record({
-    add: new Song,
-    lastAdded: List(),
-    map: (state.get('map') || Map()).map(json => json && new Song(json)),
-    userSongs: Map()
-  }));
-}
-
 const lastUpdatedSorter = song => song.updatedAt || song.createdAt;
+
+function toSortedSongsList(iterable) {
+  return Seq(iterable)
+    .filter(song => song)
+    .map(song => new Song(song))
+    .sortBy(lastUpdatedSorter)
+    .reverse()
+    .toList();
+}
 
 function addToMap(state, songs) {
   Seq(songs).forEach(json => {
+    if (!json) return;
     const song = new Song(json);
     state = state.setIn(['map', song.id], song);
   });
@@ -22,19 +23,20 @@ function addToMap(state, songs) {
 }
 
 function setLastAdded(state) {
-  const lastAdded = state.map
-    .toList()
-    .sortBy(lastUpdatedSorter)
-    .reverse();
-  return state.set('lastAdded', lastAdded);
+  return state.set('lastAdded', toSortedSongsList(state.map));
 }
 
 function setUserSongs(state, userId, songs) {
-  const userSongs = state.map
-    .toList()
-    .sortBy(lastUpdatedSorter)
-    .reverse();
-  return state.setIn(['userSongs', userId], userSongs);
+  return state.setIn(['userSongs', userId], toSortedSongsList(songs));
+}
+
+function revive(state = Map()) {
+  return new (Record({
+    add: new Song,
+    lastAdded: List(),
+    map: (state.get('map') || Map()).map(json => json && new Song(json)),
+    userSongs: Map()
+  }));
 }
 
 export default function(state, action, payload) {
