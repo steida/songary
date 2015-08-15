@@ -30,10 +30,13 @@ function setUserSongs(state, userId, songs) {
 }
 
 function revive(state = Map()) {
+  const map = (state.get('map') || Map()).map(json => json && new Song(json));
+  const all = toSortedSongsList(map.toJS());
+
   return new (Record({
     add: new Song,
-    all: List(),
-    map: (state.get('map') || Map()).map(json => json && new Song(json)),
+    all: all,
+    map: map,
     userSongs: Map()
   }));
 }

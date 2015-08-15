@@ -55,6 +55,8 @@ function loadUserData(req, routeName, params) {
   const dataSources = [];
   if (routeName === 'song')
     dataSources.push(loadSong(params.id));
+  if (routeName === 'songs')
+    dataSources.push(loadSongs());
 
   return Promise.settle(dataSources).then(receivedData =>
     receivedData
@@ -73,5 +75,17 @@ function loadSong(songId) {
           map: {[songId]: song}
         }
       });
+    });
+}
+
+function loadSongs() {
+  return firebase
+    .once('value', ['songs'])
+    .then(snapshot => {
+      return {
+        songs: {
+          map: snapshot.val()
+        }
+      };
     });
 }
