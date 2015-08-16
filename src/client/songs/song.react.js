@@ -87,7 +87,7 @@ export default class Song extends Component {
 
     const title = song.name + ' / ' + song.artist;
     const displayLyrics = this.getDisplayLyrics(song.lyrics);
-    const viewerIsSongCreator = song.createdBy === viewer.id;
+    const viewerIsSongCreator = viewer && viewer.id === song.createdBy;
 
     return (
       <DocumentTitle title={title}>
