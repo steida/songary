@@ -25,6 +25,11 @@ export function create(dispatch, validate, firebase, router, state) {
         // TODO: Catch and handle errors. Add pending action.
     },
 
+    cancelEdit(id) {
+      dispatch(actions.cancelEdit, {id});
+      router.transitionTo('song', {id});
+    },
+
     save(song) {
       const {id} = song;
       return validateSong(song)

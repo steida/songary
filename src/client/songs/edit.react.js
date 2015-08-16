@@ -30,6 +30,7 @@ export default class Edit extends Component {
     return (
       <DocumentTitle title={msg.songs.edit.title}>
         <div className="songs-edit">
+          <h2>{msg.songs.edit.title}</h2>
           {song
             ? <SongForm {...{actions, msg, song, editedSong}} editMode />
             : <Loading msg={msg} />

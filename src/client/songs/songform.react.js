@@ -2,6 +2,7 @@ import './songform.styl';
 import Component from '../components/component.react';
 import React from 'react';
 import Textarea from 'react-textarea-autosize';
+import immutable from 'immutable';
 import {FormattedHTMLMessage} from 'react-intl';
 import {focusInvalidField} from '../lib/validation';
 
@@ -28,6 +29,19 @@ export default class Add extends Component {
 
   onLyricsPaste(e) {
     this.tryExtractChordsFromPastedLyrics(e);
+  }
+
+  onCancelClick() {
+    const {actions, msg, song} = this.props;
+    const isDirty = this.isDirty();
+    if (isDirty && !confirm(msg.app.confirm.areYouSure))
+      return;
+    actions.cancelEdit(song.id);
+  }
+
+  isDirty() {
+    const {editedSong, song} = this.props;
+    return !!(editedSong && !immutable.is(song, editedSong));
   }
 
   // Why at this place? Because "declare then use" order.
@@ -99,9 +113,16 @@ export default class Add extends Component {
           <FormattedHTMLMessage message={msg.songs.form.lyricsHelp} />
         </p>
         <div>
-          <button>{
-            editMode ? msg.app.buttons.save : msg.app.buttons.add
+          <button disabled={editMode && !this.isDirty()}>{
+            editMode ? msg.app.button.save : msg.app.button.add
           }</button>
+          {editMode &&
+            <button
+              children={msg.app.button.cancel}
+              onClick={::this.onCancelClick}
+              type="button"
+            />
+          }
         </div>
       </form>
     );

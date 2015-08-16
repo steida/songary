@@ -48,6 +48,9 @@ export default function(state, action, payload) {
   case actions.add:
     return state.set('add', new Song);
 
+  case actions.cancelEdit:
+    return state.removeIn(['edited', payload.id]);
+
   case actions.onSong: {
     const {id, value} = payload;
     return addToMap(state, {[id]: value});

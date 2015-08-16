@@ -1,8 +1,12 @@
 export default {
-  buttons: {
+  button: {
     add: 'Add',
+    cancel: 'Cancel',
     edit: 'Edit',
     save: 'Save'
+  },
+  confirm: {
+    areYouSure: 'Are you sure?'
   },
   footer: {
     madeByHtml: `made by <a href="https://twitter.com/steida">steida</a>`
