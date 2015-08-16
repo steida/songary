@@ -17,7 +17,8 @@ export default class Song extends Component {
   static propTypes = {
     msg: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
-    songs: React.PropTypes.object.isRequired
+    songs: React.PropTypes.object.isRequired,
+    users: React.PropTypes.object.isRequired
   }
 
   constructor(props) {
@@ -78,7 +79,7 @@ export default class Song extends Component {
   }
 
   render() {
-    const {msg, params: {id}, songs: {map}} = this.props;
+    const {msg, params: {id}, songs: {map}, users: {viewer}} = this.props;
     const song = map.get(id);
 
     if (song === null) return <NotFound msg={msg} />;
@@ -86,13 +87,16 @@ export default class Song extends Component {
 
     const title = song.name + ' / ' + song.artist;
     const displayLyrics = this.getDisplayLyrics(song.lyrics);
+    const viewerIsSongCreator = song.createdBy === viewer.id;
 
     return (
       <DocumentTitle title={title}>
         <div className="song">
           <nav>
             <Link to="songs">{msg.app.header.songs}</Link>
-            <Link params={{id}} to="songs-edit">{msg.app.buttons.edit}</Link>
+            {viewerIsSongCreator &&
+              <Link params={{id}} to="songs-edit">{msg.app.button.edit}</Link>
+            }
           </nav>
           <h1>{title}</h1>
           <div
