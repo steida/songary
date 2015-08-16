@@ -14,11 +14,9 @@ function toSortedSongsList(iterable) {
 }
 
 function addToMap(state, songs) {
-  Seq(songs).forEach(json => {
-    const song = json && new Song(json);
-    state = state.setIn(['map', song.id], song);
-  });
-  return state;
+  return Seq(songs).reduce((state, json, id) => {
+    return state.setIn(['map', id], json ? new Song(json) : null);
+  }, state);
 }
 
 function setAll(state) {
@@ -52,8 +50,7 @@ export default function(state, action, payload) {
 
   case actions.onSong: {
     const {id, value} = payload;
-    // TODO: Use add to map imho as well.
-    return state.setIn(['map', id], value ? new Song(value) : null);
+    return addToMap(state, {[id]: value});
   }
 
   case actions.onSongs: {
@@ -74,15 +71,9 @@ export default function(state, action, payload) {
   case actions.save:
     return state.deleteIn(['edited', payload.id]);
 
-  case actions.setAddSongField: {
-    const {name, value} = payload;
-    return state.setIn(['add', name], value);
-  }
-
   case actions.setSongField: {
     const {song, name, value} = payload;
     if (!song.id) return state.setIn(['add', name], value);
-
     return state.updateIn(['edited', song.id], (edited = song) =>
       edited.set(name, value));
   }
