@@ -28,4 +28,10 @@ export default class Song extends SongRecord {
     });
   }
 
+  toSave() {
+    return ['artist', 'lyrics', 'name'].reduce((song, prop) =>
+      song.update(prop, value => value.trim())
+    , this).toJS();
+  }
+
 }

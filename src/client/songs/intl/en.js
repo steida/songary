@@ -1,6 +1,11 @@
 export default {
   add: {
-    button: 'Add',
+    title: 'Add New Song'
+  },
+  edit: {
+    title: 'Edit Song'
+  },
+  form: {
     lyricsHelp: `Check <a
         href="http://linkesoft.com/songbook/chordproformat.html"
         target="_blank"
@@ -14,8 +19,7 @@ export default {
         href="http://chordify.net"
         target="_blank"
       >chordify.net</a>.`,
-    placeholder: '[F]Michelle [Bmi7]ma belle...',
-    title: 'Add New Song'
+    placeholder: '[F]Michelle [Bmi7]ma belle...'
   },
   index: {
     title: 'Songs'

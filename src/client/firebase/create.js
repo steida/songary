@@ -40,12 +40,10 @@ export default function create(firebaseUrl) {
       });
     },
 
-    change(method, path, data) {
+    change(method, path, value) {
       const child = firebase.child(path.join('/'));
       return promisify(onComplete => {
-        // TODO: Use ES6.
-        const args = Array.prototype.slice.call(arguments, 2).concat(onComplete);
-        child[method].apply(child, args);
+        child[method](value, onComplete);
       });
     },
 
@@ -62,7 +60,8 @@ export default function create(firebaseUrl) {
     },
 
     remove(path) {
-      return this.change('remove', path);
+      // set(null) is equivalent to calling remove().
+      return this.change('set', path, null);
     },
 
     once(eventType, path) {

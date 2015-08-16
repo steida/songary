@@ -1,5 +1,5 @@
 import Song from './song';
-import {List, Map, Record, Seq} from 'immutable';
+import {Map, Record, Seq} from 'immutable';
 import {actions} from './actions';
 
 const lastUpdatedSorter = song => song.updatedAt || song.createdAt;
@@ -36,6 +36,7 @@ function revive(state = Map()) {
   return new (Record({
     add: new Song,
     all: all,
+    edited: Map(),
     map: map,
     userSongs: Map()
   }));
@@ -51,6 +52,7 @@ export default function(state, action, payload) {
 
   case actions.onSong: {
     const {id, value} = payload;
+    // TODO: Use add to map imho as well.
     return state.setIn(['map', id], value ? new Song(value) : null);
   }
 
@@ -69,9 +71,20 @@ export default function(state, action, payload) {
     return state;
   }
 
+  case actions.save:
+    return state.deleteIn(['edited', payload.id]);
+
   case actions.setAddSongField: {
     const {name, value} = payload;
     return state.setIn(['add', name], value);
+  }
+
+  case actions.setSongField: {
+    const {song, name, value} = payload;
+    if (!song.id) return state.setIn(['add', name], value);
+
+    return state.updateIn(['edited', song.id], (edited = song) =>
+      edited.set(name, value));
   }
 
   }

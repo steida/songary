@@ -5,18 +5,13 @@ import Loading from '../components/loading.react';
 import NotFound from '../components/notfound.react';
 import React from 'react';
 import escape from 'escape-html';
-import listenFirebase from '../firebase/listenfirebase';
+import listenSong from '../firebase/listensong';
 import {Link} from 'react-router';
 
 const MAX_FONT_SIZE = 50;
 const MIN_READABLE_FONT_SIZE = 8;
 
-@listenFirebase((props, firebase) => ({
-  action: props.actions.songs.onSong,
-  ref: firebase
-    .child('songs')
-    .child(props.params.id)
-}))
+@listenSong
 export default class Song extends Component {
 
   static propTypes = {
@@ -95,7 +90,10 @@ export default class Song extends Component {
     return (
       <DocumentTitle title={title}>
         <div className="song">
-          <Link to="songs">{msg.app.header.songs}</Link>
+          <nav>
+            <Link to="songs">{msg.app.header.songs}</Link>
+            <Link params={{id}} to="songs-edit">{msg.app.buttons.edit}</Link>
+          </nav>
           <h1>{title}</h1>
           <div
             className="lyrics"

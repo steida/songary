@@ -1,5 +1,6 @@
 import AddSong from './songs/add.react';
 import App from './app/app.react';
+import EditSong from './songs/edit.react';
 import Home from './home/index.react';
 import Login from './auth/index.react';
 import Me from './me/index.react';
@@ -18,5 +19,6 @@ export default (
     <Route handler={Me} name="me" />
     <Route handler={Songs} name="songs" path="songs" />
     <Route handler={Song} name="song" path="songs/:id" />
+    <Route handler={EditSong} name="songs-edit" path="songs/:id/edit" />
   </Route>
 );
