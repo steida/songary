@@ -39,6 +39,13 @@ export default class Add extends Component {
     actions.cancelEdit(song.id);
   }
 
+  onDeleteClick() {
+    const {actions, msg, song} = this.props;
+    if (!confirm(msg.app.confirm.areYouSure))
+      return;
+    actions.delete(song.id);
+  }
+
   isDirty() {
     const {editedSong, song} = this.props;
     return !!(editedSong && !immutable.is(song, editedSong));
@@ -120,6 +127,13 @@ export default class Add extends Component {
             <button
               children={msg.app.button.cancel}
               onClick={::this.onCancelClick}
+              type="button"
+            />
+          }
+          {editMode &&
+            <button
+              children={msg.app.button.delete}
+              onClick={::this.onDeleteClick}
               type="button"
             />
           }

@@ -2,6 +2,7 @@ export default {
   button: {
     add: 'Add',
     cancel: 'Cancel',
+    delete: 'Delete',
     edit: 'Edit',
     save: 'Save'
   },

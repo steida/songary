@@ -30,6 +30,12 @@ export function create(dispatch, validate, firebase, router, state) {
       router.transitionTo('song', {id});
     },
 
+    delete(id) {
+      // Is deleted via onSong, which returns id and value === null.
+      firebase.remove(['songs', id]);
+      router.transitionTo('songs');
+    },
+
     save(song) {
       const {id} = song;
       return validateSong(song)
