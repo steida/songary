@@ -58,6 +58,9 @@ export default function(state, action, payload) {
 
   case actions.onSongs: {
     const songs = payload;
+    // To ensure shown songs are removed.
+    // TODO: Rethink.
+    state = state.set('map', Map());
     state = addToMap(state, songs);
     state = setAll(state);
     return state;
