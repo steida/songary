@@ -1,4 +1,6 @@
+import Fixtures from './fixtures';
 import Song from './song';
+import {Seq} from 'immutable';
 
 export const actions = create();
 export const feature = 'songs';
@@ -25,6 +27,17 @@ export function create(dispatch, validate, firebase, router, state) {
         // TODO: Catch and handle errors. Add pending action.
     },
 
+    addFixtures() {
+      const {users: {viewer}} = state();
+      const songs = Seq(Fixtures).map(json => {
+        const song = new Song(json);
+        return Song.createNew(song, viewer, firebase.TIMESTAMP)
+          .set('id', json.id)
+          .toSave();
+      }).toJS();
+      firebase.update(['songs'], songs);
+    },
+
     cancelEdit(id) {
       dispatch(actions.cancelEdit, {id});
       router.transitionTo('song', {id});
@@ -47,10 +60,6 @@ export function create(dispatch, validate, firebase, router, state) {
         });
         // TODO: Catch and handle errors. Add pending action.
     },
-
-    // delete(song, viewer) {
-    //   firebase.remove(['songs', viewer.id, song.id]);
-    // },
 
     onSong(snapshot, {params: {id}}) {
       dispatch(actions.onSong, {id, value: snapshot.val()});
@@ -75,14 +84,3 @@ export function create(dispatch, validate, firebase, router, state) {
   };
 
 }
-
-// addFromJson(songs, viewer) {
-//     // songs.forEach(song => {
-//     //   song = new Song(song).merge({
-//     //     createdAt: firebase.TIMESTAMP,
-//     //     updatedAt: firebase.TIMESTAMP,
-//     //     createdBy: viewer.id
-//     //   }).toJS();
-//     //   firebase.set(['songs', viewer.id, song.id], song);
-//     // });
-//   }

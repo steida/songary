@@ -29,6 +29,9 @@ export default class Index extends Component {
           <p>{format(msg.me.welcome, {email: viewer.email})}</p>
           <UserSongs {...{actions, msg, viewer, userSongs}} />
           <Logout {...{actions, msg}} />
+          {/*<p>
+            <button onClick={actions.songs.addFixtures}>Add Fixtures</button>
+          </p>*/}
         </div>
       </DocumentTitle>
     );
