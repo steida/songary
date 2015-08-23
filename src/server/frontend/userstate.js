@@ -53,10 +53,15 @@ export default function userState() {
 // Gracefully settle all promises, ignore failed.
 function loadUserData(req, routeName, params) {
   const dataSources = [];
-  if (routeName === 'song')
+
+  switch (routeName) {
+  case 'song':
     dataSources.push(loadSong(params.id));
-  if (routeName === 'songs')
+    break;
+  case 'songs':
     dataSources.push(loadSongs());
+    break;
+  }
 
   return Promise.settle(dataSources).then(receivedData =>
     receivedData
