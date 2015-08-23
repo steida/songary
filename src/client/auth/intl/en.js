@@ -4,6 +4,7 @@ export default {
       login: 'Login',
       signUp: 'Sign Up'
     },
+    facebook: 'Sign Up With Facebook',
     legend: 'Login / Sign Up',
     placeholder: {
       email: 'your@email.com',

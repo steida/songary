@@ -22,6 +22,26 @@ export default function create(firebaseUrl) {
 
     root: firebase,
 
+    // const options = {
+    //   scope: {
+    //     facebook: 'email,user_friends',
+    //     google: 'email',
+    //     twitter: '' // email must be requested ad hoc
+    //   }[provider]
+    // }
+    authWithOAuth(provider, options) {
+      return promisify(onComplete => {
+        // https://www.firebase.com/docs/web/guide/user-auth.html#section-popups
+        firebase.authWithOAuthPopup(provider, (error, authData) => {
+          if (error && error.code === 'TRANSPORT_UNAVAILABLE') {
+            firebase.authWithOAuthRedirect(provider, onComplete, options);
+            return;
+          }
+          onComplete(error, authData);
+        }, options);
+      });
+    },
+
     authWithPassword(params) {
       return promisify(onComplete => {
         firebase.authWithPassword(params, onComplete);

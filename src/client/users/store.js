@@ -15,10 +15,12 @@ export default function(state, action, payload) {
 
   switch (action) {
 
-  case authActions.loginSuccess:
+  case authActions.onAuth: {
+    const {auth} = payload;
     // Hideous side effect hack, will be removed soon with new react-router.
     User.isLoggedIn = true;
-    return state.set('viewer', User.fromFirebaseAuth(payload));
+    return state.set('viewer', User.fromFirebaseAuth(auth));
+  }
 
   }
 

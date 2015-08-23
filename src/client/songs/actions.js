@@ -1,6 +1,7 @@
-import Fixtures from './fixtures';
 import Song from './song';
-import {Seq} from 'immutable';
+
+// import Fixtures from '../../../export';
+// import {Seq} from 'immutable';
 
 export const actions = create();
 export const feature = 'songs';
@@ -20,23 +21,23 @@ export function create(dispatch, validate, firebase, router, state) {
       return validateSong(song)
         .then(() => {
           song = Song.createNew(song, viewer, firebase.TIMESTAMP);
-          firebase.set(['songs', song.id], song.toSave());
           dispatch(actions.add);
+          // TODO: Catch and handle errors. Add pending action.
+          firebase.set(['songs', song.id], song.toSave());
           router.transitionTo('me');
         });
-        // TODO: Catch and handle errors. Add pending action.
     },
 
-    addFixtures() {
-      const {users: {viewer}} = state();
-      const songs = Seq(Fixtures).map(json => {
-        const song = new Song(json);
-        return Song.createNew(song, viewer, firebase.TIMESTAMP)
-          .set('id', json.id)
-          .toSave();
-      }).toJS();
-      firebase.update(['songs'], songs);
-    },
+    // addFixtures() {
+    //   const {users: {viewer}} = state();
+    //   const songs = Seq(Fixtures.songs).map(json => {
+    //     const song = new Song(json);
+    //     return Song.createNew(song, viewer, firebase.TIMESTAMP)
+    //       .set('id', json.id)
+    //       .toSave();
+    //   }).toJS();
+    //   firebase.update(['songs'], songs);
+    // },
 
     cancelEdit(id) {
       dispatch(actions.cancelEdit, {id});

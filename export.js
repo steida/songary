@@ -1,4 +1,4 @@
-{
+export default {
   "songs" : {
     "19p4amnb4x0n" : {
       "artist" : "Traband",

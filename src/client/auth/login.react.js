@@ -1,7 +1,7 @@
 import './login.styl';
 import Component from '../components/component.react';
 import React from 'react';
-import {focusInvalidField} from '../lib/validation';
+// import {focusInvalidField} from '../lib/validation';
 
 export default class Login extends Component {
 
@@ -13,15 +13,16 @@ export default class Login extends Component {
 
   onFormSubmit(e) {
     e.preventDefault();
-    this.login({signUp: false});
+    // this.emailLoginOrSignUp({signUp: false});
   }
 
-  login({signUp}) {
-    const {actions: {auth}, auth: {form}} = this.props;
-    const action = signUp ? auth.signUp : auth.login;
-    action(form.fields)
-      .catch(focusInvalidField(this));
-  }
+  // TODO: Email login must be revisited.
+  // emailLoginOrSignUp({signUp}) {
+  //   const {actions: {auth}, auth: {form}} = this.props;
+  //   const action = signUp ? auth.emailSignUp : auth.emailLogin;
+  //   action(form.fields)
+  //     .catch(focusInvalidField(this));
+  // }
 
   render() {
     const {
@@ -35,6 +36,10 @@ export default class Login extends Component {
         <form onSubmit={::this.onFormSubmit}>
           <fieldset disabled={form.disabled}>
             <legend>{msg.legend}</legend>
+            {/*
+            TODO: Remembering which provider was used for login sucks.
+            We must merge accounts like quora. All we need is Firebase email
+            check, then we can merge users by email.
             <input
               autoFocus
               name="email"
@@ -57,7 +62,12 @@ export default class Login extends Component {
             />
             <button
               children={msg.button.signUp}
-              onClick={() => this.login({signUp: true})}
+              onClick={() => this.emailLoginOrSignUp({signUp: true})}
+              type="button"
+            />*/}
+            <button
+              children={msg.facebook}
+              onClick={() => actions.auth('facebook')}
               type="button"
             />
             <p>
