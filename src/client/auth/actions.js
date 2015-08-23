@@ -40,8 +40,10 @@ export function create(dispatch, validate, firebase, router) {
       dispatch(actions.auth, {provider, options});
       firebase.authWithOAuth(provider, options)
         .then((auth) => saveUser(auth))
-        .then(() => redirectAfterAuth())
-        .then(() => dispatch(actions.authSuccess))
+        .then(() => {
+          redirectAfterAuth();
+          dispatch(actions.authSuccess);
+        })
         .catch(e => dispatch(actions.authFail, e));
     },
     authSuccess() {},
