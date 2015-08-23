@@ -1,6 +1,6 @@
 import Song from './song';
 
-// import Fixtures from '../../../export';
+// import Fixtures from '../../../firebase/export';
 // import {Seq} from 'immutable';
 
 export const actions = create();
