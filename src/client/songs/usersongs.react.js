@@ -25,17 +25,18 @@ export default class UserSongs extends Component {
     const {msg, userSongs, viewer} = this.props;
     const songs = userSongs.get(viewer.id);
 
-    if (!songs) return <Loading msg={msg} />;
-
     return (
       <div className="songs-usersongs">
-        <ol>
-          {songs.map(song =>
-            <li key={song.id}>
-              <SongLink song={song} />
-            </li>
-          )}
-        </ol>
+        {songs
+          ? <ol>
+              {songs.map(song =>
+                <li key={song.id}>
+                  <SongLink song={song} />
+                </li>
+              )}
+            </ol>
+          : <Loading msg={msg} />
+        }
       </div>
     );
   }
