@@ -21,7 +21,7 @@ export default class Loading extends Component {
 
   componentDidMount() {
     this.timer = setTimeout(() => {
-      this.setState({shown: true})
+      this.setState({shown: true});
     }, this.props.delay);
   }
 
