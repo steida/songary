@@ -22,9 +22,9 @@ export function create(dispatch, validate, firebase, router, state) {
         .then(() => {
           song = Song.createNew(song, viewer, firebase.TIMESTAMP);
           dispatch(actions.add);
-          // TODO: Catch and handle errors. Add pending action.
+          // TODO: Catch and handle errors. Consider pending action.
           firebase.set(['songs', song.id], song.toSave());
-          router.transitionTo('me');
+          router.transitionTo('song', {id: song.id});
         });
     },
 
@@ -45,9 +45,10 @@ export function create(dispatch, validate, firebase, router, state) {
     },
 
     delete(id) {
-      // Is deleted via onSong, which returns id and value === null.
+      // Remove deletes song from app state via onSong returning id and
+      // value === null.
       firebase.remove(['songs', id]);
-      router.transitionTo('songs');
+      router.transitionTo('my-songs');
     },
 
     save(song) {

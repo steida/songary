@@ -1,12 +1,11 @@
 import Component from '../components/component.react';
 import DocumentTitle from 'react-document-title';
-import Logout from '../auth/logout.react';
 import React from 'react';
+import UserSongs from '../songs/usersongs.react';
 import requireAuth from '../auth/requireauth.react';
-import {format} from '../intl/store';
 
 @requireAuth
-export default class Index extends Component {
+export default class My extends Component {
 
   static propTypes = {
     actions: React.PropTypes.object.isRequired,
@@ -16,16 +15,19 @@ export default class Index extends Component {
   }
 
   render() {
-    const {actions, msg, users: {viewer}} = this.props;
+    const {actions, msg, songs: {userSongs}, users: {viewer}} = this.props;
+    // TODO: Loading.
 
     return (
-      <DocumentTitle title={msg.me.title}>
+      <DocumentTitle title={msg.songs.my.title}>
         <div className="me-page">
-          <p>{format(msg.me.welcome, {email: viewer.email})}</p>
-          <Logout {...{actions, msg}} />
-          {/*<p>
-            <button onClick={actions.songs.addFixtures}>Add Fixtures</button>
-          </p>*/}
+          {userSongs.size > 0 &&
+            <h2>{msg.songs.my.songsYouAdded}</h2>
+          }
+          <UserSongs {...{actions, msg, viewer, userSongs}} />
+          {false &&
+            <h2>{msg.songs.my.songsYouStarred}</h2>
+          }
         </div>
       </DocumentTitle>
     );

@@ -94,6 +94,7 @@ export default class Song extends Component {
         <div className="song">
           <nav>
             <Link to="songs">{msg.app.header.songs}</Link>
+            <Link to="my-songs">{msg.app.header.mySongs}</Link>
             {viewerIsSongCreator &&
               <Link params={{id}} to="songs-edit">{msg.app.button.edit}</Link>
             }

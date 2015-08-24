@@ -1,6 +1,6 @@
 export default {
   add: {
-    title: 'Add New Song'
+    title: 'Add Song'
   },
   edit: {
     title: 'Edit Song'
@@ -23,5 +23,10 @@ export default {
   },
   index: {
     title: 'Songs'
+  },
+  my: {
+    songsYouAdded: 'Songs You Added',
+    songsYouStarred: 'Songs You Starred',
+    title: 'My Songs'
   }
 };
