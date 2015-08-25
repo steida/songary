@@ -36,6 +36,7 @@ function revive(state = Map()) {
     all: all,
     edited: Map(),
     map: map,
+    starred: Map(),
     userSongs: Map()
   }));
 }
@@ -56,10 +57,18 @@ export default function(state, action, payload) {
     return addToMap(state, {[id]: value});
   }
 
+  case actions.onSongStar: {
+    const {viewer, song, value} = payload;
+    return value
+      ? state.setIn(['starred', viewer.id, song.id], value)
+      : state.removeIn(['starred', viewer.id, song.id]);
+  }
+
   case actions.onSongs: {
     const songs = payload;
     // To ensure shown songs are removed.
-    // TODO: Rethink.
+    // TODO: Rethink. We should not reset map, but only update lists for
+    // pagging etc., so app state can work as cache until we have a new data.
     state = state.set('map', Map());
     state = addToMap(state, songs);
     state = setAll(state);

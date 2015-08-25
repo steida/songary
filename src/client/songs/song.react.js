@@ -4,6 +4,7 @@ import DocumentTitle from 'react-document-title';
 import Loading from '../components/loading.react';
 import NotFound from '../components/notfound.react';
 import React from 'react';
+import Star from '../components/star.react';
 import escape from 'escape-html';
 import listenSong from '../firebase/listensong';
 import {Link} from 'react-router';
@@ -15,6 +16,7 @@ const MIN_READABLE_FONT_SIZE = 8;
 export default class Song extends Component {
 
   static propTypes = {
+    actions: React.PropTypes.object.isRequired,
     msg: React.PropTypes.object.isRequired,
     params: React.PropTypes.object.isRequired,
     songs: React.PropTypes.object.isRequired,
@@ -79,7 +81,13 @@ export default class Song extends Component {
   }
 
   render() {
-    const {msg, params: {id}, songs: {map}, users: {viewer}} = this.props;
+    const {
+      actions,
+      msg,
+      params: {id},
+      songs: {map, starred},
+      users: {viewer}
+    } = this.props;
     const song = map.get(id);
 
     if (song === null) return <NotFound msg={msg} />;
@@ -88,6 +96,13 @@ export default class Song extends Component {
     const title = song.name + ' / ' + song.artist;
     const displayLyrics = this.getDisplayLyrics(song.lyrics);
     const viewerIsSongCreator = viewer && viewer.id === song.createdBy;
+    const star =
+      viewer &&
+      !viewerIsSongCreator &&
+      <Star
+        checked={starred.hasIn([viewer.id, song.id])}
+        {...{actions, song, viewer}}
+      />;
 
     return (
       <DocumentTitle title={title}>
@@ -99,7 +114,9 @@ export default class Song extends Component {
               <Link params={{id}} to="songs-edit">{msg.app.button.edit}</Link>
             }
           </nav>
-          <h1>{title}</h1>
+          <h1>
+            {title} {star}
+          </h1>
           <div
             className="lyrics"
             dangerouslySetInnerHTML={{__html: displayLyrics}}

@@ -16,7 +16,6 @@ export default class My extends Component {
 
   render() {
     const {actions, msg, songs: {userSongs}, users: {viewer}} = this.props;
-    // TODO: Loading.
 
     return (
       <DocumentTitle title={msg.songs.my.title}>

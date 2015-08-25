@@ -45,6 +45,7 @@ export function create(dispatch, validate, firebase, router, state) {
     },
 
     delete(id) {
+      dispatch(actions.delete, {id});
       // Remove deletes song from app state via onSong returning id and
       // value === null.
       firebase.remove(['songs', id]);
@@ -63,8 +64,20 @@ export function create(dispatch, validate, firebase, router, state) {
         // TODO: Catch and handle errors. Add pending action.
     },
 
+    star(userId, songId, enabled) {
+      dispatch(actions.star, {userId, songId, enabled});
+      const value = enabled
+        ? {createdAt: firebase.TIMESTAMP}
+        : null;
+      firebase.set(['songs-starred', userId, songId], value);
+    },
+
     onSong(snapshot, {params: {id}}) {
       dispatch(actions.onSong, {id, value: snapshot.val()});
+    },
+
+    onSongStar(snapshot, {viewer, song}) {
+      dispatch(actions.onSongStar, {viewer, song, value: snapshot.val()});
     },
 
     onSongs(snapshot) {

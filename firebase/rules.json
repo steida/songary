@@ -7,6 +7,12 @@
         ".write": "auth != null && (!data.exists() || data.child('createdBy').val() === auth.uid)"
       }
     },
+    "songs-starred": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
     "users": {
       "$uid": {
         ".read": "auth != null && auth.uid == $uid",
