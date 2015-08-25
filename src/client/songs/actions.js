@@ -84,8 +84,8 @@ export function create(dispatch, validate, firebase, router, state) {
       dispatch(actions.onSongs, snapshot.val());
     },
 
-    onSongsCreatedByUser(snapshot, {viewer: {id}}) {
-      dispatch(actions.onSongsCreatedByUser, {
+    onUserSongs(snapshot, {viewer: {id}}) {
+      dispatch(actions.onUserSongs, {
         songs: snapshot.val(),
         userId: id
       });

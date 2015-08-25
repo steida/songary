@@ -6,7 +6,7 @@ import SongLink from '../songs/songlink.react';
 import listenFirebase from '../firebase/listenfirebase';
 
 @listenFirebase((props, firebase) => ({
-  action: props.actions.songs.onSongsCreatedByUser,
+  action: props.actions.songs.onUserSongs,
   ref: firebase
     .child('songs')
     .orderByChild('createdBy')

@@ -75,7 +75,7 @@ export default function(state, action, payload) {
     return state;
   }
 
-  case actions.onSongsCreatedByUser: {
+  case actions.onUserSongs: {
     const {userId, songs} = payload;
     state = addToMap(state, songs);
     state = setUserSongs(state, userId, songs);
