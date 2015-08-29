@@ -3,7 +3,7 @@ import DocumentTitle from 'react-document-title';
 import Loading from '../components/loading.react';
 import React from 'react';
 import SongForm from './songform.react';
-import listenSong from '../firebase/listensong';
+import listenSong from './listensong';
 import requireAuth from '../auth/requireauth.react';
 
 @listenSong

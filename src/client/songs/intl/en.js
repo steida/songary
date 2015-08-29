@@ -27,6 +27,7 @@ export default {
   my: {
     songsYouAdded: 'Songs You Added',
     songsYouStarred: 'Songs You Starred',
-    title: 'My Songs'
+    title: 'My Songs',
+    youHaveNoStarredSong: 'You have no starred song.'
   }
 };

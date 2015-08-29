@@ -2,42 +2,26 @@ import Song from './song';
 import {Map, Record, Seq} from 'immutable';
 import {actions} from './actions';
 
-const lastUpdatedSorter = song => song.updatedAt || song.createdAt;
-
-function toSortedSongsList(iterable) {
-  return Seq(iterable)
-    .filter(song => song)
-    .map(song => new Song(song))
-    .sortBy(lastUpdatedSorter)
-    .reverse()
-    .toList();
-}
-
 function addToMap(state, songs) {
   return Seq(songs).reduce((state, json, id) => {
-    return state.setIn(['map', id], json ? new Song(json) : null);
+    return json
+      ? state.setIn(['map', id], new Song(json))
+      : state.removeIn(['map', id]);
   }, state);
 }
 
-function setAll(state) {
-  return state.set('all', toSortedSongsList(state.map.toJS()));
-}
-
-function setUserSongs(state, userId, songs) {
-  return state.setIn(['userSongs', userId], toSortedSongsList(songs));
-}
+const mapToIds = songs => Seq(songs).map(s => s.id).toList();
 
 function revive(state = Map()) {
-  const map = (state.get('map') || Map()).map(json => json && new Song(json));
-  const all = toSortedSongsList(map.toJS());
+  const map = (state.get('map') || Map()).map(json => new Song(json));
 
   return new (Record({
     add: new Song,
-    all: all,
+    all: mapToIds(map),
     edited: Map(),
     map: map,
     starred: Map(),
-    userSongs: Map()
+    user: Map()
   }));
 }
 
@@ -66,20 +50,20 @@ export default function(state, action, payload) {
 
   case actions.onSongs: {
     const songs = payload;
-    // To ensure shown songs are removed.
-    // TODO: Rethink. We should not reset map, but only update lists for
-    // pagging etc., so app state can work as cache until we have a new data.
-    state = state.set('map', Map());
-    state = addToMap(state, songs);
-    state = setAll(state);
-    return state;
+    // Map serves as cache and source of truth.
+    return addToMap(state, songs)
+      .set('all', mapToIds(songs));
   }
 
   case actions.onUserSongs: {
     const {userId, songs} = payload;
-    state = addToMap(state, songs);
-    state = setUserSongs(state, userId, songs);
-    return state;
+    return addToMap(state, songs)
+      .setIn(['user', userId], mapToIds(songs));
+  }
+
+  case actions.onUserStarredSongs: {
+    const {songsIds, userId} = payload;
+    return state.setIn(['starred', userId], Map(songsIds));
   }
 
   case actions.save:

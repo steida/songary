@@ -1,6 +1,8 @@
 import getRandomString from '../lib/getrandomstring';
 import {Record} from 'immutable';
 
+export const lastUpdatedSorter = song => song.updatedAt || song.createdAt;
+
 const SongRecord = Record({
   artist: '',
   createdAt: null,

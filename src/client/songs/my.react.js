@@ -2,6 +2,7 @@ import Component from '../components/component.react';
 import DocumentTitle from 'react-document-title';
 import React from 'react';
 import UserSongs from '../songs/usersongs.react';
+import UserStarredSongs from '../songs/userstarredsongs.react';
 import requireAuth from '../auth/requireauth.react';
 
 @requireAuth
@@ -15,18 +16,16 @@ export default class My extends Component {
   }
 
   render() {
-    const {actions, msg, songs: {userSongs}, users: {viewer}} = this.props;
+    const {actions, msg, songs, users: {viewer}} = this.props;
+
+    // TODO: Show both lists once they are both loaded. Use one loading?
+    // Rethink. Use probably some toggle in songs store.
 
     return (
       <DocumentTitle title={msg.songs.my.title}>
         <div className="me-page">
-          {userSongs.size > 0 &&
-            <h2>{msg.songs.my.songsYouAdded}</h2>
-          }
-          <UserSongs {...{actions, msg, viewer, userSongs}} />
-          {false &&
-            <h2>{msg.songs.my.songsYouStarred}</h2>
-          }
+          <UserStarredSongs {...{actions, msg, viewer, songs}} />
+          <UserSongs {...{actions, msg, viewer, songs}} />
         </div>
       </DocumentTitle>
     );

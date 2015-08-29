@@ -4,9 +4,9 @@ import DocumentTitle from 'react-document-title';
 import Loading from '../components/loading.react';
 import NotFound from '../components/notfound.react';
 import React from 'react';
-import Star from '../components/star.react';
+import Star from './star.react';
 import escape from 'escape-html';
-import listenSong from '../firebase/listensong';
+import listenSong from './listensong';
 import {Link} from 'react-router';
 
 const MAX_FONT_SIZE = 50;

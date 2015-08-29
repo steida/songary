@@ -91,6 +91,13 @@ export function create(dispatch, validate, firebase, router, state) {
       });
     },
 
+    onUserStarredSongs(snapshot, {viewer: {id}}) {
+      dispatch(actions.onUserStarredSongs, {
+        songsIds: snapshot.val(),
+        userId: id
+      });
+    },
+
     setSongField(song, {name, value}) {
       value = value.slice(0, Song.maxLength[name]);
       dispatch(actions.setSongField, {song, name, value});

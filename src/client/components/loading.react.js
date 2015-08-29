@@ -11,7 +11,7 @@ export default class Loading extends Component {
 
   // http://www.nngroup.com/articles/response-times-3-important-limits/
   static defaultProps = {
-    delay: 1000
+    delay: 3000
   }
 
   constructor(props) {

@@ -7,6 +7,7 @@ import {Map} from 'immutable';
 
 const firebase = createFirebase(config.firebaseUrl);
 
+// TODO: Maybe Router.run(routes, '/some/path', callback); is enough.
 function getRouterStateFromReq(req) {
   return new Promise((resolve, reject) => {
     Router.create({
