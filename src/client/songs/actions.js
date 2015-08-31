@@ -46,8 +46,6 @@ export function create(dispatch, validate, firebase, router, state) {
 
     delete(id) {
       dispatch(actions.delete, {id});
-      // Remove deletes song from app state via onSong returning id and
-      // value === null.
       firebase.remove(['songs', id]);
       router.transitionTo('my-songs');
     },

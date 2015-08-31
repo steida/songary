@@ -23,16 +23,18 @@ export default class UserSongs extends Component {
 
   render() {
     const {msg, songs: {map, user}, viewer} = this.props;
-    const viewerSongs = user.get(viewer.id);
+    const ids = user.get(viewer.id);
 
-    if (!viewerSongs) return <Loading msg={msg} />;
+    if (!ids) return <Loading msg={msg} />;
 
-    // TODO: if !viewerSongs.size render some helper text.
-
-    const songs = viewerSongs
+    // Songs are fetched as whole list, so we can expect map is fullfiled.
+    const songs = ids
       .map(id => map.get(id))
+      .filter(song => song) // But song can be deleted and not yet fb synced.
       .sortBy(lastUpdatedSorter)
       .reverse();
+
+    // TODO: Render "you have not added song" call to action message for !size.
 
     return (
       <div className="songs-user">
