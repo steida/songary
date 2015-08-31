@@ -7,21 +7,6 @@ import {Map} from 'immutable';
 
 const firebase = createFirebase(config.firebaseUrl);
 
-// TODO: Maybe Router.run(routes, '/some/path', callback); is enough.
-function getRouterStateFromReq(req) {
-  return new Promise((resolve, reject) => {
-    Router.create({
-      routes,
-      location: req.originalUrl,
-      onError: reject,
-      onAbort: reject
-    }).run((Handler, state) => {
-      resolve(state);
-    });
-  });
-}
-
-// A bit clunky, but works well.
 function set404(condition, value) {
   if (condition) value.$404 = true;
   return value;
@@ -30,18 +15,11 @@ function set404(condition, value) {
 export default function userState() {
 
   return (req, res, next) => {
-    // TODO: Refactor or use await async.
-    getRouterStateFromReq(req)
-      .then(({routes, params}) => {
-        const routeName = routes
-          .map(route => route.name)
-          .filter(name => name)
-          .join('/');
-
-        loadUserData(req, routeName, params).then(loadedData => {
-          req.userState = Map().merge(...loadedData);
-          next();
-        });
+    getRouterState(req.originalUrl)
+      .then(routerState => loadUserData(routerState, req))
+      .then(loadedData => {
+        req.userState = Map().merge(...loadedData);
+        next();
       })
       .catch(() => {
         req.userState = Map();
@@ -51,18 +29,29 @@ export default function userState() {
 
 }
 
-// Gracefully settle all promises, ignore failed.
-function loadUserData(req, routeName, params) {
+function getRouterState(originalUrl) {
+  return new Promise((resolve, reject) => {
+    Router.run(routes, originalUrl, (Root, state) => resolve(state));
+  });
+}
+
+
+function loadUserData(routerState, req) {
+  const {params, routes} = routerState;
+  const currentRoutePath = routes
+    .map(route => route.name)
+    .filter(name => name)
+    .join('/');
   const dataSources = [];
 
-  switch (routeName) {
-  case 'song':
-    dataSources.push(loadSong(params.id));
-    break;
-  case 'songs':
-    dataSources.push(loadSongs());
-    break;
-  }
+  const routesLoaders = {
+    song: () => loadSong(params.id),
+    songs: () => loadSongs()
+  };
+  const routeLoader = routesLoaders[currentRoutePath];
+
+  if (routeLoader)
+    dataSources.push(routeLoader());
 
   return Promise.settle(dataSources).then(receivedData =>
     receivedData
