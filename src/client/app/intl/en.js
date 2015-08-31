@@ -10,7 +10,10 @@ export default {
     areYouSure: 'Are you sure?'
   },
   footer: {
-    madeByHtml: `made by <a href="https://twitter.com/steida">steida</a>`
+    madeByHtml: `
+      made by <a href="https://twitter.com/steida" target="_blank">steida</a>
+      with <a href="https://github.com/este/este" target="_blank">este</a>
+    `
   },
   header: {
     addSong: 'Add Song',
