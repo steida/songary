@@ -9,7 +9,8 @@ import escape from 'escape-html';
 import listenSong from './listensong';
 import {Link} from 'react-router';
 
-const MAX_FONT_SIZE = 50;
+// 26 seems to be the best for tablet.
+const MAX_FONT_SIZE = 26;
 const MIN_READABLE_FONT_SIZE = 8;
 
 @listenSong
