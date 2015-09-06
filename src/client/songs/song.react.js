@@ -50,28 +50,20 @@ export default class Song extends Component {
   // Detect max lyrics fontSize to fit into screen.
   setLyricsMaxFontSize() {
     const songEl = React.findDOMNode(this);
-    // Because it's called in timeout, so element can be gone.
-    if (!songEl || !this.lyricsEL) return;
-
-    const songElSize = this.getElSize(songEl);
+    if (!songEl || !this.lyricsEl) return;
+    const songElWidth = songEl.offsetWidth;
     let fontSize = MIN_READABLE_FONT_SIZE;
     songEl.style.visibility = 'hidden';
-
     while (fontSize !== MAX_FONT_SIZE) {
-      this.lyricsEL.style.fontSize = fontSize + 'px';
-      const articleElSize = this.getElSize(this.lyricsEL);
+      this.lyricsEl.style.fontSize = fontSize + 'px';
       // It seems that measuring only width is the best pattern.
-      if (articleElSize.width > songElSize.width) {
-        this.lyricsEL.style.fontSize = (fontSize - 1) + 'px';
+      if (this.lyricsEl.offsetWidth > songElWidth) {
+        this.lyricsEl.style.fontSize = (fontSize - 1) + 'px';
         break;
       }
       fontSize++;
     }
     songEl.style.visibility = '';
-  }
-
-  getElSize(el) {
-    return {width: el.offsetWidth, height: el.offsetHeight};
   }
 
   onWindowResize() {
@@ -104,10 +96,12 @@ export default class Song extends Component {
         checked={starred.hasIn([viewer.id, song.id])}
         {...{actions, song, viewer}}
       />;
+    const songElementId = `song${song.id}`;
+    const lyricsElementId = `lyrics${song.id}`;
 
     return (
       <DocumentTitle title={title}>
-        <div className="song">
+        <div className="song" id={songElementId}>
           <nav>
             <Link to="songs">{msg.app.header.songs}</Link>
             <Link to="my-songs">{msg.app.header.mySongs}</Link>
@@ -121,7 +115,34 @@ export default class Song extends Component {
           <div
             className="lyrics"
             dangerouslySetInnerHTML={{__html: displayLyrics}}
-            ref={c => this.lyricsEL = React.findDOMNode(c)}
+            id={lyricsElementId}
+            ref={c => this.lyricsEl = React.findDOMNode(c)}
+          />
+          <script
+            // MaxFontSize code must be called asap to prevent FOUC when song
+            // is loaded and rendered on server side. It works for server render
+            // only - https://github.com/facebook/react/issues/4801
+            // Original code to be packed.
+            // (function(songEl, lyricsEl, fontSize, maxFontSize) {
+            //   var songElWidth = songEl.offsetWidth;
+            //   songEl.style.visibility = 'hidden';
+            //   while (fontSize !== maxFontSize) {
+            //     lyricsEl.style.fontSize = fontSize + 'px';
+            //     // It seems that measuring only width is the best pattern.
+            //     if (lyricsEl.offsetWidth > songElWidth) {
+            //       lyricsEl.style.fontSize = (fontSize - 1) + 'px';
+            //       break;
+            //     }
+            //     fontSize++;
+            //   }
+            //   songEl.style.visibility = '';
+            // })(
+            //   document.getElementById('${songElementId}'),
+            //   document.getElementById('${lyricsElementId}'),
+            //   ${MIN_READABLE_FONT_SIZE},
+            //   ${MAX_FONT_SIZE}
+            // );
+            dangerouslySetInnerHTML={{__html: `(function(b,c,a,d){var e=b.offsetWidth;for(b.style.visibility="hidden";a!==d;){c.style.fontSize=a+"px";if(c.offsetWidth>e){c.style.fontSize=a-1+"px";break}a++}b.style.visibility=""})(document.getElementById('${songElementId}'),document.getElementById('${lyricsElementId}'),${MIN_READABLE_FONT_SIZE},${MAX_FONT_SIZE});`}}
           />
         </div>
       </DocumentTitle>
