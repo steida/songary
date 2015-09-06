@@ -32,9 +32,7 @@ export function create(dispatch, validate, firebase, router, state) {
     //   const {users: {viewer}} = state();
     //   const songs = Seq(Fixtures.songs).map(json => {
     //     const song = new Song(json);
-    //     return Song.createNew(song, viewer, firebase.TIMESTAMP)
-    //       .set('id', json.id)
-    //       .toSave();
+    //     TODO: Always use plain json to preserve timestamps and everything.
     //   }).toJS();
     //   firebase.update(['songs'], songs);
     // },
