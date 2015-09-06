@@ -17,6 +17,7 @@ import {RouteHandler} from 'react-router';
 export default class App extends Component {
 
   static propTypes = {
+    actions: React.PropTypes.object,
     firebase: React.PropTypes.object,
     msg: React.PropTypes.object.isRequired,
     router: React.PropTypes.func.isRequired,

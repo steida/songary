@@ -13,7 +13,7 @@ var config = {
   appLocales: ['en', 'fr'],
   defaultLocale: 'en',
   firebaseUrl: 'https://songary.firebaseio.com',
-  googleAnalyticsId: 'UA-XXXXXXX-X',
+  googleAnalyticsId: 'UA-67263806-1',
   isProduction: isProduction,
   piping: {
     ignore: /(\/\.|~$|\.(css|less|sass|scss|styl))/,
