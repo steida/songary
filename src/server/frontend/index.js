@@ -14,8 +14,8 @@ app.use(esteHeaders());
 app.use(compression());
 app.use(favicon('assets/img/favicon.ico'));
 
-app.use('/build', express.static('build'));
-app.use('/assets', express.static('assets'));
+app.use('/assets/img', express.static('assets/img', {maxAge: '200d'}));
+app.use('/_assets', express.static('build', {maxAge: '200d'}));
 
 // Intl
 app.use('/node_modules/intl/dist', express.static('node_modules/intl/dist'));
