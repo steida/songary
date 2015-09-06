@@ -47,11 +47,11 @@ export default class App extends Component {
   }
 
   onFirebaseAuth(auth) {
-    const {users: {viewer}} = this.props;
+    const {actions, users: {viewer}} = this.props;
     if (auth && !viewer)
-      this.actions.auth.onAuth(auth);
+      actions.auth.onAuth(auth);
     else if (!auth && viewer)
-      this.actions.auth.logout();
+      actions.auth.logout();
   }
 
   maybeRedirectAfterClientSideAuth() {
