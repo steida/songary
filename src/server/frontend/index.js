@@ -30,7 +30,10 @@ app.use(intlMiddleware({
 app.use(userState());
 
 app.get('*', (req, res, next) => {
-  render(req, res, req.userState, {intl: req.intl}).catch(next);
+  const userState = req.userState.merge({
+    intl: req.intl
+  });
+  render(req, res, userState).catch(next);
 });
 
 app.on('mount', () => {

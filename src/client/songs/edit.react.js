@@ -4,7 +4,7 @@ import Loading from '../components/loading.react';
 import React from 'react';
 import SongForm from './songform.react';
 import listenSong from './listensong';
-import requireAuth from '../auth/requireauth.react';
+import requireAuth from '../auth/requireauth';
 
 @listenSong
 @requireAuth

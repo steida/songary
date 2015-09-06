@@ -3,7 +3,7 @@ import DocumentTitle from 'react-document-title';
 import React from 'react';
 import UserSongs from '../songs/usersongs.react';
 import UserStarredSongs from '../songs/userstarredsongs.react';
-import requireAuth from '../auth/requireauth.react';
+import requireAuth from '../auth/requireauth';
 
 @requireAuth
 export default class My extends Component {

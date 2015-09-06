@@ -25,7 +25,7 @@ function revive(state = Map()) {
   }));
 }
 
-export default function(state, action, payload) {
+export default function songsStore(state, action, payload) {
   if (!action) return revive(state);
 
   switch (action) {
