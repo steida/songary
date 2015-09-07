@@ -31,6 +31,14 @@ body {
     color #346392
     text-decoration none
 
+    // Remember, ios has a hover problem. Solution is simple, just don't use
+    // display nor visibility on hovered elements. We can't detect desktop nor
+    // touch device reliably, so this is the only sane approach.
+    // Don't even think about mouseDown or touchStart to detect "pressed"
+    // element, since it's brittle as hell. To highligh user action, we can use
+    // .active or implement custom highlight.
+    // https://www.nczonline.net/blog/2012/07/05/ios-has-a-hover-problem
+    // http://www.stucox.com/blog/you-cant-detect-a-touchscreen
     &:hover:not(.active)
       text-decoration underline
 
