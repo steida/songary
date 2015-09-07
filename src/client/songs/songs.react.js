@@ -9,7 +9,7 @@ import {lastUpdatedSorter} from './song.js';
   action: props.actions.songs.onSongs,
   ref: firebase.child('songs')
 }))
-export default class Index extends Component {
+export default class Songs extends Component {
 
   static propTypes = {
     actions: React.PropTypes.object.isRequired,
@@ -25,7 +25,6 @@ export default class Index extends Component {
       .sortBy(lastUpdatedSorter)
       .reverse();
 
-    // Because all is never undefined nor empty, zero means loading.
     if (!songs.size) return <Loading msg={msg} />;
 
     return (

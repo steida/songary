@@ -86,7 +86,6 @@ export default class Song extends Component {
     if (song === null) return <NotFound msg={msg} />;
     if (!song) return <Loading msg={msg} />;
 
-    const title = song.name + ' / ' + song.artist;
     const displayLyrics = this.getDisplayLyrics(song.lyrics);
     const viewerIsSongCreator = viewer && viewer.id === song.createdBy;
     const star =
@@ -100,7 +99,7 @@ export default class Song extends Component {
     const lyricsElementId = `lyrics${song.id}`;
 
     return (
-      <DocumentTitle title={title}>
+      <DocumentTitle title={song.name + ' / ' + song.artist}>
         <div className="song" id={songElementId}>
           <nav>
             <Link to="songs">{msg.app.header.songs}</Link>
@@ -110,7 +109,9 @@ export default class Song extends Component {
             }
           </nav>
           <h1>
-            {title} {star}
+            <span>{song.name}</span>&nbsp;/&nbsp;
+            <span>{song.artist}</span>&nbsp;
+            <span>{star}</span>
           </h1>
           <div
             className="lyrics"
