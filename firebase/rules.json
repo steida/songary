@@ -2,7 +2,7 @@
   "rules": {
     "songs": {
       ".read": true,
-      ".indexOn": ["createdBy"],
+      ".indexOn": ["createdAt", "createdBy", "updatedAt"],
       "$id": {
         ".write": "auth != null && (!data.exists() || data.child('createdBy').val() === auth.uid)"
       }
