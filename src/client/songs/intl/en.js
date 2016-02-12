@@ -21,8 +21,10 @@ export default {
       >chordify.net</a>.`,
     placeholder: '[F]Michelle [Bmi7]ma belle...'
   },
-  index: {
-    title: 'Songs'
+  latest: {
+    noSongs: 'No songs.',
+    more: 'More',
+    title: 'Latest Songs'
   },
   my: {
     songsYouAdded: 'Songs You Added',

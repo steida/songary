@@ -5,12 +5,13 @@ import SongLink from '../songs/songlink.react';
 import listenFirebase from '../firebase/listenfirebase';
 import {lastUpdatedSorter} from './song.js';
 
-@listenFirebase((props, firebase) => ({
+@listenFirebase(props => ({
   action: props.actions.songs.onUserSongs,
-  ref: firebase
-    .child('songs')
-    .orderByChild('createdBy')
-    .equalTo(props.viewer.id)
+  query: {
+    child: 'songs',
+    orderByChild: 'createdBy',
+    equalTo: props.viewer.id
+  }
 }))
 export default class UserSongs extends Component {
 
@@ -41,7 +42,7 @@ export default class UserSongs extends Component {
         {songs.size > 0 &&
           <h2>{msg.songs.my.songsYouAdded}</h2>
         }
-        <ol>
+        <ol className="songs">
           {songs.map(song =>
             <li key={song.id}>
               <SongLink song={song} />

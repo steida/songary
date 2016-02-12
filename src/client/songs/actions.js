@@ -1,7 +1,7 @@
 import Song from './song';
 
 // import Fixtures from '../../../firebase/export';
-// import {Seq} from 'immutable';
+import {Seq} from 'immutable';
 
 export const actions = create();
 export const feature = 'songs';
@@ -32,7 +32,6 @@ export function create(dispatch, validate, firebase, router, state) {
     //   const {users: {viewer}} = state();
     //   const songs = Seq(Fixtures.songs).map(json => {
     //     const song = new Song(json);
-    //     TODO: Always use plain json to preserve timestamps and everything.
     //   }).toJS();
     //   firebase.update(['songs'], songs);
     // },
@@ -46,6 +45,37 @@ export function create(dispatch, validate, firebase, router, state) {
       dispatch(actions.delete, {id});
       firebase.remove(['songs', id]);
       router.transitionTo('my-songs');
+    },
+
+    onLatest(snapshot, {params: {createdAt}}) {
+      dispatch(actions.onLatest, {createdAt, songs: snapshot.val()});
+    },
+
+    onSong(snapshot, {params: {id}}) {
+      dispatch(actions.onSong, {id, value: snapshot.val()});
+    },
+
+    onSongStar(snapshot, {viewer, song}) {
+      dispatch(actions.onSongStar, {viewer, song, value: snapshot.val()});
+    },
+
+    onUserSongs(snapshot, {viewer: {id}}) {
+      dispatch(actions.onUserSongs, {
+        songs: snapshot.val(),
+        userId: id
+      });
+    },
+
+    onUserStarredSongs(snapshot, {viewer: {id}}) {
+      dispatch(actions.onUserStarredSongs, {
+        songsIds: snapshot.val(),
+        userId: id
+      });
+    },
+
+    setSongField(song, {name, value}) {
+      value = value.slice(0, Song.maxLength[name]);
+      dispatch(actions.setSongField, {song, name, value});
     },
 
     save(song) {
@@ -66,37 +96,6 @@ export function create(dispatch, validate, firebase, router, state) {
         ? {createdAt: firebase.TIMESTAMP}
         : null;
       firebase.set(['songs-starred', userId, songId], value);
-    },
-
-    onSong(snapshot, {params: {id}}) {
-      dispatch(actions.onSong, {id, value: snapshot.val()});
-    },
-
-    onSongStar(snapshot, {viewer, song}) {
-      dispatch(actions.onSongStar, {viewer, song, value: snapshot.val()});
-    },
-
-    onSongs(snapshot) {
-      dispatch(actions.onSongs, snapshot.val());
-    },
-
-    onUserSongs(snapshot, {viewer: {id}}) {
-      dispatch(actions.onUserSongs, {
-        songs: snapshot.val(),
-        userId: id
-      });
-    },
-
-    onUserStarredSongs(snapshot, {viewer: {id}}) {
-      dispatch(actions.onUserStarredSongs, {
-        songsIds: snapshot.val(),
-        userId: id
-      });
-    },
-
-    setSongField(song, {name, value}) {
-      value = value.slice(0, Song.maxLength[name]);
-      dispatch(actions.setSongField, {song, name, value});
     }
 
   };

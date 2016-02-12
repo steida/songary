@@ -3,7 +3,10 @@ import Router from 'react-router';
 import config from '../config';
 import createFirebase from '../../client/firebase/create';
 import routes from '../../client/routes';
+import songsStore from '../../client/songs/store';
 import {Map} from 'immutable';
+import {actions as songsActions} from '../../client/songs/actions';
+import {latestPageSize} from '../../client/songs/latest.react';
 
 const firebase = createFirebase(config.firebaseUrl);
 
@@ -35,7 +38,6 @@ function getRouterState(originalUrl) {
   });
 }
 
-
 function loadUserData(routerState, req) {
   const {params, routes} = routerState;
   const currentRoutePath = routes
@@ -45,8 +47,8 @@ function loadUserData(routerState, req) {
   const dataSources = [];
 
   const routesLoaders = {
-    song: () => loadSong(params.id),
-    songs: () => loadSongs()
+    latest: () => loadLatestSongs(Number(params.createdAt)),
+    song: () => loadSong(params.id)
   };
   const routeLoader = routesLoaders[currentRoutePath];
 
@@ -65,6 +67,7 @@ function loadSong(songId) {
     .once('value', ['songs', songId])
     .then(snapshot => {
       const song = snapshot.val();
+      // TODO: Use songs store.
       return set404(!song, {
         songs: {
           map: {[songId]: song}
@@ -73,14 +76,20 @@ function loadSong(songId) {
     });
 }
 
-function loadSongs() {
-  return firebase
-    .once('value', ['songs'])
-    .then(snapshot => {
-      return {
-        songs: {
-          map: snapshot.val()
-        }
-      };
-    });
+function loadLatestSongs(createdAt) {
+  return new Promise((resolve, reject) => {
+    firebase.root
+      .child('songs')
+      .orderByChild('createdAt')
+      .endAt(createdAt ? createdAt : Date.now())
+      .limitToLast(latestPageSize)
+      .once('value', resolve, reject);
+  })
+  .then(snapshot => {
+    const songs = snapshot.val();
+    const state = songsStore(Map(), songsActions.onLatest, {createdAt, songs});
+    return {
+      songs: state.toJS()
+    };
+  });
 }

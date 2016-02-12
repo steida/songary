@@ -19,7 +19,7 @@ export default class Header extends Component {
           <Link to="home">{msg.home}</Link>
         </h1>
         <ul>
-          <li><Link to="songs">{msg.songs}</Link></li>
+          <li><Link to="latest">{msg.latest}</Link></li>
           <li><Link to="my-songs">{msg.mySongs}</Link></li>
           <li><Link to="add-song">{msg.addSong}</Link></li>
           {viewer

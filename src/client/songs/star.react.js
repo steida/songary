@@ -4,12 +4,11 @@ import React from 'react';
 import classnames from 'classnames';
 import listenFirebase from '../firebase/listenfirebase';
 
-@listenFirebase((props, firebase) => ({
+@listenFirebase(props => ({
   action: props.actions.songs.onSongStar,
-  ref: firebase
-    .child('songs-starred')
-    .child(props.viewer.id)
-    .child(props.song.id)
+  query: {
+    child: `songs-starred/${props.viewer.id}/${props.song.id}`
+  }
 }))
 export default class Star extends Component {
 

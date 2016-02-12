@@ -21,6 +21,6 @@ export default {
     login: 'Login / Sign Up',
     me: 'Me',
     mySongs: 'My Songs',
-    songs: 'Songs'
+    latest: 'Latest Songs'
   }
 };

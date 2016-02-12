@@ -2,6 +2,9 @@ import Song from './song';
 import {Map, Record, Seq} from 'immutable';
 import {actions} from './actions';
 
+const mapToIds = songs => Seq(songs).map(s => s.id).toList();
+
+// Map serves as cache and source of truth.
 function addToMap(state, songs) {
   return Seq(songs).reduce((state, json, id) => {
     return json
@@ -10,19 +13,28 @@ function addToMap(state, songs) {
   }, state);
 }
 
-const mapToIds = songs => Seq(songs).map(s => s.id).toList();
+function addToLatest(state, latest) {
+  const {map} = state;
+  return Map(latest).reduce((s, songs, createdAt) => {
+    const sorted = Seq(songs).sortBy(song => song.createdAt).reverse();
+    const sortedIds = mapToIds(sorted);
+    return s.setIn(['latest', createdAt], sortedIds);
+  }, state);
+}
 
 function revive(state = Map()) {
-  const map = (state.get('map') || Map()).map(json => new Song(json));
-
-  return new (Record({
+  let initalState = new (Record({
     add: new Song,
-    all: mapToIds(map),
     edited: Map(),
-    map: map,
+    latest: Map(),
+    map: Map(),
     starred: Map(),
     user: Map()
   }));
+
+  initalState = addToMap(initalState, state.get('map') || Map());
+  initalState = addToLatest(initalState, state.get('latest') || Map());
+  return initalState;
 }
 
 export default function songsStore(state, action, payload) {
@@ -41,18 +53,18 @@ export default function songsStore(state, action, payload) {
     return addToMap(state, {[id]: value});
   }
 
+  case actions.onLatest: {
+    const {createdAt, songs} = payload;
+    state = addToMap(state, songs);
+    state = addToLatest(state, {[createdAt]: songs});
+    return state;
+  }
+
   case actions.onSongStar: {
     const {viewer, song, value} = payload;
     return value
       ? state.setIn(['starred', viewer.id, song.id], value)
       : state.removeIn(['starred', viewer.id, song.id]);
-  }
-
-  case actions.onSongs: {
-    const songs = payload;
-    // Map serves as cache and source of truth.
-    return addToMap(state, songs)
-      .set('all', mapToIds(songs));
   }
 
   case actions.onUserSongs: {

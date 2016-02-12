@@ -5,11 +5,11 @@ import SongLinkLazy from '../songs/songlinklazy.react';
 import listenFirebase from '../firebase/listenfirebase';
 import {Seq} from 'immutable';
 
-@listenFirebase((props, firebase) => ({
+@listenFirebase(props => ({
   action: props.actions.songs.onUserStarredSongs,
-  ref: firebase
-    .child('songs-starred')
-    .child(props.viewer.id)
+  query: {
+    child: `songs-starred/${props.viewer.id}`
+  }
 }))
 export default class UserStarredSongs extends Component {
 
@@ -40,7 +40,7 @@ export default class UserStarredSongs extends Component {
         {allLoaded && isEmpty &&
           <p>{msg.songs.my.youHaveNoStarredSong}</p>
         }
-        <ol style={{display: allLoaded ? '' : 'none'}}>
+        <ol className="songs" style={{display: allLoaded ? '' : 'none'}}>
           {ids.map(id =>
             <li key={id}>
               <SongLinkLazy

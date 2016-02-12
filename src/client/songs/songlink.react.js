@@ -12,7 +12,7 @@ export default class SongLink extends Component {
     const {song: {artist, id, name}} = this.props;
 
     return (
-      <Link params={{id}} to="song">{name}, {artist}</Link>
+      <Link params={{id}} to="song">{name} - {artist}</Link>
     );
   }
 

@@ -3,7 +3,7 @@ import Promise from 'bluebird';
 import {ValidationError} from '../lib/validation';
 
 // Promisify Firebase onComplete callback.
-const promisify = callback => new Promise((resolve, reject) => {
+export const promisify = callback => new Promise((resolve, reject) => {
   callback((error, data) => {
     if (error) {
       reject(firebaseError(error));

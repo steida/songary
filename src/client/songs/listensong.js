@@ -1,10 +1,10 @@
 import listenFirebase from '../firebase/listenfirebase';
 
 export default function listenSong(BaseComponent) {
-  return listenFirebase((props, firebase) => ({
+  return listenFirebase(props => ({
     action: props.actions.songs.onSong,
-    ref: firebase
-      .child('songs')
-      .child(props.params.id)
+    query: {
+      child: `songs/${props.params.id}`
+    }
   }))(BaseComponent);
 }
